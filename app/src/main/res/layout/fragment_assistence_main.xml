@@ -90,7 +90,8 @@
             >
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:padding="8sp">
 
                 <ImageView
                     android:id="@+id/v_back"
@@ -140,7 +141,6 @@
                     android:layout_marginStart="8dp"
                     android:textStyle="bold"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintBottom_toTopOf="@id/recycler_calendar"
                     android:text="Lun"
                     />
                 <TextView
@@ -151,7 +151,6 @@
                     android:layout_marginStart="8dp"
                     android:textStyle="bold"
                     app:layout_constraintTop_toBottomOf="@id/v_separation1"
-                    app:layout_constraintBottom_toTopOf="@id/recycler_calendar"
                     app:layout_constraintStart_toEndOf="@id/tv_monday"
                     app:layout_constraintEnd_toStartOf="@id/tv_wednesday"
                     android:text="Mar"
@@ -164,7 +163,6 @@
                     android:layout_marginStart="8dp"
                     android:textStyle="bold"
                     app:layout_constraintTop_toBottomOf="@id/v_separation1"
-                    app:layout_constraintBottom_toTopOf="@id/recycler_calendar"
                     app:layout_constraintStart_toEndOf="@id/tv_tuesday"
                     app:layout_constraintEnd_toStartOf="@id/tv_thursday"
                     android:text="Mie"
@@ -178,7 +176,6 @@
                     android:textStyle="bold"
                     app:layout_constraintTop_toBottomOf="@id/v_separation1"
                     app:layout_constraintStart_toEndOf="@id/tv_wednesday"
-                    app:layout_constraintBottom_toTopOf="@id/recycler_calendar"
                     app:layout_constraintEnd_toEndOf="@id/tv_friday"
                     android:text="Jue"
                     />
@@ -191,7 +188,6 @@
                     android:textStyle="bold"
                     app:layout_constraintTop_toBottomOf="@id/v_separation1"
                     app:layout_constraintStart_toEndOf="@id/tv_thursday"
-                    app:layout_constraintBottom_toTopOf="@id/recycler_calendar"
                     app:layout_constraintEnd_toEndOf="parent"
                     android:text="Vie"
                     />
@@ -207,14 +203,15 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recycler_calendar"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="0sp"
                     tools:listitem="@layout/day_view"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/v_separation2"
                     app:layout_constraintBottom_toBottomOf="parent"
                     android:nestedScrollingEnabled="false"
-                    />
+                    app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                    app:spanCount="5"/>
             </androidx.constraintlayout.widget.ConstraintLayout>
         </com.google.android.material.card.MaterialCardView>
 

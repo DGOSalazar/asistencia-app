@@ -19,12 +19,24 @@ class CalendarAdapter(private var days: ArrayList<Day> = arrayListOf()): Recycle
 
     inner class ViewHolder(view: View):RecyclerView.ViewHolder(view){
         var mBinding= DayViewBinding.bind(view)
+
         fun mountCalendar(){
-            mBinding.tvDay.text= days[adapterPosition].num.toString()
-            if (days[adapterPosition].isCurrentMonth) mBinding.tvDay.setTypeface(null, Typeface.BOLD)
-            mBinding.mcFreePlaces.visibility = if(days[adapterPosition].freePlaces) View.VISIBLE else View.GONE
-            mBinding.ivProfile.visibility= if (days[adapterPosition].profilePhoto) View.VISIBLE else View.GONE
-            mBinding.mcIsToday.visibility= if(days[adapterPosition].isToday) View.VISIBLE else View.GONE
+            val day = days[adapterPosition]
+            if (day.num == null){
+                with(mBinding) {
+                    tvDay.visibility=View.GONE
+                    mcFreePlaces.visibility=View.GONE
+                    ivProfile.visibility=View.GONE
+                    mcIsToday.visibility=View.GONE
+                }
+            }else{
+                mBinding.tvDay.text= (day.num ?:"" ).toString()
+                mBinding.tvDay.visibility=View.VISIBLE
+                if (day.isCurrentMonth) mBinding.tvDay.setTypeface(null, Typeface.BOLD)
+                mBinding.mcFreePlaces.visibility = if(day.freePlaces) View.VISIBLE else View.GONE
+                mBinding.ivProfile.visibility= if (day.profilePhoto) View.VISIBLE else View.GONE
+                mBinding.mcIsToday.visibility= if(day.isToday) View.VISIBLE else View.GONE
+            }
         }
     }
     fun setCalendarData(days: ArrayList<Day>){
