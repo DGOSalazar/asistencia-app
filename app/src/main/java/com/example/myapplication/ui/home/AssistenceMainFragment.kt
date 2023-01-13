@@ -1,6 +1,6 @@
-package com.example.myapplication
+package com.example.myapplication.ui.home
 
-import UserAdapter
+
 import android.annotation.SuppressLint
 import android.os.Build
 import android.os.Bundle
@@ -11,9 +11,11 @@ import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.myapplication.adapters.CalendarAdapter
+import com.example.myapplication.R
+import com.example.myapplication.data.models.Day
 import com.example.myapplication.databinding.FragmentAssistenceMainBinding
-import com.example.myapplication.models.Day
+import com.example.myapplication.ui.home.adapters.CalendarAdapter
+import com.example.myapplication.ui.home.adapters.UserAdapter
 import java.time.LocalDate
 import java.time.YearMonth
 import java.time.format.DateTimeFormatter

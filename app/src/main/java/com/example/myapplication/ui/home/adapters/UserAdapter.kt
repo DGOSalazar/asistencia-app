@@ -1,12 +1,14 @@
+package com.example.myapplication.ui.home.adapters
+
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.R
 import com.example.myapplication.databinding.ColaboratorViewBinding
-import com.example.myapplication.models.User
+import com.example.myapplication.data.models.User
 
-val userList = listOf(User(name="Hector Coppel Ramirez"),User(),User(),User(),User(),User())
+val userList = listOf(User(name="Hector Coppel Ramirez"), User(), User(), User(), User(), User())
 
 class UserAdapter(private var user: List<User> = userList): RecyclerView.Adapter<UserAdapter.ViewHolder>() {
 

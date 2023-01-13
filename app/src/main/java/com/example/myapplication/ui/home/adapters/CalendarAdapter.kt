@@ -1,7 +1,5 @@
-package com.example.myapplication.adapters
+package com.example.myapplication.ui.home.adapters
 
-import android.R.attr.checked
-import android.R.attr.typeface
 import android.graphics.Typeface
 import android.view.LayoutInflater
 import android.view.View
@@ -9,10 +7,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.R
 import com.example.myapplication.databinding.DayViewBinding
-import com.example.myapplication.models.Day
-
-
-val listDay = listOf(Day(),Day(),Day(freePlaces = true),Day(),Day(profilePhoto = true),Day(),Day(freePlaces = true),Day(),Day(),Day(),Day(),Day(),Day(),Day(profilePhoto = true),Day(),Day(),Day(),Day(profilePhoto = true),Day(freePlaces = true),Day())
+import com.example.myapplication.data.models.Day
 
 class CalendarAdapter(private var days: ArrayList<Day> = arrayListOf()): RecyclerView.Adapter<CalendarAdapter.ViewHolder>() {
 

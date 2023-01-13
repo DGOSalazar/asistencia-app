@@ -14,13 +14,11 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="@id/tv_position"
         app:layout_constraintStart_toStartOf="parent"
-        app:cardCornerRadius="32dp"
-        >
+        app:cardCornerRadius="32dp">
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:src="@drawable/ic_user"
-            />
+            android:src="@drawable/ic_user" />
     </com.google.android.material.card.MaterialCardView>
     <TextView
         android:id="@+id/tv_name"
@@ -31,7 +29,6 @@
         android:text="Jose Alfrredo Jimenez"
         android:textStyle="bold"
         android:textSize="16sp"/>
-
     <TextView
         android:id="@+id/tv_position"
         android:layout_width="0dp"
@@ -40,8 +37,7 @@
         app:layout_constraintEnd_toEndOf="@id/tv_name"
         app:layout_constraintTop_toBottomOf="@id/tv_name"
         android:textColor="@color/black"
-        android:text="Gerente Sinior."
-        />
+        android:text="Gerente Sinior." />
     <TextView
         android:layout_width="0dp"
         android:layout_height="22dp"
@@ -52,8 +48,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:textColor="@color/white"
         android:text="          Gerente Senior Pro Max"
-        android:layout_marginStart="18dp"
-        />
+        android:layout_marginStart="18dp" />
     <View
         android:layout_width="match_parent"
         android:layout_height="2dp"
@@ -62,6 +57,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginTop="4dp"
-        android:background="#f2f2f2"/>
+        android:background="#f2f2f2" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
