@@ -26,19 +26,12 @@
         android:layout_height="wrap_content"
         app:layout_constraintStart_toEndOf="@id/iv_user"
         app:layout_constraintTop_toTopOf="@id/iv_user"
-        android:text="Jose Alfrredo Jimenez"
+        android:text="@string/name"
         android:textStyle="bold"
         android:textSize="16sp"/>
+
     <TextView
         android:id="@+id/tv_position"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="@id/tv_name"
-        app:layout_constraintEnd_toEndOf="@id/tv_name"
-        app:layout_constraintTop_toBottomOf="@id/tv_name"
-        android:textColor="@color/black"
-        android:text="Gerente Sinior." />
-    <TextView
         android:layout_width="0dp"
         android:layout_height="22dp"
         android:background="@drawable/backgroun_position"
@@ -47,7 +40,7 @@
         app:layout_constraintTop_toBottomOf="@id/tv_name"
         app:layout_constraintEnd_toEndOf="parent"
         android:textColor="@color/white"
-        android:text="          Gerente Senior Pro Max"
+        android:text="@string/position"
         android:layout_marginStart="18dp" />
     <View
         android:layout_width="match_parent"

@@ -2,4 +2,18 @@
     <string name="app_name">My Application</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="welcome_message">¡Hola Héctor!</string>
+    <string name="welcome_date">Hoy es viernes 6 de enero del 2023</string>
+    <string name="welcome_remember">Recuerda registrarte para la proxima semana.</string>
+    <string name="month">Enero</string>
+    <string name="monday">Lun</string>
+    <string name="tuesday">Mar</string>
+    <string name="Wednesday">Mie</string>
+    <string name="Thursday">Jue</string>
+    <string name="Friday">Vie</string>
+    <string name="Today_on_office">Hoy Estan en la oficina:</string>
+    <string name="Total_assist">15 Asistentes.</string>
+    <string name="name">Jose Alfrredo Jimenez</string>
+    <string name="position">          Gerente</string>
+    <string name="forget_pass"><u>¿Olvidaste tu Contraseña?</u></string>
 </resources>
