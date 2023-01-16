@@ -21,4 +21,8 @@ class AuthServices @Inject constructor(
             LoginResult.Success(result.user?.isEmailVerified ?: false)
         }
     }
+
+    suspend fun register(email: String, pass: String):LoginResult= runCatching {
+        firebase.auth.signInWithEmailAndPassword(email,pass).await()
+    }.toLoginResult()
 }

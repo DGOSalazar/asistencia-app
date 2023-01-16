@@ -36,6 +36,9 @@ class LoginFragment: Fragment(R.layout.fragment_login)  {
                 viewModel.login(mBinding.inputEmail.text.toString(),mBinding.inputPass.text.toString())
                 Toast.makeText(mBinding.root.context, "Hola", Toast.LENGTH_SHORT).show()
             }
+            bnRegister.setOnClickListener{
+                findNavController().navigate(R.id.action_loginFragment_to_registerFragment)
+            }
         }
     }
 
