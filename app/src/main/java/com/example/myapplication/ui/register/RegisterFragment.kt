@@ -98,15 +98,15 @@ class RegisterFragment : Fragment() {
         }
     }
     private fun openGallery(){
-        val gallery = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
-        startActivityForResult(gallery, SELECT_FILE);
+        val gallery = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
+        startActivityForResult(gallery, SELECT_FILE)
     }
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if(resultCode == RESULT_OK && requestCode == SELECT_FILE){
-            imageUri = data?.data;
-            foto_gallery?.setImageURI(imageUri);
+            imageUri = data?.data
+            foto_gallery?.setImageURI(imageUri)
+            mBinding.btUpload.setImageURI(imageUri)
         }
     }
 

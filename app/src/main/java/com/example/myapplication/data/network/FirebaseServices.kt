@@ -1,7 +1,9 @@
 package com.example.myapplication.data.network
 
+import android.net.Uri
 import com.example.myapplication.data.models.LoginResult
 import com.google.firebase.auth.AuthResult
+import com.google.firebase.storage.StorageReference
 import kotlinx.coroutines.tasks.await
 import java.util.*
 import javax.inject.Inject
@@ -16,6 +18,11 @@ class FirebaseServices @Inject constructor(
     suspend fun register(email: String, pass: String) = runCatching {
         firebase.auth.createUserWithEmailAndPassword(email,pass).await()
     }
+
+    suspend fun uploadPhoto(uri:Uri)= runCatching {
+        val imgName: StorageReference = firebase.dataStorage.child("image${uri.lastPathSegment}")
+    }
+
     fun registerUserData(email: String, name: String, position: String="", birthDate: String, team: String, profilePhoto: String, phone: String) = run {
         firebase.dataBase.collection("Users").document(email).set(
             hashMapOf("name" to name,
@@ -27,11 +34,6 @@ class FirebaseServices @Inject constructor(
         )
     }.isSuccessful
 
-    suspend fun getUser(email: String){
-        firebase.db.collection("Users").document(email).get().addOnSuccessListener {
-
-        }
-    }
     private fun Result<AuthResult>.toLoginResult() =
         when (val result = getOrNull()){
             null -> LoginResult.Error
