@@ -1,12 +1,15 @@
 package com.example.myapplication.domain
 
 import com.example.myapplication.data.models.LoginResult
-import com.example.myapplication.data.network.AuthServices
+import com.example.myapplication.data.network.FirebaseServices
 import javax.inject.Inject
 
 class RegisterUseCase @Inject constructor(
-    private val authServices: AuthServices
+    private val firebaseServices: FirebaseServices
 ) {
-    suspend operator fun invoke(email: String, password: String): LoginResult =
-        authServices.register(email, password)
+    suspend fun register(email: String, password: String) =
+        firebaseServices.register(email, password)
+
+    suspend fun registerUserData(email: String, name: String, position: String="", birthDate: String, team: String, profilePhoto: String, phone: String) =
+        firebaseServices.registerUserData(email,name, position, birthDate, team, profilePhoto, phone)
 }

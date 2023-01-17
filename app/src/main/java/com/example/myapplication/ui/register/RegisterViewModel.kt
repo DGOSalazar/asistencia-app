@@ -20,8 +20,13 @@ class RegisterViewMode @Inject constructor(
 
     fun register(name:String,pass:String){
             viewModelScope.launch {
-                val result = registerUseCase(name,pass)
-                _registerFlag.value = result != LoginResult.Error
+                val result = registerUseCase.register(name,pass)
+                _registerFlag.value=true
+            }
+    }
+    fun saveUserData(name: String, birthdate: String, position: String, email: String, team: String, profilePhoto: String="url", phone: String){
+            viewModelScope.launch {
+                registerUseCase.registerUserData(email,name,position,birthdate,team,profilePhoto,phone)
             }
     }
 

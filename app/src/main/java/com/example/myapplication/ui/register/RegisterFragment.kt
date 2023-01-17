@@ -1,17 +1,22 @@
 package com.example.myapplication.ui.register
 
+import android.app.Activity.RESULT_OK
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.text.Editable
 import android.text.TextWatcher
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.myapplication.R
 import com.example.myapplication.databinding.FragmentRegisterBinding
+
 
 class RegisterFragment : Fragment() {
 
@@ -20,6 +25,9 @@ class RegisterFragment : Fragment() {
 
     private var isValidEmail= true
     private var isValidPassword= true
+    private val SELECT_FILE = 1
+    var imageUri: Uri? = null
+    var foto_gallery: ImageView? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -32,7 +40,6 @@ class RegisterFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         setListeners()
         setObserver()
     }
@@ -70,21 +77,43 @@ class RegisterFragment : Fragment() {
             bnRegister.setOnClickListener{
                 if (isValidEmail && isValidPassword)
                     viewModel.register(inputEmail.text.toString(), inputPassword.text.toString())
-            }
 
+                if (isValidFields())
+                viewModel.saveUserData(
+                    name = inputName.text.toString(),
+                    birthdate = inputBirthDate.text.toString(),
+                    position = ilPosition.checkedChipIds.toString(),
+                    email = inputEmail.text.toString(),
+                    team = "",
+                    phone = inputPhone.text.toString()
+                )
+            }
             bnBack.setOnClickListener{
                 findNavController().navigate(R.id.action_registerFragment_to_loginFragment)
             }
+            btUpload.setOnClickListener {
+                openGallery()
+            }
+        }
+    }
+    private fun openGallery(){
+        val gallery = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
+        startActivityForResult(gallery, SELECT_FILE);
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if(resultCode == RESULT_OK && requestCode == SELECT_FILE){
+            imageUri = data?.data;
+            foto_gallery?.setImageURI(imageUri);
         }
     }
 
+    private fun isValidFields(): Boolean {
+        return true
+    }
     private fun validatePassword(password:String) {
-
     }
-
     private fun validateEmail(email:String) {
-
     }
-
-
 }

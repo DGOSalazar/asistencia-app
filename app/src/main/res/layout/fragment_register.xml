@@ -11,10 +11,10 @@
         android:id="@+id/iv_logo"
         android:layout_width="150dp"
         android:layout_height="75dp"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:src="@drawable/derecho" />
+        android:src="@drawable/derecho"
+        android:layout_marginEnd="16dp"/>
 
     <ImageView
         android:id="@+id/bn_back"
@@ -44,7 +44,7 @@
     <androidx.cardview.widget.CardView
         android:id="@+id/card_container"
         android:layout_width="0sp"
-        android:layout_height="wrap_content"
+        android:layout_height="700dp"
        app:layout_constraintTop_toBottomOf="@+id/iv_logo"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -72,10 +72,125 @@
                 android:layout_marginTop="28dp"/>
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/il_mail"
+                android:id="@+id/il_name"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/title_register"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:hint="Ingresa tu Nombre Completo"
+                android:animateLayoutChanges="true"
+                android:layout_marginTop="8sp">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/input_name"
+                    android:maxLines="1"
+                    android:maxLength="30"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/il_birthDate"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/il_name"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:hint="Ingresa tu Fecha de nacimiento"
+                android:animateLayoutChanges="true"
+                android:layout_marginTop="8sp">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/input_birthDate"
+                    android:maxLines="1"
+                    android:maxLength="30"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/il_phone"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/il_birthDate"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:hint="Ingresa tu Numero de Telefono"
+                android:animateLayoutChanges="true"
+                android:layout_marginTop="8sp">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/input_phone"
+                    android:maxLines="1"
+                    android:maxLength="30"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/il_position"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/il_phone"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginTop="16dp"
+                app:singleSelection="true"
+                app:selectionRequired="true"
+                >
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/analyst"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:chipIcon="@drawable/ic_analyst"
+                    app:iconStartPadding="8dp"
+                    android:checkable="true"/>
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/scrum_master"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:chipIcon="@drawable/ic_sm"
+                    app:iconStartPadding="8dp"
+                    android:checkable="true"/>
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/quality"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:chipIcon="@drawable/ic_qa"
+                    app:iconStartPadding="8dp"
+                    android:checkable="true"/>
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/android"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:chipIcon="@drawable/ic_android"
+                    app:iconStartPadding="8dp"
+                    android:checkable="true"/>
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/ios"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:chipIcon="@drawable/ic_ios"
+                    app:iconStartPadding="8dp"
+                    android:checkable="true"/>
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/backend"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:chipIcon="@drawable/ic_backend"
+                    android:gravity="center"
+                    app:iconStartPadding="8dp"
+                    android:checkable="true"/>
+            </com.google.android.material.chip.ChipGroup>
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/il_email"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/bt_upload"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:layout_marginStart="16dp"
@@ -86,40 +201,29 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/input_email"
-                    android:maxLines="1"
-                    android:maxLength="30"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:maxLength="30"
+                    android:maxLines="1" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/confirm_email"
-                android:layout_width="0dp"
+            <Button
+                android:id="@+id/bt_upload"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@id/il_mail"
+                android:text="Upload photo"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/il_position"
                 android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
-                android:hint="Confirmar tu Correo Electronico"
-                android:animateLayoutChanges="true"
-                android:layout_marginTop="8sp">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/input_confirm_email"
-                    android:maxLines="1"
-                    android:maxLength="30"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-            </com.google.android.material.textfield.TextInputLayout>
+                android:layout_marginEnd="16dp"/>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/il_password"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@id/confirm_email"
+                app:layout_constraintTop_toBottomOf="@id/il_email"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:layout_marginStart="16dp"

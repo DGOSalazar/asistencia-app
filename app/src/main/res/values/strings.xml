@@ -16,4 +16,13 @@
     <string name="name">Jose Alfrredo Jimenez</string>
     <string name="position">          Gerente</string>
     <string name="forget_pass"><u>¿Olvidaste tu Contraseña?</u></string>
+
+    <string-array name="positions">
+        <item>Android</item>
+        <item>IOS</item>
+        <item>Analyst</item>
+        <item>Backend</item>
+        <item>Scrum Master</item>
+        <item>Quality</item>
+    </string-array>
 </resources>
