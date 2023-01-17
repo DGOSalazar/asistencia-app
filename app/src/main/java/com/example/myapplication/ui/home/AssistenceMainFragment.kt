@@ -4,9 +4,8 @@ package com.example.myapplication.ui.home
 import android.annotation.SuppressLint
 import android.os.Build
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import android.view.View.OnTouchListener
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
@@ -21,12 +20,13 @@ import java.time.YearMonth
 import java.time.format.DateTimeFormatter
 
 
-class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main) {
+class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main), OnTouchListener {
 
     private lateinit var mCalendarAdapter: CalendarAdapter
     private lateinit var mUserAdapter: UserAdapter
     private lateinit var mBinding:FragmentAssistenceMainBinding
     private var dayList : ArrayList<Day> = arrayListOf()
+    private var xPreviousPosition = 0f
 
     @RequiresApi(Build.VERSION_CODES.O)
     var localDate: LocalDate= LocalDate.now()
@@ -50,6 +50,7 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main) {
         setListeners()
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @RequiresApi(Build.VERSION_CODES.O)
     private fun setListeners() {
         mBinding.vBack.setOnClickListener{
@@ -58,6 +59,7 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main) {
         mBinding.vNext.setOnClickListener{
             nextMonthAction()
         }
+        mBinding.recyclerCalendar.setOnTouchListener(this)
     }
 
     @SuppressLint("SetTextI18n")
@@ -132,4 +134,25 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main) {
         val formatter = DateTimeFormatter.ofPattern("MMMM yyyy")
         return date.format(formatter)
     }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    @SuppressLint("ClickableViewAccessibility")
+    override fun onTouch(p0: View?, motionEvent: MotionEvent?): Boolean {
+
+        if (motionEvent!!.action == MotionEvent.ACTION_DOWN){
+            xPreviousPosition = motionEvent.x
+            return false
+        }
+
+        if (motionEvent.action == MotionEvent.ACTION_UP){
+            if (xPreviousPosition > motionEvent.x)
+                previusMonthAction()
+            else
+                nextMonthAction()
+            return true
+        }
+        return false
+    }
+
+
 }
