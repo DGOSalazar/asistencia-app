@@ -78,15 +78,16 @@ class RegisterFragment : Fragment() {
                 if (isValidEmail && isValidPassword)
                     viewModel.register(inputEmail.text.toString(), inputPassword.text.toString())
 
-                if (isValidFields())
-                viewModel.saveUserData(
-                    name = inputName.text.toString(),
-                    birthdate = inputBirthDate.text.toString(),
-                    position = ilPosition.checkedChipIds.toString(),
-                    email = inputEmail.text.toString(),
-                    team = "",
-                    phone = inputPhone.text.toString()
-                )
+                if (isValidFields()) {
+                    viewModel.saveUserData(
+                        name = inputName.text.toString(),
+                        birthdate = inputBirthDate.text.toString(),
+                        position = ilPosition.checkedChipIds.toString(),
+                        email = inputEmail.text.toString(),
+                        team = "",
+                        phone = inputPhone.text.toString()
+                    )
+                }
             }
             bnBack.setOnClickListener{
                 findNavController().navigate(R.id.action_registerFragment_to_loginFragment)
