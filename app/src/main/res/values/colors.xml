@@ -9,4 +9,13 @@
     <color name="white">#FFFFFFFF</color>
     <color name="grayCoppel">#f2f2f2</color>
     <color name="blueCoppel">#076AB6</color>
+
+    <color name="background_login">#94002299</color>
+    <color name="blue_app">#2A4EA9</color>
+
+    <color name="tv_grey">#F3F3F3</color>
+    <color name="text1">#505050</color>
+    <color name="text_hint">#B2B2B2</color>
+    <color name="yellow">#E9F8AD</color>
+
 </resources>

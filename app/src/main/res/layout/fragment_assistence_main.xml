@@ -11,34 +11,36 @@
     <Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="166dp"
+        android:layout_height="210dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/cl_main"
-        android:background="@color/blueCoppel">
+        app:layout_constraintBottom_toTopOf="@id/scrool_container"
+        android:background="@color/blue_app"
+        android:elevation="51dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginStart="24dp"
-            android:layout_marginEnd="24dp">
+            android:layout_marginStart="32dp"
+            android:layout_marginEnd="32dp">
             <ImageView
                 android:id="@+id/iv_logo"
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
+                android:layout_width="82dp"
+                android:layout_height="15dp"
                 android:src="@drawable/derecho"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="41dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
+                app:layout_constraintTop_toTopOf="parent"
+                android:contentDescription="@string/icon_bancoppel" />
             <ImageView
                 android:id="@+id/tv_menu_icon"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 app:layout_constraintTop_toTopOf="@id/tv_welcome"
                 app:layout_constraintEnd_toEndOf="parent"
-                android:textColor="@color/white"
+                android:textColor="@color/tv_grey"
                 android:src="@drawable/ic_baseline_menu_24"
-                />
+                android:contentDescription="@string/menu_icon" />
             <TextView
                 android:id="@+id/tv_welcome"
                 android:layout_width="wrap_content"
@@ -57,6 +59,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_welcome"
                 android:textColor="@color/white"
+                android:textSize="14sp"
                 android:text="@string/welcome_date"/>
             <TextView
                 android:id="@+id/tv_message"
@@ -65,49 +68,61 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 android:textColor="@color/white"
-                android:layout_marginBottom="16dp"
-                android:textStyle="bold"
+                android:layout_marginBottom="31dp"
+                android:textSize="14sp"
                 android:text="@string/welcome_remember"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </Toolbar>
+
+    <ScrollView
+        android:id="@+id/scrool_container"
+        android:layout_width="0sp"
+        android:layout_height="0sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"
+        app:layout_constraintBottom_toBottomOf="parent">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cl_main"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginEnd="24dp"
+        android:layout_marginStart="28dp"
+        android:layout_marginEnd="28dp"
         app:layout_constraintTop_toBottomOf="@id/toolbar">
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/mc_calendar"
             android:layout_width="match_parent"
-            android:layout_height="293dp"
-            android:layout_marginTop="24dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="34dp"
             android:elevation="50dp"
-            app:cardCornerRadius="30dp"
+            app:cardCornerRadius="25dp"
             app:layout_constraintTop_toTopOf="parent"
             >
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:padding="8sp">
+                >
 
                 <ImageView
                     android:id="@+id/v_back"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    app:tint="@color/blue_app"
                     app:layout_constraintTop_toTopOf="@id/tv_month"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toStartOf="@id/tv_month"
+                    app:layout_constraintBottom_toBottomOf="@+id/tv_month"
                     android:src="@drawable/ic_back"
-                />
+                    android:contentDescription="@string/back_arrow_button" />
                 <TextView
                     android:id="@+id/tv_month"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/month"
-                    android:textColor="#076AB6"
+                    android:textColor="@color/blue_app"
+                    android:textSize="12sp"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintStart_toEndOf="@id/v_back"
                     app:layout_constraintEnd_toStartOf="@id/v_next"
@@ -117,11 +132,13 @@
                     android:id="@+id/v_next"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    app:tint="@color/blue_app"
                     app:layout_constraintTop_toTopOf="@id/tv_month"
+                    app:layout_constraintBottom_toBottomOf="@+id/tv_month"
                     app:layout_constraintStart_toEndOf="@id/tv_month"
                     app:layout_constraintEnd_toEndOf="parent"
                     android:src="@drawable/ic_next"
-                    />
+                    android:contentDescription="@string/next_arrow_button" />
                 <View
                     android:id="@+id/v_separation1"
                     android:layout_width="0dp"
@@ -130,80 +147,76 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_month"
                     android:layout_marginTop="8dp"
-                    android:background="#f2f2f2"
+                    android:background="@color/text_hint"
                     />
-                <TextView
-                    android:id="@+id/tv_monday"
-                    android:layout_width="wrap_content"
+
+                <LinearLayout
+                    android:id="@+id/days_container"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:orientation="horizontal"
                     app:layout_constraintTop_toBottomOf="@id/v_separation1"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginStart="8dp"
-                    android:textStyle="bold"
-                    app:layout_constraintStart_toStartOf="parent"
-                    android:text="@string/monday"
-                    />
-                <TextView
-                    android:id="@+id/tv_tuesday"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginStart="8dp"
-                    android:textStyle="bold"
-                    app:layout_constraintTop_toBottomOf="@id/v_separation1"
-                    app:layout_constraintStart_toEndOf="@id/tv_monday"
-                    app:layout_constraintEnd_toStartOf="@id/tv_wednesday"
-                    android:text="@string/tuesday"
-                    />
-                <TextView
-                    android:id="@+id/tv_wednesday"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginStart="8dp"
-                    android:textStyle="bold"
-                    app:layout_constraintTop_toBottomOf="@id/v_separation1"
-                    app:layout_constraintStart_toEndOf="@id/tv_tuesday"
-                    app:layout_constraintEnd_toStartOf="@id/tv_thursday"
-                    android:text="@string/Wednesday"
-                    />
-                <TextView
-                    android:id="@+id/tv_thursday"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginStart="8dp"
-                    android:textStyle="bold"
-                    app:layout_constraintTop_toBottomOf="@id/v_separation1"
-                    app:layout_constraintStart_toEndOf="@id/tv_wednesday"
-                    app:layout_constraintEnd_toEndOf="@id/tv_friday"
-                    android:text="@string/Thursday"
-                    />
-                <TextView
-                    android:id="@+id/tv_friday"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:textStyle="bold"
-                    app:layout_constraintTop_toBottomOf="@id/v_separation1"
-                    app:layout_constraintStart_toEndOf="@id/tv_thursday"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    android:text="@string/Friday"
-                    />
+                    >
+                    <TextView
+                        android:id="@+id/tv_monday"
+                        android:layout_width="0sp"
+                        android:layout_height="wrap_content"
+                        android:text="@string/monday"
+                        android:layout_weight="1"
+                        android:textAlignment="center"
+                        android:textColor="@color/text1"
+                        />
+                    <TextView
+                        android:id="@+id/tv_tuesday"
+                        android:layout_width="0sp"
+                        android:layout_height="wrap_content"
+                        android:text="@string/tuesday"
+                        android:layout_weight="1"
+                        android:textAlignment="center"
+                        android:textColor="@color/text1"
+                        />
+                    <TextView
+                        android:id="@+id/tv_wednesday"
+                        android:layout_width="0sp"
+                        android:layout_height="wrap_content"
+                        android:text="@string/Wednesday"
+                        android:layout_weight="1"
+                        android:textAlignment="center"
+                        android:textColor="@color/text1"
+                        />
+                    <TextView
+                        android:id="@+id/tv_thursday"
+                        android:layout_width="0sp"
+                        android:layout_height="wrap_content"
+                        android:text="@string/Thursday"
+                        android:layout_weight="1"
+                        android:textAlignment="center"
+                        android:textColor="@color/text1"
+                        />
+                    <TextView
+                        android:id="@+id/tv_friday"
+                        android:layout_width="0sp"
+                        android:layout_height="wrap_content"
+                        android:text="@string/Friday"
+                        android:layout_weight="1"
+                        android:textAlignment="center"
+                        android:textColor="@color/text1"
+                        />
+                </LinearLayout>
+
                 <View
                     android:id="@+id/v_separation2"
                     android:layout_width="0dp"
                     android:layout_height="1dp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tv_friday"
-                    android:layout_marginTop="8dp"
+                    app:layout_constraintTop_toBottomOf="@id/days_container"
+                    android:layout_marginTop="3dp"
                     />
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recycler_calendar"
                     android:layout_width="match_parent"
-                    android:layout_height="0sp"
+                    android:layout_height="match_parent"
                     tools:listitem="@layout/day_view"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -212,6 +225,7 @@
                     android:nestedScrollingEnabled="false"
                     app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
                     app:spanCount="5"/>
+
             </androidx.constraintlayout.widget.ConstraintLayout>
         </com.google.android.material.card.MaterialCardView>
 
@@ -221,16 +235,18 @@
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@id/mc_calendar"
             android:text="@string/Today_on_office"
-            android:textSize="18sp"
-            android:textColor="#6a6a6a"
+            android:textSize="24sp"
+            android:textColor="@color/text1"
             android:textStyle="bold"
-            android:layout_marginTop="36dp"/>
+            android:layout_marginTop="34dp"/>
+
         <TextView
             android:id="@+id/tv_assist"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@id/tv_actual_month"
-            android:textColor="#6a6a6a"
+            android:textSize="14sp"
+            android:textColor="@color/text1"
             android:text="@string/Total_assist"/>
 
         <com.google.android.material.card.MaterialCardView
@@ -250,6 +266,8 @@
 
         </com.google.android.material.card.MaterialCardView>
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
 
     <com.google.android.material.bottomappbar.BottomAppBar
         android:id="@+id/bm_main"

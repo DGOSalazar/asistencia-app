@@ -1,10 +1,13 @@
 package com.example.myapplication.data.network
 
 import android.net.Uri
+import android.util.Log
 import com.example.myapplication.data.models.LoginResult
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.storage.StorageReference
 import kotlinx.coroutines.tasks.await
+import java.io.File
+import java.io.FileInputStream
 import java.util.*
 import javax.inject.Inject
 
@@ -21,6 +24,12 @@ class FirebaseServices @Inject constructor(
 
     suspend fun uploadPhoto(uri:Uri)= runCatching {
         val imgName: StorageReference = firebase.dataStorage.child("image${uri.lastPathSegment}")
+        val uploadTask = imgName.putFile(uri)
+        uploadTask.addOnFailureListener {
+           Log.d("Upload", "error to upload image")
+        }.addOnSuccessListener { taskSnapshot ->
+            Log.d("Upload", "successfully upload")
+        }
     }
 
     fun registerUserData(email: String, name: String, position: String="", birthDate: String, team: String, profilePhoto: String, phone: String) = run {

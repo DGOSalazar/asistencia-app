@@ -1,5 +1,6 @@
 package com.example.myapplication.ui.register
 
+import android.app.Activity
 import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.net.Uri
@@ -11,6 +12,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.activity.result.ActivityResultCallback
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -56,7 +60,7 @@ class RegisterFragment : Fragment() {
                 override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
 
                 override fun onTextChanged(text: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                    if (text.isNullOrBlank())
+                    if (!text.isNullOrBlank())
                         validateEmail(text as String)
                 }
 
@@ -67,7 +71,7 @@ class RegisterFragment : Fragment() {
                 override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
 
                 override fun onTextChanged(text: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                    if (text.isNullOrBlank())
+                    if (!text.isNullOrBlank())
                         validatePassword(text as String)
                 }
 
@@ -77,8 +81,7 @@ class RegisterFragment : Fragment() {
             bnRegister.setOnClickListener{
                 if (isValidEmail && isValidPassword)
                     viewModel.register(inputEmail.text.toString(), inputPassword.text.toString())
-
-                if (isValidFields()) {
+                else if (isValidFields()) {
                     viewModel.saveUserData(
                         name = inputName.text.toString(),
                         birthdate = inputBirthDate.text.toString(),
@@ -94,13 +97,28 @@ class RegisterFragment : Fragment() {
             }
             btUpload.setOnClickListener {
                 openGallery()
+
             }
         }
     }
     private fun openGallery(){
-        val gallery = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
-        startActivityForResult(gallery, SELECT_FILE)
+        //val gallery = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
+        //startActivityForResult(gallery, SELECT_FILE)
+        val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
+        resultLauncher.launch(intent)
     }
+
+    var resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == RESULT_OK) {
+            val data: Intent? = result.data
+            imageUri = data?.data
+            foto_gallery?.setImageURI(imageUri)
+            mBinding.btUpload.setImageURI(imageUri)
+            imageUri?.let { viewModel.uploadImage(it) }
+        }
+    }
+
+    /*
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if(resultCode == RESULT_OK && requestCode == SELECT_FILE){
@@ -109,6 +127,7 @@ class RegisterFragment : Fragment() {
             mBinding.btUpload.setImageURI(imageUri)
         }
     }
+     */
 
     private fun isValidFields(): Boolean {
         return true

@@ -4,99 +4,182 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".ui.login.LoginFragment"
-    android:background="@color/blueCoppel">
+    tools:context=".ui.login.LoginFragment">
 
     <ImageView
-        android:id="@+id/iv_logo"
-        android:layout_width="200dp"
-        android:layout_height="100dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/background_login"
+        android:scaleType="fitStart"
+        android:contentDescription="@string/login_background" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/background_login"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/top_view"
+        android:layout_width="match_parent"
+        android:layout_height="235dp"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/title_login"
-        android:src="@drawable/derecho"
-        />
-    <TextView
-        android:id="@+id/title_login"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Registro asistencia Semanal"
-        android:textColor="@color/white"
-        app:layout_constraintTop_toBottomOf="@id/iv_logo"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/il_mail"
-        android:textSize="22dp"
-        android:textStyle="bold"/>
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:elevation="3dp">
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/il_mail"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/title_login"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:hint="Ingresa tu Correo Electronico"
-        android:animateLayoutChanges="true"
-        app:layout_constraintBottom_toTopOf="@id/il_pass">
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/input_email"
-            android:maxLines="1"
-            android:maxLength="30"
-            android:layout_width="match_parent"
+        <LinearLayout
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            />
-    </com.google.android.material.textfield.TextInputLayout>
+            android:orientation="horizontal"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:gravity="center">
+            <ImageView
+                android:layout_width="57dp"
+                android:layout_height="42dp"
+                android:src="@drawable/ic_coppel"
+                android:layout_marginEnd="12dp"
+                android:contentDescription="@string/icon_coppel" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/asistence_title"
+                android:textColor="@color/white"
+                android:textSize="22sp"/>
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="0sp"
+        app:layout_constraintTop_toBottomOf="@+id/top_view"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:background="@drawable/bg_login_container"
+        android:paddingHorizontal="30dp">
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/il_pass"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/il_mail"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:hint="ingresa tu contraseña"
-        android:animateLayoutChanges="true"
-        app:layout_constraintBottom_toTopOf="@id/bn_register">
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/input_pass"
-            android:maxLines="1"
-            android:maxLength="8"
-            android:layout_width="match_parent"
+        <ImageView
+            android:id="@+id/iv_logo"
+            android:layout_width="113dp"
+            android:layout_height="19dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/title_login"
+            android:src="@drawable/logo_bancoppel"
+            android:contentDescription="@string/icon_bancoppel" />
+        <TextView
+            android:id="@+id/title_login"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            />
-    </com.google.android.material.textfield.TextInputLayout>
+            android:text="@string/welcome"
+            android:textColor="@color/blue_app"
+            app:layout_constraintTop_toBottomOf="@id/iv_logo"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/il_mail"
+            android:textSize="40sp"
+            android:textStyle="bold"/>
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/bn_login"
-        app:layout_constraintTop_toBottomOf="@id/il_pass"
-        app:layout_constraintStart_toStartOf="@id/il_pass"
-        android:layout_width="180dp"
-        android:layout_height="wrap_content"
-        android:text="Iniciar sesion"
-        app:layout_constraintBottom_toTopOf="@id/tv_forget_pass"
-        />
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/bn_register"
-        app:layout_constraintTop_toBottomOf="@id/il_pass"
-        app:layout_constraintEnd_toEndOf="@id/il_pass"
-        android:layout_width="180dp"
-        android:layout_height="wrap_content"
-        android:text="Registrarme"
-        app:layout_constraintBottom_toTopOf="@id/tv_forget_pass"
-        />
-    <TextView
-        android:id="@+id/tv_forget_pass"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/forget_pass"
-        app:layout_constraintTop_toBottomOf="@id/bn_login"
-        app:layout_constraintStart_toStartOf="@id/bn_login"
-        app:layout_constraintEnd_toEndOf="@id/bn_register"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/il_mail"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/title_login"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:hint="@string/email"
+            android:animateLayoutChanges="true"
+            app:layout_constraintBottom_toTopOf="@id/il_pass"
+            style="@style/Widget.App.TextInputLayout">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/input_email"
+                android:maxLines="1"
+                android:maxLength="30"
+                android:textSize="16sp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/il_pass"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/il_mail"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:hint="@string/password"
+            android:animateLayoutChanges="true"
+            app:layout_constraintBottom_toTopOf="@id/tv_forget_pass"
+            style="@style/Widget.App.TextInputLayout">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/input_pass"
+                android:maxLines="1"
+                android:maxLength="8"
+                android:textSize="16sp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:id="@+id/tv_forget_pass"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/forget_pass"
+            android:textColor="@color/blue_app"
+            android:textStyle="bold"
+            app:layout_constraintTop_toBottomOf="@id/il_pass"
+            app:layout_constraintEnd_toEndOf="@id/il_pass"
+            app:layout_constraintBottom_toTopOf="@+id/bn_login"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/bn_login"
+            app:layout_constraintTop_toBottomOf="@id/tv_forget_pass"
+            app:layout_constraintStart_toStartOf="@id/il_pass"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/register_container"
+            android:layout_width="200dp"
+            android:layout_height="60dp"
+            android:text="@string/enter"
+            android:textAllCaps="false"
+            android:textSize="22sp"
+            app:cornerRadius="30dp"
+            app:backgroundTint="@color/blue_app"
+            />
+
+        <LinearLayout
+            android:id="@+id/register_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@+id/bn_login"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/label_new_account"
+                android:textColor="@color/text1"
+                android:textSize="14sp"/>
+            <TextView
+                android:id="@+id/bn_register"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/new_account"
+                android:textSize="14sp"
+                android:textColor="@color/blue_app"
+                android:textStyle="bold"/>
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

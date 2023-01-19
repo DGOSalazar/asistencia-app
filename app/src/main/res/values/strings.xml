@@ -15,7 +15,20 @@
     <string name="Total_assist">15 Asistentes.</string>
     <string name="name">Jose Alfrredo Jimenez</string>
     <string name="position">          Gerente</string>
-    <string name="forget_pass"><u>¿Olvidaste tu Contraseña?</u></string>
+    <string name="forget_pass">¿Olvidaste tu Contraseña?</string>
+    <string name="email">Correo Electronico</string>
+    <string name="password">Contraseña</string>
+    <string name="asistence_title">Asistencia \nGuadalajara</string>
+    <string name="welcome">¡Bienvenido!</string>
+    <string name="enter">Entrar</string>
+    <string name="new_account">Crear cuenta</string>
+    <string name="label_new_account">¿Eres nuevo?</string>
+    <string name="login_background">login background</string>
+    <string name="icon_coppel">icon coppel</string>
+    <string name="icon_bancoppel">icon bancoppel</string>
+    <string name="menu_icon">menu icon</string>
+    <string name="back_arrow_button">back arrow button</string>
+    <string name="next_arrow_button">next arrow button</string>
 
     <string-array name="positions">
         <item>Android</item>

@@ -18,4 +18,23 @@
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">28dp</item>
     </style>
+
+    <style name="Widget.App.TextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.FilledBox">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.App.TextInputLayout</item>
+        <item name="android:textColorHint">@color/text_hint</item>
+        <item name="boxBackgroundColor">@color/tv_grey</item>
+    </style>
+
+    <style name="ThemeOverlay.App.TextInputLayout" parent="">
+        <item name="colorPrimary">@color/text_hint</item>
+        <item name="colorOnSurface">@color/tv_grey</item>
+        <item name="colorError">@android:color/holo_orange_dark</item>
+        <item name="editTextStyle">@style/Widget.MaterialComponents.TextInputLayout.FilledBox</item>
+    </style>
+
+    <style name="roundedCorners" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">12dp</item>
+    </style>
+
 </resources>
