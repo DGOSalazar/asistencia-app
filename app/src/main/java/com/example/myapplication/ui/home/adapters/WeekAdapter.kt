@@ -13,42 +13,34 @@ import com.example.myapplication.databinding.DaySelectedViewBinding
 
 class WeekAdapter(var weekDays: List<Day>, var click: (Day) -> Unit): RecyclerView.Adapter<WeekAdapter.ViewHolder>() {
 
+    private var isSelected : Int? = null
+    private var selected=false
+
     inner class ViewHolder(view: View): RecyclerView.ViewHolder(view){
         private val mBinding = DaySelectedViewBinding.bind(view)
-        var isChecked=true
+
+
         fun setWeek(){
             mBinding.tvDay.text = weekDays[adapterPosition].name
             mBinding.tvNumDay.text = weekDays[adapterPosition].num.toString()
+            mBinding.mcMain.visibility = if(weekDays[adapterPosition].selected){View.GONE} else {View.VISIBLE}
+            mBinding.mcSelected.visibility = if(weekDays[adapterPosition].selected){View.VISIBLE} else {View.GONE}
         }
         fun selectDay(click:(Day)->Unit){
-            mBinding.root.setOnClickListener {
+            mBinding.mcMain.setOnClickListener {
                 click(weekDays[adapterPosition])
                 setSelectedDay()
             }
         }
         private fun setSelectedDay(){
-
-            val param = mBinding.mcMain.layoutParams as ViewGroup.MarginLayoutParams
-            param.setMargins(0,0,30,0)
-            if(isChecked)
-            with(mBinding) {
-                mcMain.layoutParams.height = 180
-                mcMain.layoutParams.width = 180
-                tvDay.setBackgroundColor(Color.BLUE)
-                tvNumDay.setTextColor(Color.BLACK)
-                param.setMargins(0,0,0,0)
-                mcMain.layoutParams = param
-                isChecked=false
+            if (!selected) {
+                mBinding.mcMain.visibility = View.GONE
+                mBinding.mcSelected.visibility = View.VISIBLE
+                selected=true
             }else{
-                with(mBinding){
-                    mcMain.layoutParams.height = 150
-                    mcMain.layoutParams.width = 150
-                    tvDay.setBackgroundColor(Color.GRAY)
-                    tvNumDay.setTextColor(Color.GRAY)
-                    param.setMargins(0,0,0,0)
-                    mcMain.layoutParams = param
-                    isChecked=true
-                }
+                mBinding.mcMain.visibility = View.VISIBLE
+                mBinding.mcSelected.visibility = View.GONE
+                selected=false
             }
         }
     }

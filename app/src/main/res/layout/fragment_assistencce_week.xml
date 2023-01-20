@@ -110,7 +110,7 @@
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/bt_add"
                         android:layout_width="wrap_content"
-                        android:layout_height="80dp"
+                        android:layout_height="60dp"
                         android:backgroundTint="@color/blueCoppel"
                         app:layout_constraintTop_toBottomOf="@id/recycler_week"
                         app:layout_constraintStart_toStartOf="parent"
@@ -123,9 +123,6 @@
                         />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-
                 <TextView
                     android:id="@+id/tv_actual_month"
                     android:layout_width="match_parent"
@@ -156,45 +153,4 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </ScrollView>
-
-        <com.google.android.material.bottomappbar.BottomAppBar
-            android:id="@+id/bm_main"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
-            tools:ignore="BottomAppBar">
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-                <ImageView
-                    android:id="@+id/home"
-                    android:layout_width="100dp"
-                    android:layout_height="match_parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toStartOf="@id/team"
-                    android:src="@drawable/ic_home"
-                    />
-                <ImageView
-                    android:id="@+id/team"
-                    android:layout_width="100dp"
-                    android:layout_height="match_parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/home"
-                    app:layout_constraintEnd_toStartOf="@id/myProfile"
-                    android:src="@drawable/ic_group"
-                    />
-                <ImageView
-                    android:id="@+id/myProfile"
-                    android:layout_width="100dp"
-                    android:layout_height="match_parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/team"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    android:src="@drawable/ic_my_profile"
-                    />
-            </androidx.constraintlayout.widget.ConstraintLayout>
-        </com.google.android.material.bottomappbar.BottomAppBar>
-
-
     </androidx.constraintlayout.widget.ConstraintLayout>

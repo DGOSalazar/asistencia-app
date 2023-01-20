@@ -1,11 +1,12 @@
 package com.example.myapplication.ui.home
 
+import android.os.Build
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.OnBackPressedCallback
+import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.myapplication.R
@@ -14,13 +15,17 @@ import com.example.myapplication.data.models.User
 import com.example.myapplication.databinding.FragmentAssistencceWeekBinding
 import com.example.myapplication.ui.home.adapters.UserAdapter
 import com.example.myapplication.ui.home.adapters.WeekAdapter
+import java.time.LocalDate
 
 class AssistenceWeekFragment : Fragment(R.layout.fragment_assistencce_week) {
 
     private lateinit var mBinding : FragmentAssistencceWeekBinding
     private lateinit var mAdapter: WeekAdapter
     private lateinit var mUserAdapter: UserAdapter
-    val weekDays: List<Day> = listOf(Day(), Day(),Day(),Day(),Day())
+    val weekDays: ArrayList<Day> = arrayListOf(Day(selected = true), Day(),Day(),Day(),Day())
+    var day: Day = Day()
+    @RequiresApi(Build.VERSION_CODES.O)
+    var localDate: LocalDate = LocalDate.now()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -33,6 +38,10 @@ class AssistenceWeekFragment : Fragment(R.layout.fragment_assistencce_week) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        arguments?.let {
+            day = AssistenceWeekFragmentArgs.fromBundle(it).day
+        }
         setListeners()
         //subscribeLiveData()
         setDaysAdapter()

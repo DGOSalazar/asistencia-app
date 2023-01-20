@@ -31,6 +31,9 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main), OnTo
     private var dayList : ArrayList<Day> = arrayListOf()
     private var xPreviousPosition = 0f
 
+    private  lateinit var bundleNum :Bundle
+    private lateinit var bundleDay : Bundle
+
     @RequiresApi(Build.VERSION_CODES.O)
     var localDate: LocalDate= LocalDate.now()
 
@@ -73,9 +76,8 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main), OnTo
     @SuppressLint("NotifyDataSetChanged")
     @RequiresApi(Build.VERSION_CODES.O)
     private fun setCurrentDate() {
-        val  yearMonth = YearMonth.from(localDate)
+        val yearMonth = YearMonth.from(localDate)
         val firstOfMonth= localDate.withDayOfMonth(1)
-        val numMonth= localDate.dayOfMonth
 
         val daysOfMonth= yearMonth.lengthOfMonth()
         val dayOfWeek= firstOfMonth.dayOfWeek.value
@@ -95,7 +97,7 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main), OnTo
                 }else{
                     val isSundayOrSaturdy2 = localDate.withDayOfMonth(i-dayOfWeek).dayOfWeek.value !in 6..7
                     if (isSundayOrSaturdy2)
-                        tempDays.add(Day(num = i-dayOfWeek, profilePhoto = true,freePlaces = true))
+                        tempDays.add(Day(name = localDate.withDayOfMonth(i-dayOfWeek).dayOfWeek.toString(),num = i-dayOfWeek, profilePhoto = true,freePlaces = true))
                 }
             }
         }
@@ -174,7 +176,7 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main), OnTo
         return false
     }
     private fun click(day:Day){
-        findNavController().navigate(R.id.action_assistenceMainFragment_to_assistenceWeekFragment)
+        findNavController().navigate(AssistenceMainFragmentDirections.actionAssistenceMainFragmentToAssistenceWeekFragment(day))
     }
 
 }

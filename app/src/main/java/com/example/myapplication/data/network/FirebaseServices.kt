@@ -3,12 +3,10 @@ package com.example.myapplication.data.network
 import android.net.Uri
 import android.util.Log
 import com.example.myapplication.data.models.LoginResult
+import com.example.myapplication.data.models.User
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.storage.StorageReference
 import kotlinx.coroutines.tasks.await
-import java.io.File
-import java.io.FileInputStream
-import java.util.*
 import javax.inject.Inject
 
 class FirebaseServices @Inject constructor(
@@ -31,15 +29,18 @@ class FirebaseServices @Inject constructor(
             Log.d("Upload", "successfully upload")
         }
     }
-
-    fun registerUserData(email: String, name: String, position: String="", birthDate: String, team: String, profilePhoto: String, phone: String) = run {
-        firebase.dataBase.collection("Users").document(email).set(
-            hashMapOf("name" to name,
-                "position" to position,
-                "birthDate" to birthDate,
-                "team" to team,
-                "profilePhoto" to profilePhoto,
-                "phone" to phone)
+    fun registerUserData(user: User) = run {
+        firebase.dataBase.collection("Users").document(user.email).set(
+            hashMapOf("name" to user.name,
+                "lastName1" to user.lastName1,
+                "lastName2" to user.lastName2,
+                "position" to user.position,
+                "birthDate" to user.birthDate,
+                "team" to user.team,
+                "profilePhoto" to user.profilePhoto,
+                "phone" to user.phone,
+                "employee" to user.employee,
+                "assistDay" to user.assistDay)
         )
     }.isSuccessful
 
