@@ -78,7 +78,13 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main), OnTo
             nextMonthAction()
         }
         mBinding.recyclerCalendar.setOnTouchListener(this)
+        mBinding.home.setOnClickListener{
+            moveNavSelector(it)
+        }
         mBinding.team.setOnClickListener{
+            moveNavSelector(it)
+        }
+        mBinding.myProfile.setOnClickListener{
             moveNavSelector(it)
         }
     }
@@ -135,16 +141,29 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main), OnTo
         return date.format(formatter)
     }
 
+    @SuppressLint("UseCompatLoadingForDrawables")
     private fun moveNavSelector(view: View) {
         when(view.id){
             R.id.home ->{
-
+                mBinding.containerSelectorNav.updateLayoutParams<ConstraintLayout.LayoutParams> {
+                    startToStart = mBinding.home.id
+                    endToEnd = mBinding.home.id
+                }
+                mBinding.imgSelectorNav.setImageDrawable(requireContext().getDrawable(R.drawable.ic_home))
             }
             R.id.team ->{
-
+                mBinding.containerSelectorNav.updateLayoutParams<ConstraintLayout.LayoutParams> {
+                    startToStart = mBinding.team.id
+                    endToEnd = mBinding.team.id
+                }
+                mBinding.imgSelectorNav.setImageDrawable(requireContext().getDrawable(R.drawable.ic_group))
             }
             R.id.myProfile ->{
-
+                mBinding.containerSelectorNav.updateLayoutParams<ConstraintLayout.LayoutParams> {
+                    startToStart = mBinding.myProfile.id
+                    endToEnd = mBinding.myProfile.id
+                }
+                mBinding.imgSelectorNav.setImageDrawable(requireContext().getDrawable(R.drawable.ic_my_profile))
             }
             else -> { }
         }
