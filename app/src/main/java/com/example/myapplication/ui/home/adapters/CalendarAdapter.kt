@@ -9,7 +9,7 @@ import com.example.myapplication.R
 import com.example.myapplication.databinding.DayViewBinding
 import com.example.myapplication.data.models.Day
 
-class CalendarAdapter(private var days: ArrayList<Day> = arrayListOf()): RecyclerView.Adapter<CalendarAdapter.ViewHolder>() {
+class CalendarAdapter(private var days: ArrayList<Day> = arrayListOf(),private var click:(Day)-> Unit ): RecyclerView.Adapter<CalendarAdapter.ViewHolder>() {
 
 
     inner class ViewHolder(view: View):RecyclerView.ViewHolder(view){
@@ -33,6 +33,11 @@ class CalendarAdapter(private var days: ArrayList<Day> = arrayListOf()): Recycle
                 mBinding.mcIsToday.visibility= if(day.isToday) View.VISIBLE else View.GONE
             }
         }
+        fun getDay(click:(Day)->Unit){
+            mBinding.root.setOnClickListener {
+                click(days[adapterPosition])
+            }
+        }
     }
     fun setCalendarData(days: ArrayList<Day>){
         this.days=days
@@ -45,6 +50,7 @@ class CalendarAdapter(private var days: ArrayList<Day> = arrayListOf()): Recycle
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         with(holder){
             mountCalendar()
+            getDay(click)
         }
     }
 

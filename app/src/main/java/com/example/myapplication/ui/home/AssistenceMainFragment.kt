@@ -8,10 +8,12 @@ import android.view.*
 import android.view.View.OnTouchListener
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.myapplication.R
 import com.example.myapplication.data.models.Day
+import com.example.myapplication.data.models.User
 import com.example.myapplication.databinding.FragmentAssistenceMainBinding
 import com.example.myapplication.ui.home.adapters.CalendarAdapter
 import com.example.myapplication.ui.home.adapters.UserAdapter
@@ -116,14 +118,16 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main), OnTo
     }
 
     private fun setUserAdapter() {
-        mUserAdapter = UserAdapter()
+        mUserAdapter = UserAdapter(user= listOf(User(),User(),User(),User()) )
         mBinding.recyclerUsers.apply {
             layoutManager= LinearLayoutManager(activity?.applicationContext)
             adapter=mUserAdapter
         }
     }
     private fun setCalendarAdapter(){
-        mCalendarAdapter = CalendarAdapter()
+        mCalendarAdapter = CalendarAdapter(){
+            click(it)
+        }
         mBinding.recyclerCalendar.apply {
             layoutManager= GridLayoutManager(activity?.applicationContext,5)
             adapter=mCalendarAdapter
@@ -168,6 +172,9 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main), OnTo
             return true
         }
         return false
+    }
+    private fun click(day:Day){
+        findNavController().navigate(R.id.action_assistenceMainFragment_to_assistenceWeekFragment)
     }
 
 }
