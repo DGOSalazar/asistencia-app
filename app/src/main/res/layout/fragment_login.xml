@@ -104,6 +104,7 @@
                 android:textSize="16sp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:text="humberto.macias@coppel.com"
                 />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -127,6 +128,7 @@
                 android:textSize="16sp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:text="123456"
                 />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -169,7 +171,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/label_new_account"
-                android:textColor="@color/text1"
+                android:textColor="@color/grey2"
                 android:textSize="14sp"/>
             <TextView
                 android:id="@+id/bn_register"

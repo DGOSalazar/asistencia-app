@@ -81,7 +81,7 @@ class RegisterFragment : Fragment() {
             bnRegister.setOnClickListener{
                 if (isValidEmail && isValidPassword)
                     viewModel.register(inputEmail.text.toString(), inputPassword.text.toString())
-                else if (isValidFields()) {
+                if (isValidFields()) {
                     viewModel.saveUserData(
                         name = inputName.text.toString(),
                         birthdate = inputBirthDate.text.toString(),

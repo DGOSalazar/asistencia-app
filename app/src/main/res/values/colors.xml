@@ -13,9 +13,19 @@
     <color name="background_login">#94002299</color>
     <color name="blue_app">#2A4EA9</color>
 
-    <color name="tv_grey">#F3F3F3</color>
-    <color name="text1">#505050</color>
-    <color name="text_hint">#B2B2B2</color>
-    <color name="yellow">#E9F8AD</color>
+    <color name="grey1">#F3F3F3</color>
+    <color name="grey2">#505050</color>
+    <color name="grey3">#B2B2B2</color>
+    <color name="grey4">#DDDDDD</color>
+    <color name="grey5">#B2B2B2</color>
+
+    <color name="blue1">#7FD6EA</color>
+    <color name="blue2">#9DB2B7</color>
+
+    <color name="qa_color">#E9F8AD</color>
+    <color name="android_color">#C1F8AD</color>
+    <color name="analyst_color">#F8ADE7</color>
+    <color name="back_color">#ADE1F8</color>
+    <color name="scrum_color">#F8ADAD</color>
 
 </resources>

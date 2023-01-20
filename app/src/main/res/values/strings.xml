@@ -30,6 +30,8 @@
     <string name="back_arrow_button">back arrow button</string>
     <string name="next_arrow_button">next arrow button</string>
 
+    <string name="free_days">%1$d Disponibles</string>
+
     <string-array name="positions">
         <item>Android</item>
         <item>IOS</item>
