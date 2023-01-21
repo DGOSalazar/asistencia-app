@@ -38,13 +38,13 @@ class GenerateMonthDaysUseCase @Inject constructor() {
                     val day = i-dayOfWeek
                     if (day == currentDay && monthSelected == currentMonth){
                         today = day
-                        tempDays.add(Day(num = day, profilePhoto = "",freePlaces = true, isToday = true))
+                        tempDays.add(Day(num = day, profilePhoto = false,freePlaces = true, isToday = true))
                     }
                     else{
                         if (day % 2 == 0)
-                            tempDays.add(Day(num = day, profilePhoto = "",freePlaces = true, places = 12))
+                            tempDays.add(Day(num = day, profilePhoto = false,freePlaces = true, places = 12))
                         else
-                            tempDays.add(Day(num = day, profilePhoto = "",freePlaces = true))
+                            tempDays.add(Day(num = day, profilePhoto = false,freePlaces = true))
                     }
                 }
             }

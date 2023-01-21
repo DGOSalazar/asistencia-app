@@ -79,7 +79,7 @@
                         android:text="Juan Carlos ¿Deseas asistir"
                         app:layout_constraintTop_toTopOf="parent"
                         android:textSize="24sp"
-                        android:textColor="@color/text1"
+                        android:textColor="@color/grey2"
                         android:layout_marginTop="34dp"/>
                     <TextView
                         android:id="@+id/tv_title_assist2"
@@ -89,7 +89,7 @@
                         app:layout_constraintTop_toBottomOf="@id/tv_title_assist"
                         app:layout_constraintStart_toStartOf="parent"
                         android:textSize="24sp"
-                        android:textColor="@color/text1"
+                        android:textColor="@color/grey2"
                         android:textStyle="bold"/>
 
                     <androidx.recyclerview.widget.RecyclerView
@@ -130,7 +130,7 @@
                     app:layout_constraintTop_toBottomOf="@id/cl_question"
                     android:text="7 Asistentes:"
                     android:textSize="24sp"
-                    android:textColor="@color/text1"
+                    android:textColor="@color/grey2"
                     android:textStyle="bold"
                     android:layout_marginTop="34dp"/>
 

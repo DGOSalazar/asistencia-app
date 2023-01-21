@@ -111,7 +111,16 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main), OnTo
 
     private fun setUserAdapter() {
         viewModel.getUserDate()
-        mUserAdapter = UserAdapter()
+        mUserAdapter = UserAdapter(
+            user= listOf(
+                User("example@coppel.com", "Ramon", "Coppel", "Coppel", "Gerente Senior"),
+                User("example@coppel.com", "Ramon", "Coppel", "Coppel", "Gerente Senior"),
+                User("example@coppel.com", "Ramon", "Coppel", "Coppel", "Gerente Senior"),
+                User("example@coppel.com", "Ramon", "Coppel", "Coppel", "Gerente Senior"),
+                User("example@coppel.com", "Ramon", "Coppel", "Coppel", "Gerente Senior"),
+                User("example@coppel.com", "Ramon", "Coppel", "Coppel", "Gerente Senior")
+            )
+        )
         mBinding.recyclerUsers.apply {
             layoutManager = LinearLayoutManager(activity?.applicationContext)
             adapter = mUserAdapter

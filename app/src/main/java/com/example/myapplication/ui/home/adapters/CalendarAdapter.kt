@@ -12,10 +12,10 @@ import com.example.myapplication.R
 import com.example.myapplication.databinding.DayViewBinding
 import com.example.myapplication.data.models.Day
 
-class CalendarAdapter(private var days: ArrayList<Day> = arrayListOf(),private var click:(Day)-> Unit ): RecyclerView.Adapter<CalendarAdapter.ViewHolder>() {
-const val FIRST_DAY_LAST_WEEK = 20
 
-class CalendarAdapter(private var days: ArrayList<Day> = arrayListOf()): RecyclerView.Adapter<CalendarAdapter.ViewHolder>() {
+const val FIRST_DAY_LAST_WEEK = 20
+class CalendarAdapter(private var days: ArrayList<Day> = arrayListOf(),private var click:(Day)-> Unit ): RecyclerView.Adapter<CalendarAdapter.ViewHolder>() {
+//class CalendarAdapter(private var days: ArrayList<Day> = arrayListOf()): RecyclerView.Adapter<CalendarAdapter.ViewHolder>() {
 
     var today:Int = 0
     var isPastMonth:Boolean = false
