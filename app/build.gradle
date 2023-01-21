@@ -5,6 +5,8 @@ plugins {
     id 'dagger.hilt.android.plugin'
     id 'kotlin-android'
     id 'kotlin-kapt'
+    id("androidx.navigation.safeargs")
+    id 'kotlin-parcelize'
 }
 
 android {
@@ -72,7 +74,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth-ktx'
     implementation 'com.google.firebase:firebase-firestore-ktx'
     implementation 'com.google.firebase:firebase-storage-ktx'
-
+    //
     //Compressor
     implementation 'id.zelory:compressor:3.0.1'
     //Glide

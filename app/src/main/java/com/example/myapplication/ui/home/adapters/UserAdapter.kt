@@ -8,15 +8,13 @@ import com.example.myapplication.R
 import com.example.myapplication.databinding.ColaboratorViewBinding
 import com.example.myapplication.data.models.User
 
-val userList = listOf(User(name="Hector Coppel Ramirez"), User(), User(), User(), User(), User())
-
-class UserAdapter(private var user: List<User> = userList): RecyclerView.Adapter<UserAdapter.ViewHolder>() {
+class UserAdapter(private var user: List<User>): RecyclerView.Adapter<UserAdapter.ViewHolder>() {
 
     inner class ViewHolder(view: View):RecyclerView.ViewHolder(view){
-        var mBinding= ColaboratorViewBinding.bind(view)
+        private var mBinding= ColaboratorViewBinding.bind(view)
         fun mountUsers(){
             mBinding.tvName.text=user[adapterPosition].name
-            mBinding.tvPosition.text=user[adapterPosition].position
+            mBinding.tvPosition.text=("         ${user[adapterPosition].position}")
         }
     }
 

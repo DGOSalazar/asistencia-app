@@ -13,6 +13,9 @@
         <action
             android:id="@+id/action_assistenceMainFragment_to_loginFragment"
             app:destination="@id/loginFragment" />
+        <action
+            android:id="@+id/action_assistenceMainFragment_to_assistenceWeekFragment"
+            app:destination="@id/assistenceWeekFragment" />
     </fragment>
     <fragment
         android:id="@+id/loginFragment"
@@ -37,5 +40,13 @@
         <action
             android:id="@+id/action_registerFragment_to_assistenceMainFragment"
             app:destination="@id/assistenceMainFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/assistenceWeekFragment"
+        android:name="com.example.myapplication.ui.home.AssistenceWeekFragment"
+        android:label="fragment_assistencce_week"
+        tools:layout="@layout/fragment_assistencce_week">
+        <argument android:name="day"
+            app:argType="com.example.myapplication.data.models.Day"/>
     </fragment>
 </navigation>

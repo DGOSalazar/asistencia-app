@@ -13,10 +13,13 @@ import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.myapplication.R
 import com.example.myapplication.data.models.Month
+import com.example.myapplication.data.models.Day
+import com.example.myapplication.data.models.User
 import com.example.myapplication.databinding.FragmentAssistenceMainBinding
 import com.example.myapplication.ui.home.adapters.CalendarAdapter
 import com.example.myapplication.ui.home.adapters.UserAdapter
@@ -35,6 +38,10 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main), OnTo
 
     private var xPreviousPosition = 0f
 
+    private  lateinit var bundleNum :Bundle
+    private lateinit var bundleDay : Bundle
+
+    @RequiresApi(Build.VERSION_CODES.O)
     var localDate: LocalDate= LocalDate.now()
     private var pastDate =localDate.minusMonths(1)
 
@@ -115,7 +122,9 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main), OnTo
     }
 
     private fun setCalendarAdapter(){
-        mCalendarAdapter = CalendarAdapter()
+        mCalendarAdapter = CalendarAdapter(){
+            click(it)
+        }
         mBinding.recyclerCalendar.apply {
             layoutManager = GridLayoutManager(activity?.applicationContext,5)
             adapter = mCalendarAdapter
@@ -186,6 +195,10 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main), OnTo
             return true
         }
         return false
+    }
+
+    private fun click(day:Day){
+        findNavController().navigate(AssistenceMainFragmentDirections.actionAssistenceMainFragmentToAssistenceWeekFragment(day))
     }
 
 }

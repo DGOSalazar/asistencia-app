@@ -12,6 +12,7 @@ import com.example.myapplication.R
 import com.example.myapplication.databinding.DayViewBinding
 import com.example.myapplication.data.models.Day
 
+class CalendarAdapter(private var days: ArrayList<Day> = arrayListOf(),private var click:(Day)-> Unit ): RecyclerView.Adapter<CalendarAdapter.ViewHolder>() {
 const val FIRST_DAY_LAST_WEEK = 20
 
 class CalendarAdapter(private var days: ArrayList<Day> = arrayListOf()): RecyclerView.Adapter<CalendarAdapter.ViewHolder>() {
@@ -68,6 +69,11 @@ class CalendarAdapter(private var days: ArrayList<Day> = arrayListOf()): Recycle
             }
             mBinding.tvDay.text = String.format("%02d", day.num)
         }
+        fun getDay(click:(Day)->Unit){
+            mBinding.root.setOnClickListener {
+                click(days[adapterPosition])
+            }
+        }
     }
     fun setCalendarData(days: ArrayList<Day>){
         this.days=days
@@ -82,6 +88,7 @@ class CalendarAdapter(private var days: ArrayList<Day> = arrayListOf()): Recycle
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         with(holder){
             mountCalendar()
+            getDay(click)
         }
     }
 
