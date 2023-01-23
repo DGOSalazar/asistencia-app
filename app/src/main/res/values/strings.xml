@@ -31,6 +31,31 @@
     <string name="next_arrow_button">next arrow button</string>
 
     <string name="free_days">%1$d Disponibles</string>
+    <string name="idAnalyst">2131296340</string>
+    <string name="idScrumMaster">2131296699</string>
+    <string name="idQa">2131296671</string>
+    <string name="idAndroid">2131296341</string>
+    <string name="idIos">2131296537</string>
+    <string name="idBack">2131296357</string>
+    <string name="analyst">Analyst</string>
+    <string name="scrummaster">Scrum Master</string>
+    <string name="qa">Quality Assurance</string>
+    <string name="android">Android</string>
+    <string name="ios">IOS</string>
+    <string name="back">Backend</string>
+    <string name="register">Registrarme</string>
+    <string name="text_name">Ingresa tu nombre completo</string>
+    <string name="text_birthday">Ingresa tu fecha de nacimiento</string>
+    <string name="text_phone">Ingresa tu numero de telefono</string>
+    <string name="text_email">Ingresa tu correo electronico</string>
+    <string name="text_pass">Ingresa tu contraseña</string>
+    <string name="text_pass2">Confirma tu contraseña</string>
+    <string name="text_employee">Ingresa tu numero de empleado</string>
+    <string name="text_team">Ingresa el nombre de tu equipo</string>
+    <string name="imagenDescription">.</string>
+    <string name="registro">Registro</string>
+    <string name="upload_photo">Upload photo</string>
+    <string name="o_registrate_con">o registrate con</string>
 
     <string-array name="positions">
         <item>Android</item>

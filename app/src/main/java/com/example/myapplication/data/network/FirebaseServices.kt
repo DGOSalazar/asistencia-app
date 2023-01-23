@@ -2,16 +2,27 @@ package com.example.myapplication.data.network
 
 import android.net.Uri
 import android.util.Log
+import androidx.core.net.toUri
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import com.example.myapplication.data.models.Day
 import com.example.myapplication.data.models.LoginResult
 import com.example.myapplication.data.models.User
 import com.google.firebase.auth.AuthResult
+import com.google.firebase.firestore.Query
 import com.google.firebase.storage.StorageReference
+import kotlinx.coroutines.android.awaitFrame
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.tasks.await
+import java.util.logging.Handler
 import javax.inject.Inject
 
 class FirebaseServices @Inject constructor(
     private val firebase: FirebaseClient
 ){
+    private var url: Uri? =null
+
     suspend fun login(email: String, pass: String): LoginResult = runCatching {
          firebase.auth.signInWithEmailAndPassword(email,pass).await()
      }.toLoginResult()
@@ -20,17 +31,35 @@ class FirebaseServices @Inject constructor(
         firebase.auth.createUserWithEmailAndPassword(email,pass).await()
     }
 
-    suspend fun uploadPhoto(uri:Uri)= runCatching {
-        val imgName: StorageReference = firebase.dataStorage.child("image${uri.lastPathSegment}")
-        val uploadTask = imgName.putFile(uri)
-        uploadTask.addOnFailureListener {
-           Log.d("Upload", "error to upload image")
-        }.addOnSuccessListener { taskSnapshot ->
-            Log.d("Upload", "successfully upload")
+    fun uploadPhoto(uri:Uri) = runCatching {
+        val ref: StorageReference = firebase.dataStorage.child("image${uri.lastPathSegment}")
+        val uploadTask = ref.putFile(uri)
+
+        uploadTask.continueWithTask { task ->
+            if (!task.isSuccessful) {
+                task.exception?.let {
+                    throw it
+                }
+            }
+            ref.downloadUrl
+        }.addOnFailureListener {
+            Log.d("Upload", "error to upload image")
+        }.addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                url = task.result!!
+                Log.d("Upload", "successfully upload")
+            }
         }
     }
+    suspend fun getUrlF(): Uri? = run {
+        while (url==null){
+            delay(1000)
+        }
+        url
+    }
+
     fun registerUserData(user: User) = run {
-        firebase.dataBase.collection("Users").document(user.email).set(
+        firebase.userCollection.document(user.email).set(
             hashMapOf("name" to user.name,
                 "lastName1" to user.lastName1,
                 "lastName2" to user.lastName2,
@@ -43,6 +72,19 @@ class FirebaseServices @Inject constructor(
                 "assistDay" to user.assistDay)
         )
     }.isSuccessful
+
+    fun registerUserOnSelectedDay(email: String, currentDay: Day){
+        firebase.dayCollection.document(email).set(
+            hashMapOf(
+                "email" to email,
+                "currentDay" to currentDay
+            )
+        )
+    }
+
+    fun getCurrentRegisters(date: String, currentDay: Day): Query = run {
+        return firebase.dayCollection.whereEqualTo(date,currentDay)
+    }
 
     private fun Result<AuthResult>.toLoginResult() =
         when (val result = getOrNull()){

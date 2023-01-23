@@ -1,24 +1,22 @@
 package com.example.myapplication.ui.register
 
-import android.app.Activity
 import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import androidx.activity.result.ActivityResultCallback
-import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.example.myapplication.R
+import com.example.myapplication.core.extensionFun.toast
+import com.example.myapplication.data.models.User
+import com.example.myapplication.data.network.FirebaseServices
 import com.example.myapplication.databinding.FragmentRegisterBinding
 
 
@@ -33,11 +31,19 @@ class RegisterFragment : Fragment() {
     var imageUri: Uri? = null
     var foto_gallery: ImageView? = null
 
+    private var resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == RESULT_OK) {
+            val data: Intent? = result.data
+            imageUri = data?.data
+            foto_gallery?.setImageURI(imageUri)
+            mBinding.btUpload.setImageURI(imageUri)
+            imageUri?.let { viewModel.uploadImage(it) }
+        }
+    }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         mBinding = FragmentRegisterBinding.inflate(layoutInflater, container,false)
         return mBinding.root
     }
@@ -52,44 +58,33 @@ class RegisterFragment : Fragment() {
         viewModel.registerFlag.observe(viewLifecycleOwner){
             findNavController().navigate(R.id.action_registerFragment_to_assistenceMainFragment)
         }
+        viewModel.urlPhoto.observe(viewLifecycleOwner){
+            imageUri = it
+            context?.toast(viewModel.urlPhoto.value.toString())
+        }
     }
 
     private fun setListeners() {
         with(mBinding){
-            inputEmail.addTextChangedListener(object:TextWatcher{
-                override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-
-                override fun onTextChanged(text: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                    if (!text.isNullOrBlank())
-                        validateEmail(text as String)
-                }
-
-                override fun afterTextChanged(text: Editable?) {}
-            })
-
-            inputPassword.addTextChangedListener(object:TextWatcher{
-                override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-
-                override fun onTextChanged(text: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                    if (!text.isNullOrBlank())
-                        validatePassword(text as String)
-                }
-
-                override fun afterTextChanged(text: Editable?) {}
-            })
-
             bnRegister.setOnClickListener{
-                if (isValidEmail && isValidPassword)
+                if (isValidEmail && isValidPassword) {
                     viewModel.register(inputEmail.text.toString(), inputPassword.text.toString())
+                }
                 if (isValidFields()) {
-                    viewModel.saveUserData(
-                        name = inputName.text.toString(),
-                        birthdate = inputBirthDate.text.toString(),
-                        position = ilPosition.checkedChipIds.toString(),
-                        email = inputEmail.text.toString(),
-                        team = "",
-                        phone = inputPhone.text.toString()
+                    val user = User(
+                        email = mBinding.inputEmail.text.toString(),
+                        name = mBinding.inputName.text.toString(),
+                        lastName1 = mBinding.inputName.text.toString(),
+                        lastName2 = mBinding.inputName.text.toString(),
+                        position = setPosition(),
+                        birthDate = mBinding.inputBirthDate.text.toString(),
+                        team = mBinding.inputTeam.text.toString(),
+                        profilePhoto = imageUri.toString(),
+                        employee = mBinding.inputEmployee.text.toString().toInt(),
+                        phone = inputPhone.text.toString(),
+                        assistDay = listOf("","","")
                     )
+                    viewModel.saveUserData(user)
                 }
             }
             bnBack.setOnClickListener{
@@ -97,37 +92,23 @@ class RegisterFragment : Fragment() {
             }
             btUpload.setOnClickListener {
                 openGallery()
-
             }
         }
     }
+    private fun setPosition(): String{
+        return when(mBinding.ilPosition.checkedChipId.toString()){
+            getString(R.string.idAnalyst) ->{getString(R.string.analyst)}
+            getString(R.string.idScrumMaster) -> {getString(R.string.scrummaster)}
+            getString(R.string.idQa) ->{getString(R.string.qa)}
+            getString(R.string.idAndroid)-> {getString(R.string.android)}
+            getString(R.string.idIos) ->{getString(R.string.ios)}
+            else ->  {getString(R.string.back)}
+        }
+    }
     private fun openGallery(){
-        //val gallery = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
-        //startActivityForResult(gallery, SELECT_FILE)
         val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
         resultLauncher.launch(intent)
     }
-
-    var resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-        if (result.resultCode == RESULT_OK) {
-            val data: Intent? = result.data
-            imageUri = data?.data
-            foto_gallery?.setImageURI(imageUri)
-            mBinding.btUpload.setImageURI(imageUri)
-            imageUri?.let { viewModel.uploadImage(it) }
-        }
-    }
-
-    /*
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if(resultCode == RESULT_OK && requestCode == SELECT_FILE){
-            imageUri = data?.data
-            foto_gallery?.setImageURI(imageUri)
-            mBinding.btUpload.setImageURI(imageUri)
-        }
-    }
-     */
 
     private fun isValidFields(): Boolean {
         return true

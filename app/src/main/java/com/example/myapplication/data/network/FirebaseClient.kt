@@ -10,6 +10,7 @@ import javax.inject.Singleton
 @Singleton
 class FirebaseClient @Inject constructor() {
     val auth : FirebaseAuth get() = FirebaseAuth.getInstance()
-    val dataBase = Firebase.firestore
+    val userCollection = Firebase.firestore.collection("UsersCollection")
+    val dayCollection = Firebase.firestore.collection("DayCollection")
     val dataStorage = FirebaseStorage.getInstance().getReference("profilePhotos").child("usersPhotos")
 }
