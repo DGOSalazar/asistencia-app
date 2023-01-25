@@ -1,5 +1,6 @@
 package com.example.myapplication.data.network
 
+import android.content.Context
 import android.net.Uri
 import android.util.Log
 import com.example.myapplication.data.models.Day
@@ -79,12 +80,13 @@ class FirebaseServices @Inject constructor(
             )
         )
     }
-    fun getUserInfo(): User = run {
-        var user = User()
+    fun getUserInfo(user : (User)->Unit) = runCatching{
+        var user1 = User()
         val mail = "topo12@coppel.com"
+        val list = arrayListOf<User>()
         firebase.userCollection.whereEqualTo("email", mail).get().addOnSuccessListener {
-            for (i in it) {
-                user = User(
+            it.forEach{ i->
+                user1 = User(
                     i.get("email") as String,
                     i.get("name") as String,
                     i.get("lastName1") as String,
@@ -94,12 +96,14 @@ class FirebaseServices @Inject constructor(
                     i.get("team") as String,
                     i.get("profilePhoto") as String,
                     i.get("phone") as String,
-                    i.get("employee") as Long
-                    //i.get("listAssist") as ArrayList<String>
+                    i.get("employee") as Long,
+                    i.get("assistDay") as ArrayList<String>
                 )
+                list.add(user1)
+                user(list[0])
             }
-        }.isSuccessful
-        return user
+        }
+
     }
 
     fun getCurrentRegisters(date: String, currentDay: Day) {
