@@ -51,9 +51,10 @@ class HomeViewModel @Inject constructor(
 
     fun getUserData() {
         viewModelScope.launch {
-            val res = getUserInfoUseCase()
             withContext(Dispatchers.IO){
-                _user.postValue(res)
+                 getUserInfoUseCase() {
+                     _user.postValue(it)
+                 }
             }
         }
     }
