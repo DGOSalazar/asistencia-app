@@ -1,24 +1,23 @@
 package com.example.myapplication.ui.home
 
 
-import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
 import android.os.Build
 import android.os.Bundle
 import android.view.*
-import android.view.View.OnTouchListener
 import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.myapplication.R
-import com.example.myapplication.data.models.Month
+import com.example.myapplication.data.models.AttendanceDays
 import com.example.myapplication.data.models.Day
+import com.example.myapplication.data.models.Month
 import com.example.myapplication.data.models.User
 import com.example.myapplication.databinding.FragmentAssistenceMainBinding
 import com.example.myapplication.ui.home.adapters.CalendarAdapter
@@ -26,24 +25,25 @@ import com.example.myapplication.ui.home.adapters.UserAdapter
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.*
-import kotlin.math.absoluteValue
+
+const val PAST_MONTH=1
+const val ACTUAL_MONTH=2
+const val NEXT_MONTH=3
 
 @RequiresApi(Build.VERSION_CODES.O)
-class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main), OnTouchListener {
+class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main) {
 
     private lateinit var mCalendarAdapter: CalendarAdapter
     private lateinit var mUserAdapter: UserAdapter
     private lateinit var mBinding:FragmentAssistenceMainBinding
     private val viewModel:HomeViewModel by activityViewModels()
 
-    private var xPreviousPosition = 0f
-
-    private  lateinit var bundleNum :Bundle
+    private lateinit var bundleNum :Bundle
     private lateinit var bundleDay : Bundle
 
-    @RequiresApi(Build.VERSION_CODES.O)
     var localDate: LocalDate= LocalDate.now()
-    private var pastDate =localDate.minusMonths(1)
+    private var pastDate = localDate.minusMonths(1)
+    private var actualMonth = 1
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -62,21 +62,30 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main), OnTo
         setListeners()
     }
 
-    @SuppressLint("NotifyDataSetChanged")
     private fun setObservers() {
         viewModel.userData.observe(viewLifecycleOwner, this::setCalendarDays)
 
         viewModel.currentMonth.observe(viewLifecycleOwner, this::setCurrentDate)
     }
 
-    @SuppressLint("NotifyDataSetChanged")
-    private fun setCalendarDays(daysToAttend: List<Int>){
-        mCalendarAdapter.assistedDays = daysToAttend
-        mCalendarAdapter.notifyDataSetChanged()
-        viewModel.setCalendarDays(localDate, pastDate)
+    private fun setCalendarDays(daysToAttend:List<AttendanceDays>){
+        mCalendarAdapter.statusMonth = actualMonth
+        mCalendarAdapter.assistedDays = getDaysToAttend(daysToAttend)
+        viewModel.setCalendarDays(localDate, pastDate, daysToAttend)
     }
 
-    @SuppressLint("ClickableViewAccessibility")
+    private fun getDaysToAttend(daysToAttend: List<AttendanceDays>): List<Int> {
+        val userAssistanceDays = arrayListOf<Int>()
+        daysToAttend.forEach{ day ->
+            if(day.emails.any {it == "humberto.macias@coppel.com"}) {
+                val date = day.currentDay.split("-")
+                val assistanceDay = date[0].toInt()
+                userAssistanceDays.add(assistanceDay)
+            }
+        }
+        return userAssistanceDays
+    }
+
     private fun setListeners() {
         mBinding.vBack.setOnClickListener{
             previusMonthAction()
@@ -84,7 +93,6 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main), OnTo
         mBinding.vNext.setOnClickListener{
             nextMonthAction()
         }
-        mBinding.recyclerCalendar.setOnTouchListener(this)
         mBinding.home.setOnClickListener{
             moveNavSelector(it)
         }
@@ -110,7 +118,7 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main), OnTo
     }
 
     private fun setUserAdapter() {
-        viewModel.getUserDate()
+        viewModel.getUserDate(date = localDate)
         mUserAdapter = UserAdapter(
             user= listOf(
                 User("example@coppel.com", "Ramon", "Coppel", "Coppel", "Gerente Senior"),
@@ -143,14 +151,16 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main), OnTo
     private fun previusMonthAction(){
         localDate = localDate.minusMonths(1)
         pastDate = pastDate.minusMonths(1)
-        viewModel.getUserDate()
+        actualMonth -= 1
+        viewModel.getUserDate(date = localDate)
         setUi()
     }
 
     private fun nextMonthAction(){
         localDate = localDate.plusMonths(1)
         pastDate = pastDate.minusMonths(1)
-        viewModel.getUserDate()
+        actualMonth += 1
+        viewModel.getUserDate(date = localDate)
         setUi()
     }
 
@@ -185,25 +195,6 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main), OnTo
             }
             else -> { }
         }
-    }
-
-    @SuppressLint("ClickableViewAccessibility")
-    override fun onTouch(p0: View?, motionEvent: MotionEvent?): Boolean {
-        if (motionEvent!!.action == MotionEvent.ACTION_DOWN){
-            xPreviousPosition = motionEvent.x
-            return false
-        }
-        if (motionEvent.action == MotionEvent.ACTION_UP){
-            if ((xPreviousPosition - motionEvent.x).absoluteValue > 150f){
-                if (xPreviousPosition > motionEvent.x)
-                    nextMonthAction()
-                else
-                    previusMonthAction()
-            }
-            xPreviousPosition = 0f
-            return true
-        }
-        return false
     }
 
     private fun click(day:Day){

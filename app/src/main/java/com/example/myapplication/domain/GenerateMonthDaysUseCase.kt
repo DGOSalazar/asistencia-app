@@ -1,7 +1,9 @@
 package com.example.myapplication.domain
 
+import android.annotation.SuppressLint
 import android.os.Build
 import androidx.annotation.RequiresApi
+import com.example.myapplication.data.models.AttendanceDays
 import com.example.myapplication.data.models.Day
 import com.example.myapplication.data.models.Month
 import java.time.LocalDate
@@ -10,8 +12,13 @@ import javax.inject.Inject
 
 class GenerateMonthDaysUseCase @Inject constructor() {
 
+    @SuppressLint("SuspiciousIndentation")
     @RequiresApi(Build.VERSION_CODES.O)
-    operator fun invoke(localDate: LocalDate, pastDate: LocalDate): Month {
+    operator fun invoke(
+        localDate: LocalDate,
+        pastDate: LocalDate,
+        attendanceDays: List<AttendanceDays>,
+    ): Month {
 
         val monthSelected = localDate.month
         val currentDay = LocalDate.now().dayOfMonth
@@ -38,19 +45,25 @@ class GenerateMonthDaysUseCase @Inject constructor() {
                     val day = i-dayOfWeek
                     if (day == currentDay && monthSelected == currentMonth){
                         today = day
-                        tempDays.add(Day(num = day, profilePhoto = false,freePlaces = true, isToday = true))
+                        tempDays.add(Day(num = day, profilePhoto = false, freePlaces = true, isToday = true))
                     }
                     else{
-                        if (day % 2 == 0)
-                            tempDays.add(Day(num = day, profilePhoto = false,freePlaces = true, places = 12))
-                        else
-                            tempDays.add(Day(num = day, profilePhoto = false,freePlaces = true))
+                        var freePlaces = 15
+                            attendanceDays.forEach {
+                                freePlaces = if(it.day == day )
+                                    it.freePlaces
+                                else
+                                    15
+                        }
+                        tempDays.add( Day(num = day, profilePhoto = false, freePlaces = true, places = freePlaces) )
                     }
                 }
             }
         }
+        val isPastMonth =
+        if(LocalDate.now().year > localDate.year) true else currentMonth > monthSelected
 
-        return Month(daysList = selectDays(tempDays), today = today, pastMonth = currentMonth > monthSelected)
+        return Month(daysList = selectDays(tempDays), today = today, pastMonth = isPastMonth)
     }
 
     private fun selectDays(dayList: ArrayList<Day>) :ArrayList<Day>{

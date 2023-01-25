@@ -1,7 +1,9 @@
 package com.example.myapplication.data.models
 
 data class Month(
-    val daysList: ArrayList<Day>,
-    val today: Int,
-    val pastMonth:Boolean
+    var daysList: ArrayList<Day>,
+    var today: Int,
+    var pastMonth:Boolean,
+    var userAssistanceDays: List<Int>?= emptyList(),
+    var freePlacesOfDays: List<Int>?= emptyList()
 )

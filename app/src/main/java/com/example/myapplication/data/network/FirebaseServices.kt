@@ -2,20 +2,15 @@ package com.example.myapplication.data.network
 
 import android.net.Uri
 import android.util.Log
-import androidx.core.net.toUri
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import com.example.myapplication.data.models.AttendanceDays
 import com.example.myapplication.data.models.Day
 import com.example.myapplication.data.models.LoginResult
 import com.example.myapplication.data.models.User
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.firestore.Query
 import com.google.firebase.storage.StorageReference
-import kotlinx.coroutines.android.awaitFrame
-import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.tasks.await
-import java.util.logging.Handler
 import javax.inject.Inject
 
 class FirebaseServices @Inject constructor(
@@ -84,6 +79,31 @@ class FirebaseServices @Inject constructor(
 
     fun getCurrentRegisters(date: String, currentDay: Day): Query = run {
         return firebase.dayCollection.whereEqualTo(date,currentDay)
+    }
+
+    fun getAllRegistersDays(
+        success:(List<AttendanceDays>) -> Unit,
+        errorObserver:(String) -> Unit
+    ):List<AttendanceDays> {
+        val list = mutableListOf<AttendanceDays>()
+
+        firebase.dayCollection
+            .get()
+            .addOnSuccessListener { result ->
+                result.documents.forEach { document ->
+                    val day = AttendanceDays(
+                        document.get("email") as ArrayList<String>,
+                        document.get("currentDay") as String,
+                    )
+                    list.add(day)
+                }
+                success(list)
+            }
+            .addOnFailureListener { exception ->
+                Log.w("Firebase", "Error getting documents.", exception)
+                exception.message?.let { errorObserver(it) }
+            }
+        return list
     }
 
     private fun Result<AuthResult>.toLoginResult() =
