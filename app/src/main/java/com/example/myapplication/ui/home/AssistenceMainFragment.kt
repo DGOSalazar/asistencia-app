@@ -26,10 +26,6 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.*
 
-const val PAST_MONTH=1
-const val ACTUAL_MONTH=2
-const val NEXT_MONTH=3
-
 @RequiresApi(Build.VERSION_CODES.O)
 class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main) {
 
@@ -149,6 +145,8 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main) {
     }
 
     private fun previusMonthAction(){
+        if (actualMonth == 0 )
+            return
         localDate = localDate.minusMonths(1)
         pastDate = pastDate.minusMonths(1)
         actualMonth -= 1
@@ -157,6 +155,8 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main) {
     }
 
     private fun nextMonthAction(){
+        if (actualMonth == 2 )
+            return
         localDate = localDate.plusMonths(1)
         pastDate = pastDate.minusMonths(1)
         actualMonth += 1

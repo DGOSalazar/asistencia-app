@@ -2,10 +2,7 @@ package com.example.myapplication.data.network
 
 import android.net.Uri
 import android.util.Log
-import com.example.myapplication.data.models.AttendanceDays
-import com.example.myapplication.data.models.Day
-import com.example.myapplication.data.models.LoginResult
-import com.example.myapplication.data.models.User
+import com.example.myapplication.data.models.*
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.firestore.Query
 import com.google.firebase.storage.StorageReference
@@ -86,7 +83,6 @@ class FirebaseServices @Inject constructor(
         errorObserver:(String) -> Unit
     ):List<AttendanceDays> {
         val list = mutableListOf<AttendanceDays>()
-
         firebase.dayCollection
             .get()
             .addOnSuccessListener { result ->

@@ -39,19 +39,37 @@ class CalendarAdapter(private var days: ArrayList<Day> = arrayListOf(),private v
         @SuppressLint("ResourceAsColor")
         fun mountCalendar(){
             val day = days[adapterPosition]
-
             val isAssistedDay = assistedDays.any { it == day.num }
 
-            if ((day.num < today || isPastMonth) && adapterPosition < FIRST_DAY_LAST_WEEK){
-                with(mBinding) {
+            with(mBinding) {
+                if (statusMonth == 2){  //next month
+                    container.backgroundTintList = ColorStateList.valueOf(ctx.getColor(R.color.white))
+                    tvDay.setTextColor(ColorStateList.valueOf(ctx.getColor(R.color.grey2)))
+                    tvDay.visibility = View.VISIBLE
+                    assistedDay.visibility = View.GONE
+                    ivProfile.visibility = View.GONE
+                    mcFreePlaces.visibility= View.GONE
+                    tvDay.text = String.format("%02d", day.num)
+                    return
+                }
+
+                if (statusMonth == 0){  //past month
                     mcFreePlaces.visibility = View.GONE
                     ivProfile.visibility = View.GONE
                     assistedDay.visibility = if (isAssistedDay) View.VISIBLE else View.GONE
                     container.backgroundTintList = ColorStateList.valueOf(ctx.getColor(R.color.grey4))
                     tvDay.setTextColor(ColorStateList.valueOf(ctx.getColor(R.color.grey5)))
+                    tvDay.text = String.format("%02d", day.num)
+                    return
                 }
-            }else{
-                with(mBinding){
+
+                if ((day.num < today || isPastMonth) && adapterPosition < FIRST_DAY_LAST_WEEK){
+                    mcFreePlaces.visibility = View.GONE
+                    ivProfile.visibility = View.GONE
+                    assistedDay.visibility = if (isAssistedDay) View.VISIBLE else View.GONE
+                    container.backgroundTintList = ColorStateList.valueOf(ctx.getColor(R.color.grey4))
+                    tvDay.setTextColor(ColorStateList.valueOf(ctx.getColor(R.color.grey5)))
+                }else{
                     val mcFreePlacesVisivility = if(day.freePlaces && !isAssistedDay && day.num != today && day.isCurrentMonth) View.VISIBLE else View.GONE
                     mcFreePlaces.visibility = mcFreePlacesVisivility
 
@@ -68,53 +86,7 @@ class CalendarAdapter(private var days: ArrayList<Day> = arrayListOf(),private v
                     freePlaces.backgroundTintList = ColorStateList.valueOf(ctx.getColor(freeDaysBgColor))
                     freePlaces.text = ctx.resources.getString(R.string.free_days, day.places)
                 }
-            }
-            mBinding.tvDay.text = String.format("%02d", day.num)
-        }
-
-        fun setView(){
-            val day = days[adapterPosition]
-            val isAssistedDay = assistedDays.any { it == day.num }
-
-            with(mBinding) {
-                when(statusMonth){
-                    0->{//past month
-                        mcFreePlaces.visibility = View.GONE
-                        ivProfile.visibility = View.GONE
-                        assistedDay.visibility = if (isAssistedDay) View.VISIBLE else View.GONE
-                        container.backgroundTintList = ColorStateList.valueOf(ctx.getColor(R.color.grey4))
-                        tvDay.setTextColor(ColorStateList.valueOf(ctx.getColor(R.color.grey5)))
-                    }
-                    1->{//current month
-                        mcFreePlaces.visibility = if(!isAssistedDay && day.num != today && day.num > today) View.VISIBLE else View.GONE
-
-                        val freeDaysBgColor = if(day.places!=0) R.color.blue1 else R.color.blue2
-                        freePlaces.backgroundTintList = ColorStateList.valueOf(ctx.getColor(freeDaysBgColor))
-                        freePlaces.text = ctx.resources.getString(R.string.free_days, day.places)
-
-                        ivProfile.visibility = if (isAssistedDay && day.isCurrentMonth && day.num > today) View.VISIBLE else View.GONE
-                        assistedDay.visibility = View.GONE
-
-                        val bgColor = if (day.num > today)
-                            if(day.isToday) R.color.blue1 else R.color.white else R.color.grey4
-
-                        val dayBgColor = if(day.isCurrentMonth) R.color.grey2 else R.color.grey4
-                        tvDay.setTextColor(ColorStateList.valueOf(ctx.getColor(dayBgColor)))
-                        tvDay.visibility=View.VISIBLE
-
-                        container.backgroundTintList = ColorStateList.valueOf(ctx.getColor(bgColor))
-                    }
-                    2->{//next month
-                        container.backgroundTintList = ColorStateList.valueOf(ctx.getColor(R.color.white))
-                        tvDay.setTextColor(ColorStateList.valueOf(ctx.getColor(R.color.grey2)))
-                        mBinding.tvDay.visibility = View.VISIBLE
-                        assistedDay.visibility = View.GONE
-                        ivProfile.visibility = View.GONE
-                        mcFreePlaces.visibility= View.GONE
-                    }
-                    else->{}
-                }
-                mBinding.tvDay.text = String.format("%02d", day.num)
+                tvDay.text = String.format("%02d", day.num)
             }
         }
 
@@ -137,7 +109,6 @@ class CalendarAdapter(private var days: ArrayList<Day> = arrayListOf(),private v
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         with(holder){
             mountCalendar()
-            //setView()
             getDay(click)
         }
     }
