@@ -12,10 +12,8 @@ import com.example.myapplication.R
 import com.example.myapplication.databinding.DayViewBinding
 import com.example.myapplication.data.models.Day
 
-
 const val FIRST_DAY_LAST_WEEK = 20
 class CalendarAdapter(private var days: ArrayList<Day> = arrayListOf(),private var click:(Day)-> Unit ): RecyclerView.Adapter<CalendarAdapter.ViewHolder>() {
-//class CalendarAdapter(private var days: ArrayList<Day> = arrayListOf()): RecyclerView.Adapter<CalendarAdapter.ViewHolder>() {
 
     var today:Int = 0
     var isPastMonth:Boolean = false
@@ -37,7 +35,6 @@ class CalendarAdapter(private var days: ArrayList<Day> = arrayListOf(),private v
         fun mountCalendar(){
             val day = days[adapterPosition]
             mBinding.tvDay.visibility = View.VISIBLE
-
             val isAssistedDay = assistedDays.any { it==day.num }
 
             if ((day.num < today || isPastMonth) && adapterPosition < FIRST_DAY_LAST_WEEK){

@@ -9,5 +9,5 @@ data class User(var email: String="",
                 var team: String="",
                 var profilePhoto: String="",
                 var phone: String="",
-                var employee: Int=0,
-                var assistDay: List<String> = listOf())
+                var employee: Long=0,
+                var assistDay: ArrayList<String> = arrayListOf())

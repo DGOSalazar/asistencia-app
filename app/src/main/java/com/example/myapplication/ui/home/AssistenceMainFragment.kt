@@ -1,7 +1,6 @@
 package com.example.myapplication.ui.home
 
 
-import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
 import android.os.Build
 import android.os.Bundle
@@ -38,9 +37,6 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main), OnTo
 
     private var xPreviousPosition = 0f
 
-    private  lateinit var bundleNum :Bundle
-    private lateinit var bundleDay : Bundle
-
     @RequiresApi(Build.VERSION_CODES.O)
     var localDate: LocalDate= LocalDate.now()
     private var pastDate =localDate.minusMonths(1)
@@ -65,7 +61,6 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main), OnTo
     @SuppressLint("NotifyDataSetChanged")
     private fun setObservers() {
         viewModel.userData.observe(viewLifecycleOwner, this::setCalendarDays)
-
         viewModel.currentMonth.observe(viewLifecycleOwner, this::setCurrentDate)
     }
 
@@ -131,7 +126,7 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main), OnTo
     }
 
     private fun setCalendarAdapter(){
-        mCalendarAdapter = CalendarAdapter(){
+        mCalendarAdapter = CalendarAdapter {
             click(it)
         }
         mBinding.recyclerCalendar.apply {
@@ -207,7 +202,7 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main), OnTo
     }
 
     private fun click(day:Day){
-        findNavController().navigate(AssistenceMainFragmentDirections.actionAssistenceMainFragmentToAssistenceWeekFragment(day))
+        viewModel.setWeekList(day.nameEng,day.num)
+        findNavController().navigate(AssistenceMainFragmentDirections.actionAssistenceMainFragmentToAssistenceWeekFragment())
     }
-
 }

@@ -31,20 +31,20 @@ class GenerateMonthDaysUseCase @Inject constructor() {
                 if (i <= dayOfWeek || i> daysOfMonth + dayOfWeek ){
                     if(dayOfWeek !in 6..7 ){
                         if(i <= dayOfWeek){
-                            tempDays.add(Day(num = pastMonthDays - dayOfWeek + i, isCurrentMonth = false, freePlaces = false))
+                            tempDays.add(Day(num = pastMonthDays - dayOfWeek + i, isCurrentMonth = false, freePlaces = false, dayOfWeek = dayOfWeek))
                         }
                     }
                 }else{
                     val day = i-dayOfWeek
                     if (day == currentDay && monthSelected == currentMonth){
                         today = day
-                        tempDays.add(Day(num = day, profilePhoto = false,freePlaces = true, isToday = true))
+                         tempDays.add(Day(num = day, nameEng = localDate.withDayOfMonth(day).dayOfWeek, profilePhoto = false,freePlaces = true, isToday = true, dayOfWeek = localDate.withDayOfMonth(day).dayOfWeek.value))
                     }
                     else{
                         if (day % 2 == 0)
-                            tempDays.add(Day(num = day, profilePhoto = false,freePlaces = true, places = 12))
+                            tempDays.add(Day(num = day, nameEng = localDate.withDayOfMonth(day).dayOfWeek,profilePhoto = false,freePlaces = true, places = 12, dayOfWeek = localDate.withDayOfMonth(day).dayOfWeek.value))
                         else
-                            tempDays.add(Day(num = day, profilePhoto = false,freePlaces = true))
+                            tempDays.add(Day(num = day,nameEng = localDate.withDayOfMonth(day).dayOfWeek, profilePhoto = false,freePlaces = true, dayOfWeek = localDate.withDayOfMonth(day).dayOfWeek.value))
                     }
                 }
             }
@@ -53,6 +53,7 @@ class GenerateMonthDaysUseCase @Inject constructor() {
         return Month(daysList = selectDays(tempDays), today = today, pastMonth = currentMonth > monthSelected)
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun selectDays(dayList: ArrayList<Day>) :ArrayList<Day>{
         if (dayList.size < 25){
             for (i in 1..(25-dayList.size)){

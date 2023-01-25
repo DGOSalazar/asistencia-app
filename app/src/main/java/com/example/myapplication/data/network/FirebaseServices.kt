@@ -2,32 +2,28 @@ package com.example.myapplication.data.network
 
 import android.net.Uri
 import android.util.Log
-import androidx.core.net.toUri
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.example.myapplication.data.models.Day
 import com.example.myapplication.data.models.LoginResult
 import com.example.myapplication.data.models.User
 import com.google.firebase.auth.AuthResult
-import com.google.firebase.firestore.Query
 import com.google.firebase.storage.StorageReference
-import kotlinx.coroutines.android.awaitFrame
-import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.tasks.await
-import java.util.logging.Handler
 import javax.inject.Inject
 
 class FirebaseServices @Inject constructor(
     private val firebase: FirebaseClient
 ){
     private var url: Uri? =null
+    private var email = ""
 
-    suspend fun login(email: String, pass: String): LoginResult = runCatching {
-         firebase.auth.signInWithEmailAndPassword(email,pass).await()
+    suspend fun login(mail: String, pass: String): LoginResult = runCatching {
+        email = mail
+        firebase.auth.signInWithEmailAndPassword(email,pass).await()
      }.toLoginResult()
 
     suspend fun register(email: String, pass: String) = runCatching {
+        this.email = email
         firebase.auth.createUserWithEmailAndPassword(email,pass).await()
     }
 
@@ -60,7 +56,9 @@ class FirebaseServices @Inject constructor(
 
     fun registerUserData(user: User) = run {
         firebase.userCollection.document(user.email).set(
-            hashMapOf("name" to user.name,
+            hashMapOf(
+                "email" to user.email,
+                "name" to user.name,
                 "lastName1" to user.lastName1,
                 "lastName2" to user.lastName2,
                 "position" to user.position,
@@ -81,9 +79,31 @@ class FirebaseServices @Inject constructor(
             )
         )
     }
+    fun getUserInfo(): User = run {
+        var user = User()
+        val mail = "topo12@coppel.com"
+        firebase.userCollection.whereEqualTo("email", mail).get().addOnSuccessListener {
+            for (i in it) {
+                user = User(
+                    i.get("email") as String,
+                    i.get("name") as String,
+                    i.get("lastName1") as String,
+                    i.get("lastName2") as String,
+                    i.get("position") as String,
+                    i.get("birthDate") as String,
+                    i.get("team") as String,
+                    i.get("profilePhoto") as String,
+                    i.get("phone") as String,
+                    i.get("employee") as Long
+                    //i.get("listAssist") as ArrayList<String>
+                )
+            }
+        }.isSuccessful
+        return user
+    }
 
-    fun getCurrentRegisters(date: String, currentDay: Day): Query = run {
-        return firebase.dayCollection.whereEqualTo(date,currentDay)
+    fun getCurrentRegisters(date: String, currentDay: Day) {
+
     }
 
     private fun Result<AuthResult>.toLoginResult() =

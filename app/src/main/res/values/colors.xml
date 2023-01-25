@@ -6,6 +6,7 @@
     <color name="teal_200">#FF03DAC5</color>
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
+    <color name="black20">#00FFFFFF</color>
     <color name="white">#FFFFFFFF</color>
     <color name="grayCoppel">#f2f2f2</color>
     <color name="blueCoppel">#076AB6</color>
@@ -18,6 +19,7 @@
     <color name="grey3">#B2B2B2</color>
     <color name="grey4">#DDDDDD</color>
     <color name="grey5">#B2B2B2</color>
+    <color name="grey6">#DEDEDE</color>
 
     <color name="blue1">#7FD6EA</color>
     <color name="blue2">#9DB2B7</color>

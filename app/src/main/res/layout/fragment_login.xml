@@ -107,7 +107,7 @@
                 android:textSize="16sp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="humberto.macias@coppel.com"
+                android:text="diegogo@coppel.com"
                 />
         </com.google.android.material.textfield.TextInputLayout>
 
