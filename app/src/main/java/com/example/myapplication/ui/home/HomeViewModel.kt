@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myapplication.data.models.Day
+import com.example.myapplication.data.models.AttendanceDays
 import com.example.myapplication.data.models.Month
 import com.example.myapplication.data.models.User
 import com.example.myapplication.domain.EnrollUserToDayUseCase
@@ -14,6 +15,7 @@ import com.example.myapplication.domain.GenerateMonthDaysUseCase
 import com.example.myapplication.domain.GenerateWeekDaysUseCase
 import com.example.myapplication.domain.GetUserInfoUseCase
 import com.google.firebase.firestore.Query
+import com.example.myapplication.domain.GetAllAttendanceDaysByMonthUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -28,6 +30,7 @@ class HomeViewModel @Inject constructor(
     private val generateWeekDaysUseCase: GenerateWeekDaysUseCase,
     private val enrollUserToDayUseCase: EnrollUserToDayUseCase,
     private val getUserInfoUseCase: GetUserInfoUseCase
+    private val getAllAttendanceDaysByMonthUseCase: GetAllAttendanceDaysByMonthUseCase
     ):ViewModel() {
 
     private val _daySelected = MutableLiveData<Day>()
@@ -36,8 +39,8 @@ class HomeViewModel @Inject constructor(
     private val _user = MutableLiveData<User>()
     var user : LiveData<User> = _user
 
-    private val _userData = MutableLiveData<List<Int>>()
-    var userData : LiveData<List<Int>> = _userData
+    private val _userData = MutableLiveData<List<AttendanceDays>>()
+    var userData : LiveData<List<AttendanceDays>> = _userData
 
     private val _currentMonth = MutableLiveData<Month>()
     var currentMonth : LiveData<Month> = _currentMonth
@@ -49,15 +52,6 @@ class HomeViewModel @Inject constructor(
         enrollUserToDayUseCase(_user.value!!.email!!,_daySelected.value!!)
     }
 
-    fun getUserData() {
-        viewModelScope.launch {
-            withContext(Dispatchers.IO){
-                 getUserInfoUseCase() {
-                     _user.postValue(it)
-                 }
-            }
-        }
-    }
 
     fun getUserDate(){
         viewModelScope.launch {
@@ -69,9 +63,25 @@ class HomeViewModel @Inject constructor(
         _weekSelected.value = generateWeekDaysUseCase(d,a)
     }
     @RequiresApi(Build.VERSION_CODES.O)
+    fun getUserDate(date:LocalDate){
+        getAllAttendanceDaysByMonthUseCase.invoke(
+            date = date,
+            errorObserver = {},
+            success = { _userData.value = it }
+        )
     fun setCalendarDays(localDate: LocalDate, pastDate:LocalDate){
         _currentMonth.value = generateMonthDaysUseCase(localDate, pastDate)
     }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun setCalendarDays(
+        localDate: LocalDate,
+        pastDate: LocalDate,
+        daysToAttend: List<AttendanceDays>
+    ){
+        _currentMonth.value = generateMonthDaysUseCase.invoke( localDate, pastDate, daysToAttend)
+    }
+
 
     fun setDay(p: Int){
         _daySelected.value!!.dayOfWeek = p

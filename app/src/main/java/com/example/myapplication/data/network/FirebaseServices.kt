@@ -6,6 +6,7 @@ import android.util.Log
 import com.example.myapplication.data.models.Day
 import com.example.myapplication.data.models.LoginResult
 import com.example.myapplication.data.models.User
+import com.example.myapplication.data.models.*
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.storage.StorageReference
 import kotlinx.coroutines.delay
@@ -108,6 +109,30 @@ class FirebaseServices @Inject constructor(
 
     fun getCurrentRegisters(date: String, currentDay: Day) {
 
+    }
+
+    fun getAllRegistersDays(
+        success:(List<AttendanceDays>) -> Unit,
+        errorObserver:(String) -> Unit
+    ):List<AttendanceDays> {
+        val list = mutableListOf<AttendanceDays>()
+        firebase.dayCollection
+            .get()
+            .addOnSuccessListener { result ->
+                result.documents.forEach { document ->
+                    val day = AttendanceDays(
+                        document.get("email") as ArrayList<String>,
+                        document.get("currentDay") as String,
+                    )
+                    list.add(day)
+                }
+                success(list)
+            }
+            .addOnFailureListener { exception ->
+                Log.w("Firebase", "Error getting documents.", exception)
+                exception.message?.let { errorObserver(it) }
+            }
+        return list
     }
 
     private fun Result<AuthResult>.toLoginResult() =
