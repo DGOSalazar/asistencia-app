@@ -35,6 +35,7 @@ class HomeViewModel @Inject constructor(
         )
     }
 
+
     @RequiresApi(Build.VERSION_CODES.O)
     fun setCalendarDays(
         localDate: LocalDate,
