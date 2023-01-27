@@ -52,22 +52,20 @@ class GenerateMonthDaysUseCase @Inject constructor() {
                     if(dayOfWeek !in 6..7 && i <= dayOfWeek){   //add past month days only if the week of current month is not start on monday
                         val dia =  pastMonthDays - dayOfWeek + i
                         var freePlaces = 15
-                        var date = ""
+
                         pastMonthDaysList.forEach {  day->
-                            if (day.day == pastMonthDays - dayOfWeek + i){
+                            if (day.day == pastMonthDays - dayOfWeek + i)
                                 freePlaces = day.freePlaces
-                                date = day.currentDay
-                            }
                         }
                         tempDays.add(
                             Day(
                             num = dia,
-                            nameEng = currentDate.withDayOfMonth(day).dayOfWeek,
+                            nameEng = pastDate.withDayOfMonth(dia).dayOfWeek,
                             isCurrentMonth = false,
                             freePlaces = false,
                             dayOfWeek = dayOfWeek,
                             date = getFormatDate(day,monthSelected.value),
-                            places = freePlaces, date = date)
+                            places = freePlaces)
                         )
                     }
                 }else{
