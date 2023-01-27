@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.myapplication.R
+import com.example.myapplication.core.extensionFun.toast
 import com.example.myapplication.data.models.AttendanceDays
 import com.example.myapplication.data.models.Day
 import com.example.myapplication.data.models.Month
@@ -191,7 +192,7 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main) {
                 mBinding.imgSelectorNav.setImageDrawable(requireContext().getDrawable(R.drawable.ic_my_profile))
             }
             else -> {
-
+                //
             }
         }
     }

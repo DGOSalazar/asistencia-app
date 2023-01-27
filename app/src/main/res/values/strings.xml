@@ -61,6 +61,7 @@
     <string name="accept">Aceptar</string>
     <string name="succes">Te haz registrado exitosamente.</string>
     <string name="msgAssit">Asistentes</string>
+    <string name="free_day">Aun no se ha seleccionado ningun espacio para este dia</string>
 
     <string-array name="positions">
         <item>Android</item>

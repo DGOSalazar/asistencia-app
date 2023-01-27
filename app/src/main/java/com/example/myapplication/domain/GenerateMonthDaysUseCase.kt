@@ -28,23 +28,25 @@ class GenerateMonthDaysUseCase @Inject constructor() {
         val daysOfMonth = YearMonth.from(localDate).lengthOfMonth()
         val dayOfWeek = localDate.withDayOfMonth(1).dayOfWeek.value
 
+
         val tempDays: ArrayList<Day> = arrayListOf()
         val sunDaysAndSaturdays= arrayOf(1,7,8,14,15,21,22,28,29,35,36,42)
 
         for(i in 1..42){
             val isSundayOrSaturday = sunDaysAndSaturdays.any{ it == i }
             val day = i-dayOfWeek
+
             if(!isSundayOrSaturday) {
                 if (i <= dayOfWeek || i> daysOfMonth + dayOfWeek ){
                     if(dayOfWeek !in 6..7 ){
                         if(i <= dayOfWeek){
-                            tempDays.add(Day(num = pastMonthDays - dayOfWeek + i, isCurrentMonth = false, freePlaces = false, dayOfWeek = dayOfWeek,date = getFormatDate(day,monthSelected.value)))
+                            tempDays.add(Day(num = pastMonthDays - dayOfWeek + i, nameEng = localDate.withDayOfMonth(day).dayOfWeek,isCurrentMonth = false, freePlaces = false, dayOfWeek = dayOfWeek,date = getFormatDate(day,monthSelected.value)))
                         }
                     }
                 }else{
                     if (day == currentDay && monthSelected == currentMonth){
                         today = day
-                        tempDays.add(Day(num = day, profilePhoto = false, freePlaces = true, isToday = true, date = getFormatDate(day,monthSelected.value)))
+                        tempDays.add(Day(num = day, profilePhoto = false, nameEng = localDate.withDayOfMonth(day).dayOfWeek, freePlaces = true, isToday = true, date = getFormatDate(day,monthSelected.value)))
                     }
                     else{
                         var freePlaces = 15
@@ -54,7 +56,7 @@ class GenerateMonthDaysUseCase @Inject constructor() {
                                 else
                                     15
                         }
-                        tempDays.add( Day(num = day, profilePhoto = false, freePlaces = true, places = freePlaces, date = getFormatDate(day,monthSelected.value)))
+                        tempDays.add( Day(num = day, profilePhoto = false, nameEng = localDate.withDayOfMonth(day).dayOfWeek, freePlaces = true, places = freePlaces, date = getFormatDate(day,monthSelected.value)))
                     }
                 }
             }

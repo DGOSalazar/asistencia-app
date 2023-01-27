@@ -12,188 +12,83 @@ class GenerateWeekDaysUseCase @Inject constructor(){
     @RequiresApi(Build.VERSION_CODES.O)
     var localDate: LocalDate = LocalDate.now()
     @RequiresApi(Build.VERSION_CODES.O)
-    operator fun invoke(day:Day): List<Day> {
-        val dayOfMonth = day.num
-        val dayOfWeek = day.nameEng
-        val monthSelected = localDate.month
-        return when (dayOfWeek.value) {
+    operator fun invoke(day:Day): ArrayList<Day>{
+        var dayList : ArrayList<Day> = arrayListOf()
+        val dayOfMonth = day.num ; val dayOfWeek = day.nameEng ; val monthSelected = localDate.month
+
+        return when (dayOfWeek.value){
             1 -> {
-                listOf(
-                    Day(
-                        num = dayOfMonth,
-                        name = setSpanishDay(dayOfWeek),
-                        dayOfWeek = dayOfWeek.value,
-                        selected = true,
-                        date = getFormatDate(dayOfMonth,monthSelected.value)
-                    ),
-                    Day(
-                        num = dayOfMonth + 1,
-                        name = setSpanishDay(dayOfWeek + 1),
-                        dayOfWeek = dayOfWeek.value + 1,
-                        date = getFormatDate(dayOfMonth+1,monthSelected.value)
-                    ),
-                    Day(
-                        num = dayOfMonth + 2,
-                        name = setSpanishDay(dayOfWeek + 2),
-                        dayOfWeek = dayOfWeek.value + 2,
-                        date = getFormatDate(dayOfMonth+2,monthSelected.value)
-                    ),
-                    Day(
-                        num = dayOfMonth + 3,
-                        name = setSpanishDay(dayOfWeek + 3),
-                        dayOfWeek = dayOfWeek.value + 3,
-                        date = getFormatDate(dayOfMonth+3,monthSelected.value)
-                    ),
-                    Day(
-                        num = dayOfMonth + 4,
-                        name = setSpanishDay(dayOfWeek + 4),
-                        dayOfWeek = dayOfWeek.value + 4,
-                        date = getFormatDate(dayOfMonth+4,monthSelected.value)
+                for (i in 0..4) {
+                    dayList.add(
+                        Day(
+                            num = dayOfMonth + i,
+                            name = setSpanishDay(dayOfWeek+i.toLong()),
+                            dayOfWeek = dayOfWeek.value + i,
+                            selected = i==0,
+                            date = getFormatDate(dayOfMonth+i, monthSelected.value)
+                        )
                     )
-                )
+                }
+                dayList
             }
             2 -> {
-                listOf(
-                    Day(
-                        num = dayOfMonth - 1,
-                        name = setSpanishDay(dayOfWeek - 1),
-                        dayOfWeek = dayOfWeek.value - 1,
-                        date = getFormatDate(dayOfMonth-1,monthSelected.value)
-                    ),
-                    Day(
-                        num = dayOfMonth,
-                        name = setSpanishDay(dayOfWeek),
-                        dayOfWeek = dayOfWeek.value,
-                        selected = true,
-                        date = getFormatDate(dayOfMonth,monthSelected.value)
-                    ),
-                    Day(
-                        num = dayOfMonth + 1,
-                        name = setSpanishDay(dayOfWeek + 1),
-                        dayOfWeek = dayOfWeek.value + 1,
-                        date = getFormatDate(dayOfMonth+1,monthSelected.value)
-                    ),
-                    Day(
-                        num = dayOfMonth + 2,
-                        name = setSpanishDay(dayOfWeek + 2),
-                        dayOfWeek = dayOfWeek.value + 2,
-                        date = getFormatDate(dayOfMonth+2,monthSelected.value)
-                    ),
-                    Day(
-                        num = dayOfMonth + 3,
-                        name = setSpanishDay(dayOfWeek + 3),
-                        dayOfWeek = dayOfWeek.value + 3,
-                        date = getFormatDate(dayOfMonth+3,monthSelected.value)
+                for (i in -1..3) {
+                    dayList.add(
+                        Day(
+                            num = dayOfMonth + i,
+                            name = setSpanishDay(dayOfWeek+i.toLong()),
+                            dayOfWeek = dayOfWeek.value + i,
+                            selected = i==0,
+                            date = getFormatDate(dayOfMonth+i, monthSelected.value)
+                        )
                     )
-                )
+                }
+                dayList
             }
             3 -> {
-                listOf(
-                    Day(
-                        num = dayOfMonth - 2,
-                        name = setSpanishDay(dayOfWeek - 2),
-                        dayOfWeek = dayOfWeek.value - 2,
-                        date = getFormatDate(dayOfMonth-2,monthSelected.value)
-                    ),
-                    Day(
-                        num = dayOfMonth - 1,
-                        name = setSpanishDay(dayOfWeek - 1),
-                        dayOfWeek = dayOfWeek.value - 1,
-                        date = getFormatDate(dayOfMonth-1,monthSelected.value)
-                    ),
-                    Day(
-                        num = dayOfMonth,
-                        name = setSpanishDay(dayOfWeek),
-                        dayOfWeek = dayOfWeek.value,
-                        selected = true,
-                        date = getFormatDate(dayOfMonth,monthSelected.value)
-                    ),
-                    Day(
-                        num = dayOfMonth + 1,
-                        name = setSpanishDay(dayOfWeek + 1),
-                        dayOfWeek = dayOfWeek.value + 1,
-                        date = getFormatDate(dayOfMonth+1,monthSelected.value)
-                    ),
-                    Day(
-                        num = dayOfMonth + 2,
-                        name = setSpanishDay(dayOfWeek + 2),
-                        dayOfWeek = dayOfWeek.value + 2,
-                        date = getFormatDate(dayOfMonth+2,monthSelected.value)
+                for (i in -2..2) {
+                    dayList.add(
+                        Day(
+                            num = dayOfMonth + i,
+                            name = setSpanishDay(dayOfWeek+i.toLong()),
+                            dayOfWeek = dayOfWeek.value + i,
+                            selected = i==0,
+                            date = getFormatDate(dayOfMonth+i, monthSelected.value)
+                        )
                     )
-                )
+                }
+                dayList
             }
             4 -> {
-                listOf(
-                    Day(
-                        num = dayOfMonth - 3,
-                        name = setSpanishDay(dayOfWeek - 3),
-                        dayOfWeek = dayOfWeek.value - 3,
-                        date = getFormatDate(dayOfMonth-3,monthSelected.value)
-                    ),
-                    Day(
-                        num = dayOfMonth - 2,
-                        name = setSpanishDay(dayOfWeek - 2),
-                        dayOfWeek = dayOfWeek.value - 2,
-                        date = getFormatDate(dayOfMonth-2,monthSelected.value)
-                    ),
-                    Day(
-                        num = dayOfMonth - 1,
-                        name = setSpanishDay(dayOfWeek - 1),
-                        dayOfWeek = dayOfWeek.value - 1,
-                        date = getFormatDate(dayOfMonth-1,monthSelected.value)
-                    ),
-                    Day(
-                        num = dayOfMonth,
-                        name = setSpanishDay(dayOfWeek),
-                        dayOfWeek = dayOfWeek.value,
-                        selected = true,
-                        date = getFormatDate(dayOfMonth,monthSelected.value)
-                    ),
-                    Day(
-                        num = dayOfMonth + 1,
-                        name = setSpanishDay(dayOfWeek + 1),
-                        dayOfWeek = dayOfWeek.value + 1,
-                        date = getFormatDate(dayOfMonth+1,monthSelected.value)
+                for (i in -3..1) {
+                    dayList.add(
+                        Day(
+                            num = dayOfMonth + i,
+                            name = setSpanishDay(dayOfWeek+i.toLong()),
+                            dayOfWeek = dayOfWeek.value + i,
+                            selected = i==0,
+                            date = getFormatDate(dayOfMonth+i, monthSelected.value)
+                        )
                     )
-                )
+                }
+                dayList
             }
             5 -> {
-                listOf(
-                    Day(
-                        num = dayOfMonth - 4,
-                        name = setSpanishDay(dayOfWeek - 4),
-                        dayOfWeek = dayOfWeek.value - 4,
-                        date = getFormatDate(dayOfMonth-4,monthSelected.value)
-                    ),
-                    Day(
-                        num = dayOfMonth - 3,
-                        name = setSpanishDay(dayOfWeek - 3),
-                        dayOfWeek = dayOfWeek.value - 3,
-                        date = getFormatDate(dayOfMonth-3,monthSelected.value)
-                    ),
-                    Day(
-                        num = dayOfMonth - 2,
-                        name = setSpanishDay(dayOfWeek - 2),
-                        dayOfWeek = dayOfWeek.value - 2,
-                        date = getFormatDate(dayOfMonth-2,monthSelected.value)
-                    ),
-                    Day(
-                        num = dayOfMonth - 1,
-                        name = setSpanishDay(dayOfWeek - 1),
-                        dayOfWeek = dayOfWeek.value - 1,
-                        date = getFormatDate(dayOfMonth-1,monthSelected.value)
-                    ),
-                    Day(
-                        num = dayOfMonth,
-                        name = setSpanishDay(dayOfWeek),
-                        dayOfWeek = dayOfWeek.value,
-                        selected = true,
-                        date = getFormatDate(dayOfMonth,monthSelected.value)
+                for (i in -4..0) {
+                    dayList.add(
+                        Day(
+                            num = dayOfMonth + i,
+                            name = setSpanishDay(dayOfWeek+i.toLong()),
+                            dayOfWeek = dayOfWeek.value + i,
+                            selected = i==0,
+                            date = getFormatDate(dayOfMonth+i, monthSelected.value)
+                        )
                     )
-                )
+                }
+                dayList
             }
             else -> {
-                listOf(Day())
+                arrayListOf(Day())
             }
         }
     }
