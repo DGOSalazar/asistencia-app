@@ -32,12 +32,7 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main) {
     private lateinit var mCalendarAdapter: CalendarAdapter
     private lateinit var mUserAdapter: UserAdapter
     private lateinit var mBinding:FragmentAssistenceMainBinding
-    private val viewModel:HomeViewModel by activityViewModels()
-
-    private lateinit var bundleNum :Bundle
-    private lateinit var bundleDay : Bundle
-
-    private var xPreviousPosition = 0f
+    private val viewModel: HomeViewModel by activityViewModels()
 
     @RequiresApi(Build.VERSION_CODES.O)
     var localDate: LocalDate= LocalDate.now()
@@ -195,12 +190,15 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main) {
                 }
                 mBinding.imgSelectorNav.setImageDrawable(requireContext().getDrawable(R.drawable.ic_my_profile))
             }
-            else -> { }
+            else -> {
+
+            }
         }
     }
-
     private fun click(day:Day){
-        viewModel.setWeekList(day.nameEng,day.num)
+        viewModel.setDay(day.date)
+        viewModel.getListEmails(day.date)
+        viewModel.setWeekList(day)
         findNavController().navigate(AssistenceMainFragmentDirections.actionAssistenceMainFragmentToAssistenceWeekFragment())
     }
 }

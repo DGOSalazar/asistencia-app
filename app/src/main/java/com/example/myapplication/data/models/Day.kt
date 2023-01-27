@@ -6,6 +6,9 @@ import android.os.Parcelable
 import androidx.annotation.RequiresApi
 import kotlinx.parcelize.Parcelize
 import java.time.DayOfWeek
+import java.time.Year
+import java.time.YearMonth
+
 @RequiresApi(Build.VERSION_CODES.O)
 data class Day constructor(var num: Int=12,
                            var name: String="01",
@@ -17,5 +20,8 @@ data class Day constructor(var num: Int=12,
                            var isToday: Boolean= false,
                            var selected: Boolean= false,
                            var dayOfWeek:Int=0,
-                           var userList: ArrayList<User> = arrayListOf()
+                           var userList: ArrayList<User> = arrayListOf(),
+                           val emails:ArrayList<String> = arrayListOf(),
+                           val date: String = "",
+                           val dayOfYear: Year = Year.now()
 )

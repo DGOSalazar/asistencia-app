@@ -1,9 +1,9 @@
 package com.example.myapplication.data.network
 
-import android.content.Context
 import android.net.Uri
+import android.os.Build
 import android.util.Log
-import com.example.myapplication.data.models.Day
+import androidx.annotation.RequiresApi
 import com.example.myapplication.data.models.LoginResult
 import com.example.myapplication.data.models.User
 import com.example.myapplication.data.models.*
@@ -17,10 +17,10 @@ class FirebaseServices @Inject constructor(
     private val firebase: FirebaseClient
 ){
     private var url: Uri? =null
-    private var email = ""
+    var email = "primero"
 
     suspend fun login(mail: String, pass: String): LoginResult = runCatching {
-        email = mail
+        this.email = mail
         firebase.auth.signInWithEmailAndPassword(email,pass).await()
      }.toLoginResult()
 
@@ -73,44 +73,57 @@ class FirebaseServices @Inject constructor(
         )
     }.isSuccessful
 
-    fun registerUserOnSelectedDay(email: String, currentDay: Day){
-        firebase.dayCollection.document(email).set(
+    fun addUserToDay(currentDay:String, emails: ArrayList<String>)= run{
+        firebase.dayCollection.document(currentDay).set(
             hashMapOf(
-                "email" to email,
-                "currentDay" to currentDay
+                "currentDay" to currentDay,
+                "email" to emails
             )
         )
     }
-    fun getUserInfo(user : (User)->Unit) = runCatching{
-        var user1 = User()
-        val mail = "topo12@coppel.com"
+
+    fun getUserInfo(listEmail: ArrayList<String>,user:(ArrayList<User>)->Unit) = runCatching {
+        var user1: User
         val list = arrayListOf<User>()
-        firebase.userCollection.whereEqualTo("email", mail).get().addOnSuccessListener {
-            it.forEach{ i->
-                user1 = User(
-                    i.get("email") as String,
-                    i.get("name") as String,
-                    i.get("lastName1") as String,
-                    i.get("lastName2") as String,
-                    i.get("position") as String,
-                    i.get("birthDate") as String,
-                    i.get("team") as String,
-                    i.get("profilePhoto") as String,
-                    i.get("phone") as String,
-                    i.get("employee") as Long,
-                    i.get("assistDay") as ArrayList<String>
-                )
-                list.add(user1)
-                user(list[0])
+            for (i in listEmail) {
+                firebase.userCollection.whereEqualTo("email", i).get().addOnSuccessListener {
+                    it.forEach { i ->
+                        user1 = User(
+                            i.get("email") as String,
+                            i.get("name") as String,
+                            i.get("lastName1") as String,
+                            i.get("lastName2") as String,
+                            i.get("position") as String,
+                            i.get("birthDate") as String,
+                            i.get("team") as String,
+                            i.get("profilePhoto") as String,
+                            i.get("phone") as String,
+                            i.get("employee") as Long
+                        )
+                        list.add(user1)
+                    }
+                    user(list)
+                }
             }
-        }
-
     }
 
-    fun getCurrentRegisters(date: String, currentDay: Day) {
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun getListUsers(day: String, mails:(ArrayList<String>) -> Unit) = runCatching{
+        var emails = AttendanceDays(arrayListOf(),"")
 
+        firebase.dayCollection.whereEqualTo("currentDay", day).get()
+            .addOnSuccessListener {
+                it.forEach { j ->
+                    emails = AttendanceDays(
+                        j.get("email") as ArrayList<String>,
+                        j.get("currentDay") as String
+                    )
+                }
+                mails(emails.emails)
+            }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     fun getAllRegistersDays(
         success:(List<AttendanceDays>) -> Unit,
         errorObserver:(String) -> Unit
@@ -122,7 +135,7 @@ class FirebaseServices @Inject constructor(
                 result.documents.forEach { document ->
                     val day = AttendanceDays(
                         document.get("email") as ArrayList<String>,
-                        document.get("currentDay") as String,
+                        document.get("currentDay") as String
                     )
                     list.add(day)
                 }

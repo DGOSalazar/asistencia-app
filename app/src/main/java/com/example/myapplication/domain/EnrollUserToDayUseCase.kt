@@ -8,6 +8,6 @@ import javax.inject.Inject
 class EnrollUserToDayUseCase @Inject constructor(
     private val firebase : FirebaseServices
 ) {
-    operator fun invoke(email: String, day: Day) = firebase.registerUserOnSelectedDay(email, day)
+    operator fun invoke(day: String, emails: ArrayList<String>) = firebase.addUserToDay(day,emails)
 }
 

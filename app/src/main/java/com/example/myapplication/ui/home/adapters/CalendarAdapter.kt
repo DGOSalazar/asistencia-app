@@ -11,9 +11,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.R
 import com.example.myapplication.databinding.DayViewBinding
 import com.example.myapplication.data.models.Day
-
-const val FIRST_DAY_LAST_WEEK = 20
-
 const val FIRST_DAY_LAST_WEEK = 15
 class CalendarAdapter(private var days: ArrayList<Day> = arrayListOf(),private var click:(Day)-> Unit ): RecyclerView.Adapter<CalendarAdapter.ViewHolder>() {
 

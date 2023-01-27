@@ -33,19 +33,18 @@ class GenerateMonthDaysUseCase @Inject constructor() {
 
         for(i in 1..42){
             val isSundayOrSaturday = sunDaysAndSaturdays.any{ it == i }
-
+            val day = i-dayOfWeek
             if(!isSundayOrSaturday) {
                 if (i <= dayOfWeek || i> daysOfMonth + dayOfWeek ){
                     if(dayOfWeek !in 6..7 ){
                         if(i <= dayOfWeek){
-                            tempDays.add(Day(num = pastMonthDays - dayOfWeek + i, isCurrentMonth = false, freePlaces = false, dayOfWeek = dayOfWeek))
+                            tempDays.add(Day(num = pastMonthDays - dayOfWeek + i, isCurrentMonth = false, freePlaces = false, dayOfWeek = dayOfWeek,date = getFormatDate(day,monthSelected.value)))
                         }
                     }
                 }else{
-                    val day = i-dayOfWeek
                     if (day == currentDay && monthSelected == currentMonth){
                         today = day
-                        tempDays.add(Day(num = day, profilePhoto = false, freePlaces = true, isToday = true))
+                        tempDays.add(Day(num = day, profilePhoto = false, freePlaces = true, isToday = true, date = getFormatDate(day,monthSelected.value)))
                     }
                     else{
                         var freePlaces = 15
@@ -55,7 +54,7 @@ class GenerateMonthDaysUseCase @Inject constructor() {
                                 else
                                     15
                         }
-                        tempDays.add( Day(num = day, profilePhoto = false, freePlaces = true, places = freePlaces) )
+                        tempDays.add( Day(num = day, profilePhoto = false, freePlaces = true, places = freePlaces, date = getFormatDate(day,monthSelected.value)))
                     }
                 }
             }
@@ -66,6 +65,7 @@ class GenerateMonthDaysUseCase @Inject constructor() {
         return Month(daysList = selectDays(tempDays), today = today, pastMonth = isPastMonth)
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun selectDays(dayList: ArrayList<Day>) :ArrayList<Day>{
         if (dayList.size < 25){
             for (i in 1..(25-dayList.size)){
@@ -77,4 +77,6 @@ class GenerateMonthDaysUseCase @Inject constructor() {
             }
         return dayList
     }
+
+    private fun getFormatDate(dayMonth: Int, month:Int): String = "${dayMonth}-0${month}-2023"
 }

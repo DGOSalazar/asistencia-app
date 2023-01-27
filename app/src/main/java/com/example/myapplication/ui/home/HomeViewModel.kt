@@ -10,12 +10,7 @@ import com.example.myapplication.data.models.Day
 import com.example.myapplication.data.models.AttendanceDays
 import com.example.myapplication.data.models.Month
 import com.example.myapplication.data.models.User
-import com.example.myapplication.domain.EnrollUserToDayUseCase
-import com.example.myapplication.domain.GenerateMonthDaysUseCase
-import com.example.myapplication.domain.GenerateWeekDaysUseCase
-import com.example.myapplication.domain.GetUserInfoUseCase
-import com.google.firebase.firestore.Query
-import com.example.myapplication.domain.GetAllAttendanceDaysByMonthUseCase
+import com.example.myapplication.domain.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -29,15 +24,20 @@ class HomeViewModel @Inject constructor(
     private val generateMonthDaysUseCase: GenerateMonthDaysUseCase,
     private val generateWeekDaysUseCase: GenerateWeekDaysUseCase,
     private val enrollUserToDayUseCase: EnrollUserToDayUseCase,
-    private val getUserInfoUseCase: GetUserInfoUseCase
-    private val getAllAttendanceDaysByMonthUseCase: GetAllAttendanceDaysByMonthUseCase
+    private val getUserInfoUseCase: GetUserInfoUseCase,
+    private val getAllAttendanceDaysByMonthUseCase: GetAllAttendanceDaysByMonthUseCase,
+    private val getListEmailsUseCase: GetListEmailsUseCase,
+    private val getUser: GetUser
     ):ViewModel() {
 
-    private val _daySelected = MutableLiveData<Day>()
-    var daySelected : LiveData<Day> = _daySelected
+    private val _daySelected = MutableLiveData<String>()
+    var daySelected : LiveData<String> = _daySelected
 
-    private val _user = MutableLiveData<User>()
-    var user : LiveData<User> = _user
+    private val _users = MutableLiveData<ArrayList<User>>()
+    var users : LiveData<ArrayList<User>> = _users
+
+    private val _userEmails = MutableLiveData<ArrayList<String>>()
+    var userEmails : LiveData<ArrayList<String>> = _userEmails
 
     private val _userData = MutableLiveData<List<AttendanceDays>>()
     var userData : LiveData<List<AttendanceDays>> = _userData
@@ -48,19 +48,14 @@ class HomeViewModel @Inject constructor(
     private val _weekSelected = MutableLiveData<List<Day>>()
     var weekSelected : LiveData<List<Day>> = _weekSelected
 
+
     fun addUserToDay(){
-        enrollUserToDayUseCase(_user.value!!.email!!,_daySelected.value!!)
+        enrollUserToDayUseCase(_daySelected.value!!, _userEmails.value!!)
     }
 
-
-    fun getUserDate(){
-        viewModelScope.launch {
-            _userData.value = listOf(1, 4, 5, 10, 11, 20, 23, 28 )
-        }
-    }
     @RequiresApi(Build.VERSION_CODES.O)
-    fun setWeekList(d: DayOfWeek, a: Int){
-        _weekSelected.value = generateWeekDaysUseCase(d,a)
+    fun setWeekList(day:Day){
+        _weekSelected.value = generateWeekDaysUseCase(day)
     }
     @RequiresApi(Build.VERSION_CODES.O)
     fun getUserDate(date:LocalDate){
@@ -69,10 +64,7 @@ class HomeViewModel @Inject constructor(
             errorObserver = {},
             success = { _userData.value = it }
         )
-    fun setCalendarDays(localDate: LocalDate, pastDate:LocalDate){
-        _currentMonth.value = generateMonthDaysUseCase(localDate, pastDate)
     }
-
     @RequiresApi(Build.VERSION_CODES.O)
     fun setCalendarDays(
         localDate: LocalDate,
@@ -82,8 +74,39 @@ class HomeViewModel @Inject constructor(
         _currentMonth.value = generateMonthDaysUseCase.invoke( localDate, pastDate, daysToAttend)
     }
 
-
-    fun setDay(p: Int){
-        _daySelected.value!!.dayOfWeek = p
+    fun setDay(p: String){
+        _daySelected.value = p
     }
+
+    fun getUserDatastore(listEmails:ArrayList<String>) {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO){
+                getUserInfoUseCase(listEmails){
+                    _users.postValue(it)
+                }
+            }
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun getListEmails(day: String){
+        viewModelScope.launch {
+            withContext(Dispatchers.IO){
+                getListEmailsUseCase(day){
+                    _userEmails.postValue(it)
+                }
+            }
+        }
+    }
+
+    fun enrollUser(date: String, emails: ArrayList<String>){
+        viewModelScope.launch {
+            enrollUserToDayUseCase(date,emails)
+        }
+    }
+
+    fun addUserToListUsers(email: String) {
+        _userEmails.value!!.add(email)
+    }
+    fun getEmail()  = getUser()
 }

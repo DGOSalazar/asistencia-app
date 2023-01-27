@@ -60,6 +60,7 @@
     <string name="message">Deberás asistir a las oficinas de BanCoppel Guadalajara (Darío Business) el día Lunes 09 de Enero de 2023.</string>
     <string name="accept">Aceptar</string>
     <string name="succes">Te haz registrado exitosamente.</string>
+    <string name="msgAssit">Asistentes</string>
 
     <string-array name="positions">
         <item>Android</item>
