@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.myapplication.R
+import com.example.myapplication.core.extensionFun.toast
 import com.example.myapplication.data.models.AttendanceDays
 import com.example.myapplication.data.models.Day
 import com.example.myapplication.data.models.Month
@@ -46,11 +47,9 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main) {
     private lateinit var mCalendarAdapter: CalendarAdapter
     private lateinit var mUserAdapter: UserAdapter
     private lateinit var mBinding:FragmentAssistenceMainBinding
-    private val viewModel:HomeViewModel by activityViewModels()
+    private val viewModel: HomeViewModel by activityViewModels()
 
-    private lateinit var bundleNum :Bundle
-    private lateinit var bundleDay : Bundle
-
+    @RequiresApi(Build.VERSION_CODES.O)
     var localDate: LocalDate= LocalDate.now()
     private var pastDate = localDate.minusMonths(1)
     private var actualMonth = CURRENT_MONTH
@@ -78,7 +77,6 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main) {
 
     private fun setObservers() {
         viewModel.userData.observe(viewLifecycleOwner, this::setCalendarDays)
-
         viewModel.currentMonth.observe(viewLifecycleOwner, this::setCurrentDate)
     }
 
@@ -160,7 +158,7 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main) {
     }
 
     private fun setCalendarAdapter(){
-        mCalendarAdapter = CalendarAdapter{
+        mCalendarAdapter = CalendarAdapter {
             click(it)
         }
         mBinding.recyclerCalendar.apply {
@@ -213,12 +211,15 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main) {
                 mBinding.containerTeamNav.setBackgroundColor(requireContext().getColor(R.color.grey1))
                 Toast.makeText(requireContext(), "Perfil", Toast.LENGTH_SHORT).show()
             }
-            else -> { }
+            else -> {
+                //
+            }
         }
     }
-
     private fun click(day:Day){
-        findNavController().navigate(AssistenceMainFragmentDirections.actionAssistenceMainFragmentToAssistenceWeekFragment(day))
+        viewModel.setDay(day.date)
+        viewModel.getListEmails(day.date)
+        viewModel.setWeekList(day)
+        findNavController().navigate(AssistenceMainFragmentDirections.actionAssistenceMainFragmentToAssistenceWeekFragment())
     }
-
 }

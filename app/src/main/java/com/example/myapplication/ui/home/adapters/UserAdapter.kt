@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.myapplication.R
 import com.example.myapplication.databinding.ColaboratorViewBinding
 import com.example.myapplication.data.models.User
@@ -13,8 +14,11 @@ class UserAdapter(private var user: List<User>): RecyclerView.Adapter<UserAdapte
     inner class ViewHolder(view: View):RecyclerView.ViewHolder(view){
         private var mBinding= ColaboratorViewBinding.bind(view)
         fun mountUsers(){
-            mBinding.tvName.text=user[adapterPosition].name
-            mBinding.tvPosition.text=("         ${user[adapterPosition].position}")
+            with(mBinding) {
+                Glide.with(mBinding.ivUser.context).load(user[adapterPosition].profilePhoto).into(mBinding.ivProfile)
+                tvName.text = user[adapterPosition].name
+                tvPosition.text = ("         ${user[adapterPosition].position}")
+            }
         }
     }
 
