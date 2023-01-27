@@ -2,9 +2,13 @@ package com.example.myapplication.ui.home
 
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.content.SharedPreferences
 import android.os.Build
 import android.os.Bundle
+import android.preference.PreferenceManager
 import android.view.*
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.updateLayoutParams
@@ -22,10 +26,20 @@ import com.example.myapplication.data.models.User
 import com.example.myapplication.databinding.FragmentAssistenceMainBinding
 import com.example.myapplication.ui.home.adapters.CalendarAdapter
 import com.example.myapplication.ui.home.adapters.UserAdapter
+import com.example.myapplication.ui.login.EMAIL_KEY
+import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.*
+import javax.inject.Inject
+import kotlin.math.absoluteValue
 
+
+const val CURRENT_MONTH = 1
+const val PAST_MONTH = 2
+const val NEXT_MONTH = 3
+
+@AndroidEntryPoint
 @RequiresApi(Build.VERSION_CODES.O)
 class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main) {
 
@@ -39,7 +53,11 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main) {
 
     var localDate: LocalDate= LocalDate.now()
     private var pastDate = localDate.minusMonths(1)
-    private var actualMonth = 1
+    private var actualMonth = CURRENT_MONTH
+
+    @Inject
+    lateinit var sharedPreferences: SharedPreferences
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -67,16 +85,20 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main) {
     private fun setCalendarDays(daysToAttend:List<AttendanceDays>){
         mCalendarAdapter.statusMonth = actualMonth
         mCalendarAdapter.assistedDays = getDaysToAttend(daysToAttend)
-        viewModel.setCalendarDays(localDate, pastDate, daysToAttend)
+        viewModel.setCalendarDays(localDate, pastDate, daysToAttend, actualMonth)
     }
 
     private fun getDaysToAttend(daysToAttend: List<AttendanceDays>): List<Int> {
         val userAssistanceDays = arrayListOf<Int>()
+        val email = sharedPreferences.getString(EMAIL_KEY, "")
+
         daysToAttend.forEach{ day ->
-            if(day.emails.any {it == "humberto.macias@coppel.com"}) {
+            if(day.emails.any {it == email}) {
                 val date = day.currentDay.split("-")
                 val assistanceDay = date[0].toInt()
-                userAssistanceDays.add(assistanceDay)
+                val currentMonth = localDate.toString().split("-")[1]
+                if (date[1]==currentMonth)
+                    userAssistanceDays.add(assistanceDay)
             }
         }
         return userAssistanceDays
@@ -89,14 +111,17 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main) {
         mBinding.vNext.setOnClickListener{
             nextMonthAction()
         }
-        mBinding.home.setOnClickListener{
+        mBinding.containerHomeNav.setOnClickListener{
             moveNavSelector(it)
         }
-        mBinding.team.setOnClickListener{
+        mBinding.containerTeamNav.setOnClickListener{
             moveNavSelector(it)
         }
-        mBinding.myProfile.setOnClickListener{
+        mBinding.containerMyProfileNav.setOnClickListener{
             moveNavSelector(it)
+        }
+        mBinding.tvMenuIcon.setOnClickListener{
+            Toast.makeText(requireContext(), "Top menu", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -107,14 +132,14 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main) {
 
     @SuppressLint("NotifyDataSetChanged", "SimpleDateFormat")
     private fun setCurrentDate(month:Month) {
+        mCalendarAdapter.daysToFormatNextMonth = month.daysToFormatNextMonth.absoluteValue
         mCalendarAdapter.setCalendarData(month.daysList)
         mCalendarAdapter.today = month.today
-        mCalendarAdapter.isPastMonth = month.pastMonth
         mCalendarAdapter.notifyDataSetChanged()
     }
 
     private fun setUserAdapter() {
-        viewModel.getUserDate(date = localDate)
+        viewModel.getUserDate()
         mUserAdapter = UserAdapter(
             user= listOf(
                 User("example@coppel.com", "Ramon", "Coppel", "Coppel", "Gerente Senior"),
@@ -135,7 +160,7 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main) {
     }
 
     private fun setCalendarAdapter(){
-        mCalendarAdapter = CalendarAdapter(){
+        mCalendarAdapter = CalendarAdapter{
             click(it)
         }
         mBinding.recyclerCalendar.apply {
@@ -145,22 +170,20 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main) {
     }
 
     private fun previusMonthAction(){
-        if (actualMonth == 0 )
-            return
+        if (actualMonth == PAST_MONTH ) return
         localDate = localDate.minusMonths(1)
         pastDate = pastDate.minusMonths(1)
-        actualMonth -= 1
-        viewModel.getUserDate(date = localDate)
+        actualMonth = if (actualMonth == NEXT_MONTH) CURRENT_MONTH else PAST_MONTH
+        viewModel.getUserDate()
         setUi()
     }
 
     private fun nextMonthAction(){
-        if (actualMonth == 2 )
-            return
+        if (actualMonth == NEXT_MONTH ) return
         localDate = localDate.plusMonths(1)
         pastDate = pastDate.minusMonths(1)
-        actualMonth += 1
-        viewModel.getUserDate(date = localDate)
+        actualMonth = if (actualMonth == PAST_MONTH) CURRENT_MONTH else NEXT_MONTH
+        viewModel.getUserDate()
         setUi()
     }
 
@@ -172,26 +195,23 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main) {
     @SuppressLint("UseCompatLoadingForDrawables")
     private fun moveNavSelector(view: View) {
         when(view.id){
-            R.id.home ->{
-                mBinding.containerSelectorNav.updateLayoutParams<ConstraintLayout.LayoutParams> {
-                    startToStart = mBinding.home.id
-                    endToEnd = mBinding.home.id
-                }
-                mBinding.imgSelectorNav.setImageDrawable(requireContext().getDrawable(R.drawable.ic_home))
+            R.id.container_home_nav ->{
+                mBinding.containerHomeNav.setBackgroundResource(R.drawable.bg_buttom_nav)
+                mBinding.containerTeamNav.setBackgroundColor(requireContext().getColor(R.color.grey1))
+                mBinding.containerMyProfileNav.setBackgroundColor(requireContext().getColor(R.color.grey1))
+                Toast.makeText(requireContext(), "Home", Toast.LENGTH_SHORT).show()
             }
-            R.id.team ->{
-                mBinding.containerSelectorNav.updateLayoutParams<ConstraintLayout.LayoutParams> {
-                    startToStart = mBinding.team.id
-                    endToEnd = mBinding.team.id
-                }
-                mBinding.imgSelectorNav.setImageDrawable(requireContext().getDrawable(R.drawable.ic_group))
+            R.id.container_team_nav ->{
+                mBinding.containerTeamNav.setBackgroundResource(R.drawable.bg_buttom_nav)
+                mBinding.containerHomeNav.setBackgroundColor(requireContext().getColor(R.color.grey1))
+                mBinding.containerMyProfileNav.setBackgroundColor(requireContext().getColor(R.color.grey1))
+                Toast.makeText(requireContext(), "Equipo", Toast.LENGTH_SHORT).show()
             }
-            R.id.myProfile ->{
-                mBinding.containerSelectorNav.updateLayoutParams<ConstraintLayout.LayoutParams> {
-                    startToStart = mBinding.myProfile.id
-                    endToEnd = mBinding.myProfile.id
-                }
-                mBinding.imgSelectorNav.setImageDrawable(requireContext().getDrawable(R.drawable.ic_my_profile))
+            R.id.container_my_profile_nav ->{
+                mBinding.containerMyProfileNav.setBackgroundResource(R.drawable.bg_buttom_nav)
+                mBinding.containerHomeNav.setBackgroundColor(requireContext().getColor(R.color.grey1))
+                mBinding.containerTeamNav.setBackgroundColor(requireContext().getColor(R.color.grey1))
+                Toast.makeText(requireContext(), "Perfil", Toast.LENGTH_SHORT).show()
             }
             else -> { }
         }

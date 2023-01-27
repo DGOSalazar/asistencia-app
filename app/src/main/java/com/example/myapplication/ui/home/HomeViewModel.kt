@@ -28,10 +28,9 @@ class HomeViewModel @Inject constructor(
 
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun getUserDate(date:LocalDate){
+    fun getUserDate(){
         getAllAttendanceDaysByMonthUseCase.invoke(
-            date = date,
-            errorObserver = {},
+            errorObserver = { },
             success = { _userData.value = it }
         )
     }
@@ -40,9 +39,10 @@ class HomeViewModel @Inject constructor(
     fun setCalendarDays(
         localDate: LocalDate,
         pastDate: LocalDate,
-        daysToAttend: List<AttendanceDays>
+        daysToAttend: List<AttendanceDays>,
+        isNextMonth:  Int
     ){
-        _currentMonth.value = generateMonthDaysUseCase.invoke( localDate, pastDate, daysToAttend)
+        _currentMonth.value = generateMonthDaysUseCase.invoke( localDate, pastDate, daysToAttend, isNextMonth)
     }
 
 

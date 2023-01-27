@@ -7,9 +7,11 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class Day(var num: Int=12,
                var name: String="01",
-               var places: Int=0,
+               var places: Int=15,
                var freePlaces: Boolean = false,
                var profilePhoto: Boolean=false,
                var isCurrentMonth: Boolean=true,
                var isToday: Boolean= false,
-               var selected: Boolean= false) : Parcelable
+               var selected: Boolean= false,
+               var enable:Boolean = false,
+               var date:String = "") : Parcelable

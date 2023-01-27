@@ -6,6 +6,7 @@ import androidx.annotation.RequiresApi
 import com.example.myapplication.data.models.AttendanceDays
 import com.example.myapplication.data.models.Day
 import com.example.myapplication.data.models.Month
+import com.example.myapplication.ui.home.NEXT_MONTH
 import java.time.LocalDate
 import java.time.YearMonth
 import javax.inject.Inject
@@ -15,61 +16,107 @@ class GenerateMonthDaysUseCase @Inject constructor() {
     @SuppressLint("SuspiciousIndentation")
     @RequiresApi(Build.VERSION_CODES.O)
     operator fun invoke(
-        localDate: LocalDate,
+        currentDate: LocalDate,
         pastDate: LocalDate,
         attendanceDays: List<AttendanceDays>,
+        isNextMonth:  Int
     ): Month {
-
-        val monthSelected = localDate.month
+        val monthSelected = currentDate.month
         val currentDay = LocalDate.now().dayOfMonth
         val currentMonth = LocalDate.now().month
-        var today = 0
+
+        var todayValue = 0
+        var todayPosition = 0
+        var pastToday = false
+        var countEnableDays = 0
+
         val pastMonthDays = YearMonth.from(pastDate).lengthOfMonth()
-        val daysOfMonth = YearMonth.from(localDate).lengthOfMonth()
-        val dayOfWeek = localDate.withDayOfMonth(1).dayOfWeek.value
+        val daysOfMonth = YearMonth.from(currentDate).lengthOfMonth()
+        val dayOfWeek = currentDate.withDayOfMonth(1).dayOfWeek.value
 
         val tempDays: ArrayList<Day> = arrayListOf()
-        val sunDaysAndSaturdays= arrayOf(1,7,8,14,15,21,22,28,29,35,36,42)
+        val sunDaysAndSaturdays = arrayOf(1,7,8,14,15,21,22,28,29,35,36,42)
+
+        val pastMonthDaysList = getDaysToAttend(attendanceDays, pastDate)
+        val currentMonthDaysList = getDaysToAttend(attendanceDays, currentDate)
+        val nextDate = currentDate.plusMonths(1)
+        val nextMonthDaysList = getDaysToAttend(attendanceDays, nextDate)
 
         for(i in 1..42){
             val isSundayOrSaturday = sunDaysAndSaturdays.any{ it == i }
 
-            if(!isSundayOrSaturday) {
+            if(!isSundayOrSaturday) {   //add days if is not weekend
                 if (i <= dayOfWeek || i> daysOfMonth + dayOfWeek ){
-                    if(dayOfWeek !in 6..7 ){
-                        if(i <= dayOfWeek){
-                            tempDays.add(Day(num = pastMonthDays - dayOfWeek + i, isCurrentMonth = false, freePlaces = false))
+                    if(dayOfWeek !in 6..7 && i <= dayOfWeek){   //add past month days only if the week of current month is not start on monday
+                        val dia =  pastMonthDays - dayOfWeek + i
+                        var freePlaces = 15
+                        var date = ""
+                        pastMonthDaysList.forEach {  day->
+                            if (day.day == pastMonthDays - dayOfWeek + i){
+                                freePlaces = day.freePlaces
+                                date = day.currentDay
+                            }
                         }
+                        tempDays.add(Day(num = dia, isCurrentMonth = false, places = freePlaces, date = date))
                     }
                 }else{
                     val day = i-dayOfWeek
-                    if (day == currentDay && monthSelected == currentMonth){
-                        today = day
-                        tempDays.add(Day(num = day, profilePhoto = false, freePlaces = true, isToday = true))
+
+                    if (day == currentDay && monthSelected == currentMonth){        //set today
+                        todayValue = day
+                        todayPosition = i
+                        if (!pastToday) pastToday = true
+                        tempDays.add( Day(num = day, isToday = true, enable = true))
                     }
                     else{
+                        if (pastToday) countEnableDays  += 1
+                        val dayEnable = if(isNextMonth == NEXT_MONTH) false else pastToday && countEnableDays <= 15
                         var freePlaces = 15
-                            attendanceDays.forEach {
-                                freePlaces = if(it.day == day )
-                                    it.freePlaces
-                                else
-                                    15
+
+                        currentMonthDaysList.forEach {
+                             if( it.day == day ) freePlaces =it.freePlaces
                         }
-                        tempDays.add( Day(num = day, profilePhoto = false, freePlaces = true, places = freePlaces) )
+                        tempDays.add( Day(num = day, places = freePlaces, enable = dayEnable) )
                     }
                 }
             }
         }
-        val isPastMonth =
-        if(LocalDate.now().year > localDate.year) true else currentMonth > monthSelected
+        val daysLeftToEnable = 15-countEnableDays
+        val selectedDays = selectDays(tempDays,nextMonthDaysList, daysLeftToEnable)
+        var daysToFormatNextMonth = 0
 
-        return Month(daysList = selectDays(tempDays), today = today, pastMonth = isPastMonth)
+        if (todayPosition + 16 < selectedDays.size)
+            daysToFormatNextMonth = 15 - selectedDays.size - (todayPosition + 1)
+
+        return Month(
+            daysList = selectedDays,
+            today = todayValue,
+            daysToFormatNextMonth = daysToFormatNextMonth
+        )
     }
 
-    private fun selectDays(dayList: ArrayList<Day>) :ArrayList<Day>{
+    private fun selectDays(
+        dayList: ArrayList<Day>,
+        nextMonthDaysList: List<AttendanceDays>,
+        daysLeftToEnable: Int
+    ) :ArrayList<Day>{
+        var temDaysLeftToEnable = daysLeftToEnable
+
         if (dayList.size < 25){
-            for (i in 1..(25-dayList.size)){
-                dayList.add(Day(num = i, isCurrentMonth = false, freePlaces = true))
+            var freePlaces = 15
+            var date = ""
+
+            for (day in 1..(25-dayList.size)){
+                nextMonthDaysList.forEach{
+                    if(it.day == day){
+                        freePlaces = it.freePlaces
+                        date = it.currentDay
+                    }
+                }
+                dayList.add(Day(
+                    num = day, isCurrentMonth = false,
+                    places = freePlaces, enable = temDaysLeftToEnable > 0, date = date))
+                temDaysLeftToEnable-=1
             }
         }else
             for (i in 1..(dayList.size-25)){
@@ -77,4 +124,25 @@ class GenerateMonthDaysUseCase @Inject constructor() {
             }
         return dayList
     }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun getDaysToAttend(attendanceDays: List<AttendanceDays>, date:LocalDate):List<AttendanceDays>{
+        val filterList = mutableListOf<AttendanceDays>()
+
+        attendanceDays.forEach { day ->
+            val currentDate = date.toString().split("-")
+            val dayDate = day.currentDay.split("-")
+            val dayMonth = dayDate[1]
+            val currentMonth = currentDate[1]
+
+            if (currentMonth == dayMonth) {
+                day.freePlaces = 15 - day.emails.size
+                day.day = dayDate[0].toInt()
+                filterList.add(day)
+            }
+        }
+        return filterList
+    }
+
+
 }
