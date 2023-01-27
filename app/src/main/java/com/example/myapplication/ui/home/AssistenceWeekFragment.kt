@@ -79,10 +79,10 @@ class AssistenceWeekFragment : Fragment(R.layout.fragment_assistencce_week) {
                 EnrollToDayDialog().show(parentFragmentManager,"Yep")
                 viewModel.addUserToListUsers("diego.maradona@coppl.com")
                 viewModel.addUserToDay()
-                changeBotton()
+                changeButton()
             }
             btUndo.setOnClickListener {
-                changeBotton()
+                changeButton()
             }
         }
     }
@@ -99,10 +99,10 @@ class AssistenceWeekFragment : Fragment(R.layout.fragment_assistencce_week) {
     }
     private fun setUserAdapter(userList: List<User>) {
         if(userList.isEmpty()) {
-            setEmptyUserUi()
+            setEmptyUser()
         }
         else {
-            setNotEmptyUser()
+            setEmptyUser()
             mBinding.tvActualMonth.text = "${userList.size} ${getString(R.string.msgAssit)}"
             mUserAdapter = UserAdapter(userList)
             mBinding.recyclerUsers.apply {
@@ -112,25 +112,21 @@ class AssistenceWeekFragment : Fragment(R.layout.fragment_assistencce_week) {
         }
     }
 
-    private fun setNotEmptyUser() {
+    private fun setEmptyUser() {
         with(mBinding){
-            tvActualMonth.visibility=View.VISIBLE
-            tvFreeDay.visibility = View.GONE
-            recyclerUsers.visibility=View.VISIBLE
+            if (tvActualMonth.visibility == View.GONE) {
+                tvActualMonth.visibility = View.VISIBLE
+                tvFreeDay.visibility = View.GONE
+                recyclerUsers.visibility = View.VISIBLE
+            }else{
+                tvActualMonth.visibility=View.GONE
+                tvFreeDay.visibility = View.VISIBLE
+                recyclerUsers.visibility=View.GONE
+            }
         }
     }
 
-    private fun setEmptyUserUi() {
-        with(mBinding){
-            tvActualMonth.visibility=View.GONE
-            tvFreeDay.visibility = View.VISIBLE
-            recyclerUsers.visibility=View.GONE
-        }
-    }
-
-
-
-    private fun changeBotton() {
+    private fun changeButton() {
         with(mBinding) {
             if (mBinding.btAdd.visibility == View.VISIBLE) {
                     btAdd.visibility = View.GONE
