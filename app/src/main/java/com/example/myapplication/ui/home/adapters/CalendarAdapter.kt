@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.myapplication.R
 import com.example.myapplication.databinding.DayViewBinding
 import com.example.myapplication.data.models.Day
@@ -22,6 +23,7 @@ class CalendarAdapter(private var days: ArrayList<Day> = arrayListOf(),private v
     var assistedDays = emptyList<Int>()
     var statusMonth = 1
     var daysToFormatNextMonth = 0
+    var imageProfileUrl = ""
 
     @RequiresApi(Build.VERSION_CODES.M)
     inner class ViewHolder(view: View):RecyclerView.ViewHolder(view){
@@ -104,6 +106,7 @@ class CalendarAdapter(private var days: ArrayList<Day> = arrayListOf(),private v
                         }
                     }
                 }
+                Glide.with(ctx).load(imageProfileUrl).into(ivProfile)
                 tvDay.text = String.format("%02d", day.num)
                 val freeDaysBgColor = if(isFreePlaces) R.color.blue1 else R.color.blue2
                 freePlaces.backgroundTintList = ColorStateList.valueOf(ctx.getColor(freeDaysBgColor))
