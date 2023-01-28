@@ -61,7 +61,6 @@ class AssistenceWeekFragment : Fragment(R.layout.fragment_assistencce_week) {
           userEmails.observe(viewLifecycleOwner){
               if (it.isEmpty()){
                   setUserAdapter(listOf())
-
               }
               viewModel.enrollUser(day,viewModel.userEmails.value!!)
               viewModel.getUserDatastore(it)
@@ -75,8 +74,9 @@ class AssistenceWeekFragment : Fragment(R.layout.fragment_assistencce_week) {
                 activity?.onBackPressed()
             }
             btAdd.setOnClickListener {
-                //context?.toast(viewModel!!.saveEmail!!.value!!)
                 EnrollToDayDialog().show(parentFragmentManager,"Yep")
+
+                viewModel.getListEmails(selectDay.date)
                 viewModel.addUserToListUsers("diego.maradona@coppl.com")
                 viewModel.addUserToDay()
                 changeButton()
