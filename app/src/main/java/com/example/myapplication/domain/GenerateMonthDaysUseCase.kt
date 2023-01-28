@@ -34,6 +34,7 @@ class GenerateMonthDaysUseCase @Inject constructor() {
         val daysOfMonth = YearMonth.from(currentDate).lengthOfMonth()
         val dayOfWeek = currentDate.withDayOfMonth(1).dayOfWeek.value
 
+
         val tempDays: ArrayList<Day> = arrayListOf()
         val sunDaysAndSaturdays = arrayOf(1,7,8,14,15,21,22,28,29,35,36,42)
 
@@ -44,20 +45,28 @@ class GenerateMonthDaysUseCase @Inject constructor() {
 
         for(i in 1..42){
             val isSundayOrSaturday = sunDaysAndSaturdays.any{ it == i }
+            val day = i-dayOfWeek
 
             if(!isSundayOrSaturday) {   //add days if is not weekend
                 if (i <= dayOfWeek || i> daysOfMonth + dayOfWeek ){
                     if(dayOfWeek !in 6..7 && i <= dayOfWeek){   //add past month days only if the week of current month is not start on monday
                         val dia =  pastMonthDays - dayOfWeek + i
                         var freePlaces = 15
-                        var date = ""
+
                         pastMonthDaysList.forEach {  day->
-                            if (day.day == pastMonthDays - dayOfWeek + i){
+                            if (day.day == pastMonthDays - dayOfWeek + i)
                                 freePlaces = day.freePlaces
-                                date = day.currentDay
-                            }
                         }
-                        tempDays.add(Day(num = dia, isCurrentMonth = false, places = freePlaces, date = date))
+                        tempDays.add(
+                            Day(
+                            num = dia,
+                            nameEng = pastDate.withDayOfMonth(dia).dayOfWeek,
+                            isCurrentMonth = false,
+                            freePlaces = false,
+                            dayOfWeek = dayOfWeek,
+                            date = getFormatDate(day,monthSelected.value),
+                            places = freePlaces)
+                        )
                     }
                 }else{
                     val day = i-dayOfWeek
@@ -66,7 +75,10 @@ class GenerateMonthDaysUseCase @Inject constructor() {
                         todayValue = day
                         todayPosition = i
                         if (!pastToday) pastToday = true
-                        tempDays.add( Day(num = day, isToday = true, enable = true))
+                        tempDays.add( Day(num = day, isToday = true, enable = true,
+                            nameEng = currentDate.withDayOfMonth(day).dayOfWeek,
+                            freePlaces = true,
+                            date = getFormatDate(day,monthSelected.value)))
                     }
                     else{
                         if (pastToday) countEnableDays  += 1
@@ -76,10 +88,24 @@ class GenerateMonthDaysUseCase @Inject constructor() {
                         currentMonthDaysList.forEach {
                              if( it.day == day ) freePlaces =it.freePlaces
                         }
-                        tempDays.add( Day(num = day, places = freePlaces, enable = dayEnable) )
+                        tempDays.add( Day(num = day, places = freePlaces,
+                            nameEng = currentDate.withDayOfMonth(day).dayOfWeek,
+                            enable = dayEnable,freePlaces = true,
+                            date = getFormatDate(day,monthSelected.value)) )
                     }
                 }
             }
+
+            if (day == currentDay && monthSelected == currentMonth){        //set today
+                todayValue = day
+                todayPosition = i
+                if (!pastToday) pastToday = true
+                tempDays.add( Day(num = day, isToday = true, enable = true,
+                    nameEng = currentDate.withDayOfMonth(day).dayOfWeek,
+                    freePlaces = true,
+                    date = getFormatDate(day,monthSelected.value)))
+            }
+
         }
         val daysLeftToEnable = 15-countEnableDays
         val selectedDays = selectDays(tempDays,nextMonthDaysList, daysLeftToEnable)
@@ -95,6 +121,7 @@ class GenerateMonthDaysUseCase @Inject constructor() {
         )
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun selectDays(
         dayList: ArrayList<Day>,
         nextMonthDaysList: List<AttendanceDays>,
@@ -145,4 +172,6 @@ class GenerateMonthDaysUseCase @Inject constructor() {
     }
 
 
+
+    private fun getFormatDate(dayMonth: Int, month:Int): String = "${dayMonth}-0${month}-2023"
 }

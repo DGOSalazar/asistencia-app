@@ -2,16 +2,12 @@ package com.example.myapplication.ui.home
 
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.content.SharedPreferences
 import android.os.Build
 import android.os.Bundle
-import android.preference.PreferenceManager
 import android.view.*
 import android.widget.Toast
 import androidx.annotation.RequiresApi
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -46,18 +42,22 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main) {
     private lateinit var mCalendarAdapter: CalendarAdapter
     private lateinit var mUserAdapter: UserAdapter
     private lateinit var mBinding:FragmentAssistenceMainBinding
-    private val viewModel:HomeViewModel by activityViewModels()
+    private val viewModel: HomeViewModel by activityViewModels()
 
-    private lateinit var bundleNum :Bundle
-    private lateinit var bundleDay : Bundle
-
+    @RequiresApi(Build.VERSION_CODES.O)
     var localDate: LocalDate= LocalDate.now()
     private var pastDate = localDate.minusMonths(1)
     private var actualMonth = CURRENT_MONTH
+    private var accountEmail = ""
 
     @Inject
     lateinit var sharedPreferences: SharedPreferences
 
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        accountEmail = sharedPreferences.getString(EMAIL_KEY, "").toString()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -72,14 +72,39 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main) {
         setObservers()
         setCalendarAdapter()
         setUserAdapter()
-        setUi()
+        setCalendarTitle()
         setListeners()
     }
 
     private fun setObservers() {
-        viewModel.userData.observe(viewLifecycleOwner, this::setCalendarDays)
+        viewModel.assistanceDays.observe(viewLifecycleOwner, this::setCalendarDays)
+        viewModel.currentMonth.observe(viewLifecycleOwner, this::updateCurrentDateInCalendar)
+        viewModel.accountData.observe(viewLifecycleOwner, this::setHeader)
+        viewModel.newUsers.observe(viewLifecycleOwner, this::updateUsersList)
+        viewModel.newUserEmails.observe(viewLifecycleOwner){
+            viewModel.getUserDatastore(it, 1)
+        }
+    }
 
-        viewModel.currentMonth.observe(viewLifecycleOwner, this::setCurrentDate)
+    @SuppressLint("SetTextI18n")
+    private fun updateUsersList(emailList:ArrayList<User>) {
+        mBinding.tvAssist.text = "${emailList.size} Asistentes"
+        mUserAdapter = UserAdapter(emailList)
+        mBinding.recyclerUsers.apply {
+            layoutManager = LinearLayoutManager(activity?.applicationContext)
+            adapter = mUserAdapter
+            addItemDecoration(
+                DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL)
+            )
+        }
+    }
+
+    @SuppressLint("SetTextI18n", "NotifyDataSetChanged")
+    private fun setHeader(user: User) {
+        mBinding.tvWelcome.text = "Hola ${user.name}"
+        mBinding.tvDate.text = "Hoy es $pastDate"
+        mCalendarAdapter.imageProfileUrl = user.profilePhoto
+        mCalendarAdapter.notifyDataSetChanged()
     }
 
     private fun setCalendarDays(daysToAttend:List<AttendanceDays>){
@@ -90,10 +115,9 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main) {
 
     private fun getDaysToAttend(daysToAttend: List<AttendanceDays>): List<Int> {
         val userAssistanceDays = arrayListOf<Int>()
-        val email = sharedPreferences.getString(EMAIL_KEY, "")
 
         daysToAttend.forEach{ day ->
-            if(day.emails.any {it == email}) {
+            if(day.emails.any {it == accountEmail}) {
                 val date = day.currentDay.split("-")
                 val assistanceDay = date[0].toInt()
                 val currentMonth = localDate.toString().split("-")[1]
@@ -126,12 +150,12 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main) {
     }
 
     @SuppressLint("SetTextI18n")
-    private fun setUi() {
+    private fun setCalendarTitle() {
         mBinding.tvMonth.text = monthYearFromDate(localDate)
     }
 
     @SuppressLint("NotifyDataSetChanged", "SimpleDateFormat")
-    private fun setCurrentDate(month:Month) {
+    private fun updateCurrentDateInCalendar(month:Month) {
         mCalendarAdapter.daysToFormatNextMonth = month.daysToFormatNextMonth.absoluteValue
         mCalendarAdapter.setCalendarData(month.daysList)
         mCalendarAdapter.today = month.today
@@ -139,28 +163,15 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main) {
     }
 
     private fun setUserAdapter() {
-        viewModel.getUserDate()
-        mUserAdapter = UserAdapter(
-            user= listOf(
-                User("example@coppel.com", "Ramon", "Coppel", "Coppel", "Gerente Senior"),
-                User("example@coppel.com", "Ramon", "Coppel", "Coppel", "Gerente Senior"),
-                User("example@coppel.com", "Ramon", "Coppel", "Coppel", "Gerente Senior"),
-                User("example@coppel.com", "Ramon", "Coppel", "Coppel", "Gerente Senior"),
-                User("example@coppel.com", "Ramon", "Coppel", "Coppel", "Gerente Senior"),
-                User("example@coppel.com", "Ramon", "Coppel", "Coppel", "Gerente Senior")
-            )
-        )
-        mBinding.recyclerUsers.apply {
-            layoutManager = LinearLayoutManager(activity?.applicationContext)
-            adapter = mUserAdapter
-            addItemDecoration(
-                DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL)
-            )
-        }
+        viewModel.getAccountData(accountEmail)
+        val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy")
+        val formattedString = localDate.format(formatter)
+        viewModel.getListEmails(formattedString, 1)
     }
 
     private fun setCalendarAdapter(){
-        mCalendarAdapter = CalendarAdapter{
+        viewModel.getUserDate()
+        mCalendarAdapter = CalendarAdapter {
             click(it)
         }
         mBinding.recyclerCalendar.apply {
@@ -175,7 +186,7 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main) {
         pastDate = pastDate.minusMonths(1)
         actualMonth = if (actualMonth == NEXT_MONTH) CURRENT_MONTH else PAST_MONTH
         viewModel.getUserDate()
-        setUi()
+        setCalendarTitle()
     }
 
     private fun nextMonthAction(){
@@ -184,7 +195,7 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main) {
         pastDate = pastDate.minusMonths(1)
         actualMonth = if (actualMonth == PAST_MONTH) CURRENT_MONTH else NEXT_MONTH
         viewModel.getUserDate()
-        setUi()
+        setCalendarTitle()
     }
 
     private fun monthYearFromDate(date:LocalDate):String {
@@ -213,12 +224,16 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main) {
                 mBinding.containerTeamNav.setBackgroundColor(requireContext().getColor(R.color.grey1))
                 Toast.makeText(requireContext(), "Perfil", Toast.LENGTH_SHORT).show()
             }
-            else -> { }
+            else -> {
+                //
+            }
         }
     }
 
     private fun click(day:Day){
-        findNavController().navigate(AssistenceMainFragmentDirections.actionAssistenceMainFragmentToAssistenceWeekFragment(day))
+        viewModel.setDay(day.date)
+        viewModel.getListEmails(day.date)
+        viewModel.setWeekList(day)
+        findNavController().navigate(AssistenceMainFragmentDirections.actionAssistenceMainFragmentToAssistenceWeekFragment())
     }
-
 }

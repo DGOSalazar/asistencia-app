@@ -46,7 +46,5 @@
         android:name="com.example.myapplication.ui.home.AssistenceWeekFragment"
         android:label="fragment_assistencce_week"
         tools:layout="@layout/fragment_assistencce_week">
-        <argument android:name="day"
-            app:argType="com.example.myapplication.data.models.Day"/>
     </fragment>
 </navigation>

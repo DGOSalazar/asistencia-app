@@ -16,7 +16,6 @@ import androidx.navigation.fragment.findNavController
 import com.example.myapplication.R
 import com.example.myapplication.core.extensionFun.toast
 import com.example.myapplication.data.models.User
-import com.example.myapplication.data.network.FirebaseServices
 import com.example.myapplication.databinding.FragmentRegisterBinding
 
 
@@ -80,9 +79,9 @@ class RegisterFragment : Fragment() {
                         birthDate = mBinding.inputBirthDate.text.toString(),
                         team = mBinding.inputTeam.text.toString(),
                         profilePhoto = imageUri.toString(),
-                        employee = mBinding.inputEmployee.text.toString().toInt(),
+                        employee = mBinding.inputEmployee.text.toString().toLong(),
                         phone = inputPhone.text.toString(),
-                        assistDay = listOf("","","")
+                        assistDay = arrayListOf("","","")
                     )
                     viewModel.saveUserData(user)
                 }

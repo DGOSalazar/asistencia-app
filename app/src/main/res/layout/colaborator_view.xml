@@ -19,6 +19,7 @@
         android:backgroundTint="@color/white"
         app:cardCornerRadius="21dp">
         <ImageView
+            android:id="@+id/iv_profile"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:src="@drawable/account_img" />
@@ -58,7 +59,15 @@
         android:layout_marginTop="4dp"
         android:background="@drawable/backgroun_position"
         android:backgroundTint="@color/android_color"
+        app:layout_goneMarginTop="16dp"
         android:layout_marginStart="12sp"
          />
+    <View
+        android:layout_width="match_parent"
+        android:layout_marginTop="16dp"
+        android:layout_height="1dp"
+        android:background="@color/grayCoppel"
+        app:layout_constraintTop_toBottomOf="@id/bg_occupation"
+        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
