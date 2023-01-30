@@ -82,7 +82,7 @@ class FirebaseServices @Inject constructor(
         )
     }
 
-    fun getUserInfo(listEmail: ArrayList<String>,user:(ArrayList<User>)->Unit) = runCatching {
+    fun getUserInfo(listEmail: ArrayList<String>,user:(ArrayList<User>)-> Unit) = runCatching {
         var user1: User
         val list = arrayListOf<User>()
             for (i in listEmail) {

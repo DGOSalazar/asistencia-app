@@ -62,13 +62,29 @@
     <string name="succes">Te haz registrado exitosamente.</string>
     <string name="msgAssit">Asistentes</string>
     <string name="free_day">Aun no se ha seleccionado ningun espacio para este dia</string>
+    <string name="title_register">ASISTENCIA <b>GUADALAJARA</b></string>
+    <string name="tv_create_account">Crear una cuenta</string>
+    <string name="helper_email">Ingresaa tu correo coppel.</string>
+    <string name="hint_pass">Contraseña</string>
+    <string name="hint_pass2">Confirmar contraseña.</string>
+    <string name="helper_pass">Ingresa tu contraseña.</string>
+    <string name="helper_pass2">Vuelve a escribir la contraseña.</string>
+    <string name="tv_personal_data">Datos personales</string>
+    <string name="tv_last_steps">¡Último paso!</string>
+    <string name="name_user">Diego Salazar Contreras</string>
 
     <string-array name="positions">
-        <item>Android</item>
-        <item>IOS</item>
+        <item>Android Dev</item>
+        <item>IOS Dev</item>
         <item>Analyst</item>
-        <item>Backend</item>
+        <item>Backend Dev</item>
         <item>Scrum Master</item>
-        <item>Quality</item>
+        <item>Tester/QA</item>
+    </string-array>
+    <string-array name="teams">
+        <item>HellFish</item>
+        <item>Minus</item>
+        <item>Rocket</item>
+        <item>En espera...</item>
     </string-array>
 </resources>
