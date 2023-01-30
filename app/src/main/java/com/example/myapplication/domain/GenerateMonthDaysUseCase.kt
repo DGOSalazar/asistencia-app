@@ -100,12 +100,7 @@ class GenerateMonthDaysUseCase @Inject constructor() {
                 todayValue = day
                 todayPosition = i
                 if (!pastToday) pastToday = true
-                tempDays.add( Day(num = day, isToday = true, enable = true,
-                    nameEng = currentDate.withDayOfMonth(day).dayOfWeek,
-                    freePlaces = true,
-                    date = getFormatDate(day,monthSelected.value)))
             }
-
         }
         val daysLeftToEnable = 15-countEnableDays
         val selectedDays = selectDays(tempDays,nextMonthDaysList, daysLeftToEnable)

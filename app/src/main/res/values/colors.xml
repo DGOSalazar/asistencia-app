@@ -13,6 +13,7 @@
 
     <color name="background_login">#94002299</color>
     <color name="blue_app">#2A4EA9</color>
+    <color name="blue2_app">#0F236E</color>
 
     <color name="grey1">#F3F3F3</color>
     <color name="grey2">#505050</color>
@@ -21,6 +22,7 @@
     <color name="grey5">#B2B2B2</color>
     <color name="grey6">#DEDEDE</color>
     <color name="grey7">#DBDBDB</color>
+    <color name="transparent_grey">#B3505050</color>
 
     <color name="blue1">#7FD6EA</color>
     <color name="blue2">#9DB2B7</color>

@@ -160,6 +160,8 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main) {
         mCalendarAdapter.setCalendarData(month.daysList)
         mCalendarAdapter.today = month.today
         mCalendarAdapter.notifyDataSetChanged()
+        setCalendarTitle()
+        mBinding.loader.visibility = View.GONE
     }
 
     private fun setUserAdapter() {
@@ -182,20 +184,20 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main) {
 
     private fun previusMonthAction(){
         if (actualMonth == PAST_MONTH ) return
+        mBinding.loader.visibility = View.VISIBLE
         localDate = localDate.minusMonths(1)
         pastDate = pastDate.minusMonths(1)
         actualMonth = if (actualMonth == NEXT_MONTH) CURRENT_MONTH else PAST_MONTH
         viewModel.getUserDate()
-        setCalendarTitle()
     }
 
     private fun nextMonthAction(){
         if (actualMonth == NEXT_MONTH ) return
+        mBinding.loader.visibility = View.VISIBLE
         localDate = localDate.plusMonths(1)
         pastDate = pastDate.minusMonths(1)
         actualMonth = if (actualMonth == PAST_MONTH) CURRENT_MONTH else NEXT_MONTH
         viewModel.getUserDate()
-        setCalendarTitle()
     }
 
     private fun monthYearFromDate(date:LocalDate):String {
