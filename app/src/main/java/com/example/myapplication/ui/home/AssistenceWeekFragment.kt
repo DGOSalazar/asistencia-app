@@ -14,6 +14,7 @@ import com.example.myapplication.R
 import com.example.myapplication.core.dialog.EnrollToDayDialog
 import com.example.myapplication.core.extensionFun.toast
 import com.example.myapplication.data.models.Day
+import com.example.myapplication.data.models.Status
 import com.example.myapplication.data.models.User
 import com.example.myapplication.databinding.FragmentAssistencceWeekBinding
 import com.example.myapplication.ui.home.adapters.UserAdapter
@@ -40,12 +41,20 @@ class AssistenceWeekFragment : Fragment(R.layout.fragment_assistencce_week) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        isLoading(true)
         subscribeLiveData()
         setListeners()
     }
 
     private fun subscribeLiveData() {
       with(viewModel){
+          isLoading.observe(viewLifecycleOwner){
+            if(it==Status.LOADING){
+                isLoading(true)
+            }else{
+                isLoading(false)
+            }
+          }
           daySelected.observe(viewLifecycleOwner){
               day = it
               context?.toast(day)
@@ -60,7 +69,15 @@ class AssistenceWeekFragment : Fragment(R.layout.fragment_assistencce_week) {
           }
           userEmails.observe(viewLifecycleOwner){
               if (it.isEmpty()){
+                  setEmptyUserUi(true)
+                  isLoading(false)
                   setUserAdapter(listOf())
+              }else
+                  setEmptyUserUi(false)
+              if(it.contains("diego.maradona@coppl.com")){
+                  activateButton(false)
+              }else{
+                  activateButton(true)
               }
               viewModel.enrollUser(day,viewModel.userEmails.value!!)
               viewModel.getUserDatastore(it)
@@ -74,19 +91,33 @@ class AssistenceWeekFragment : Fragment(R.layout.fragment_assistencce_week) {
                 activity?.onBackPressed()
             }
             btAdd.setOnClickListener {
-                EnrollToDayDialog().show(parentFragmentManager,"Yep")
-
+                EnrollToDayDialog(true,selectDay).show(parentFragmentManager,"Yep")
                 viewModel.getListEmails(selectDay.date)
                 viewModel.addUserToListUsers("diego.maradona@coppl.com")
                 viewModel.addUserToDay()
-                changeButton()
+                activateButton(false)
             }
             btUndo.setOnClickListener {
-                changeButton()
+                EnrollToDayDialog(false,selectDay).show(parentFragmentManager,"Yep")
+                viewModel.getListEmails(selectDay.date)
+                viewModel.deleteUserOfDay("diego.maradona@coppl.com")
+                viewModel.addUserToDay()
+                activateButton(true)
             }
         }
     }
 
+    private fun isLoading(i:Boolean){
+        with(mBinding){
+            if (i){
+                progress.visibility = View.VISIBLE
+                mcAssist.visibility = View.GONE
+            }else{
+                progress.visibility = View.GONE
+                mcAssist.visibility = View.VISIBLE
+            }
+        }
+    }
     private fun setDaysAdapter(_p:List<Day>) {
         mAdapter = WeekAdapter(_p){
             click(it)
@@ -98,45 +129,37 @@ class AssistenceWeekFragment : Fragment(R.layout.fragment_assistencce_week) {
         }
     }
     private fun setUserAdapter(userList: List<User>) {
-        if(userList.isEmpty()) {
-            setEmptyUserUi()
+        mBinding.tvActualMonth.text = "${userList.size} ${getString(R.string.msgAssit)}"
+        mUserAdapter = UserAdapter(userList)
+        mBinding.recyclerUsers.apply {
+            layoutManager = LinearLayoutManager(activity?.applicationContext)
+            adapter = mUserAdapter
         }
-        else {
-            setNotEmptyUser()
-            mBinding.tvActualMonth.text = "${userList.size} ${getString(R.string.msgAssit)}"
-            mUserAdapter = UserAdapter(userList)
-            mBinding.recyclerUsers.apply {
-                layoutManager = LinearLayoutManager(activity?.applicationContext)
-                adapter = mUserAdapter
+    }
+
+    private fun setEmptyUserUi(i: Boolean) {
+        with(mBinding){
+            if(i) {
+                tvActualMonth.visibility = View.GONE
+                tvFreeDay.visibility = View.VISIBLE
+                recyclerUsers.visibility = View.GONE
+            }else{
+                tvActualMonth.visibility=View.VISIBLE
+                tvFreeDay.visibility = View.GONE
+                recyclerUsers.visibility=View.VISIBLE
             }
         }
     }
 
-    private fun setNotEmptyUser() {
-        with(mBinding){
-            tvActualMonth.visibility=View.VISIBLE
-            tvFreeDay.visibility = View.GONE
-            recyclerUsers.visibility=View.VISIBLE
-        }
-    }
-
-    private fun setEmptyUserUi() {
-        with(mBinding){
-            tvActualMonth.visibility=View.GONE
-            tvFreeDay.visibility = View.VISIBLE
-            recyclerUsers.visibility=View.GONE
-        }
-    }
-
-    private fun changeButton() {
+    private fun activateButton(i: Boolean){
         with(mBinding) {
-            if (mBinding.btAdd.visibility == View.VISIBLE) {
-                    btAdd.visibility = View.GONE
-                    btUndo.visibility = View.VISIBLE
-                }else{
-                    btAdd.visibility = View.VISIBLE
-                    btUndo.visibility = View.GONE
-                }
+            if(i){
+                btAdd.visibility = View.VISIBLE
+                btUndo.visibility = View.GONE
+            }else{
+                btAdd.visibility = View.GONE
+                btUndo.visibility = View.VISIBLE
+            }
         }
     }
 
@@ -150,7 +173,6 @@ class AssistenceWeekFragment : Fragment(R.layout.fragment_assistencce_week) {
         cleanUserAdapter()
         cleanSelected(i.dayOfWeek-1)
         setDaysAdapter(days)
-        context?.toast(day)
     }
 
     private fun cleanSelected(t:Int){

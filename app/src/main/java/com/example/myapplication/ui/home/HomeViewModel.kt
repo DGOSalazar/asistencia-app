@@ -6,10 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.myapplication.data.models.Day
-import com.example.myapplication.data.models.AttendanceDays
-import com.example.myapplication.data.models.Month
-import com.example.myapplication.data.models.User
+import com.example.myapplication.data.models.*
 import com.example.myapplication.domain.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -24,9 +21,7 @@ class HomeViewModel @Inject constructor(
     private val generateWeekDaysUseCase: GenerateWeekDaysUseCase,
     private val enrollUserToDayUseCase: EnrollUserToDayUseCase,
     private val getUserInfoUseCase: GetUserInfoUseCase,
-    private val getAllAttendanceDaysByMonthUseCase: GetAllAttendanceDaysByMonthUseCase,
-    private val getListEmailsUseCase: GetListEmailsUseCase,
-    private val getUser: GetUser
+    private val getAllAttendanceDaysByMonthUseCase: GetAllAttendanceDaysByMonthUseCase
     ):ViewModel() {
 
     private val _daySelected = MutableLiveData<String>()
@@ -56,7 +51,11 @@ class HomeViewModel @Inject constructor(
     private val _newUsers = MutableLiveData<ArrayList<User>>()
     var newUsers : LiveData<ArrayList<User>> = _newUsers
 
+    private val _loader = MutableLiveData<Boolean>()
+    var loader : LiveData<Boolean> = _loader
 
+    private val _isLoading = MutableLiveData<Status>()
+    var isLoading : LiveData<Status> =_isLoading
 
     fun addUserToDay(){
         enrollUserToDayUseCase(_daySelected.value!!, _userEmails.value!!)
@@ -90,9 +89,10 @@ class HomeViewModel @Inject constructor(
     fun getUserDatastore(listEmails:ArrayList<String>, fragment:Int = 0) {
         viewModelScope.launch {
             withContext(Dispatchers.IO){
-                getUserInfoUseCase(listEmails){
+                getUserInfoUseCase.userInfo(listEmails){
                     if(fragment == 0) _users.postValue(it)
                     else _newUsers.postValue(it)
+                    _isLoading.value= Status.SUCCESS
                 }
             }
         }
@@ -100,9 +100,10 @@ class HomeViewModel @Inject constructor(
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun getListEmails(day: String, fragment:Int = 0){
+        _isLoading.value= Status.LOADING
         viewModelScope.launch {
             withContext(Dispatchers.IO){
-                getListEmailsUseCase(day){
+                getUserInfoUseCase.emailList(day){
                     if(fragment==0) _userEmails.postValue(it)
                     else _newUserEmails.postValue(it)
                 }
@@ -119,15 +120,17 @@ class HomeViewModel @Inject constructor(
     fun addUserToListUsers(email: String) {
         _userEmails.value!!.add(email)
     }
-    fun getEmail()  = getUser()
 
     fun getAccountData(accountEmail: String) {
         val listEmails = arrayListOf(accountEmail)
         viewModelScope.launch {
-            getUserInfoUseCase(listEmails){
+            getUserInfoUseCase.userInfo(listEmails){
                 _accountData.postValue(it[0])
             }
         }
+    }
+    fun deleteUserOfDay(email: String){
+        _userEmails.value!!.remove(email)
     }
 
 }
