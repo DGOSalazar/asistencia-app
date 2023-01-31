@@ -57,6 +57,10 @@ class HomeViewModel @Inject constructor(
     private val _isLoading = MutableLiveData<Status>()
     var isLoading : LiveData<Status> =_isLoading
 
+
+    private val _mail = MutableLiveData<String>()
+    var mail : LiveData<String> =_mail
+
     fun addUserToDay(){
         enrollUserToDayUseCase(_daySelected.value!!, _userEmails.value!!)
     }
@@ -135,5 +139,8 @@ class HomeViewModel @Inject constructor(
     fun deleteUserOfDay(email: String){
         _userEmails.value!!.remove(email)
     }
-
+    fun  setEmail(email: String){
+        _mail.value=email
+    }
+    fun  getEmail(): String = mail.value!!
 }

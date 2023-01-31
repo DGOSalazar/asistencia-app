@@ -1,5 +1,6 @@
 package com.example.myapplication.ui.home
 
+
 import android.os.Build
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -19,6 +20,8 @@ import com.example.myapplication.data.models.User
 import com.example.myapplication.databinding.FragmentAssistencceWeekBinding
 import com.example.myapplication.ui.home.adapters.UserAdapter
 import com.example.myapplication.ui.home.adapters.WeekAdapter
+import com.example.myapplication.ui.login.EMAIL_KEY
+import javax.inject.Inject
 
 @RequiresApi(Build.VERSION_CODES.O)
 class AssistenceWeekFragment : Fragment(R.layout.fragment_assistencce_week) {
@@ -30,6 +33,7 @@ class AssistenceWeekFragment : Fragment(R.layout.fragment_assistencce_week) {
     private var days: List<Day> = listOf()
     private var day: String = ""
     private var selectDay : Day = Day()
+    private var accountEmail = ""
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -41,6 +45,7 @@ class AssistenceWeekFragment : Fragment(R.layout.fragment_assistencce_week) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        accountEmail = viewModel.mail.value!!
         isLoading(true)
         subscribeLiveData()
         setListeners()
@@ -74,7 +79,7 @@ class AssistenceWeekFragment : Fragment(R.layout.fragment_assistencce_week) {
                   setUserAdapter(listOf())
               }else
                   setEmptyUserUi(false)
-              if(it.contains("diego.maradona@coppl.com")){
+              if(it.contains(accountEmail)){
                   activateButton(false)
               }else{
                   activateButton(true)
@@ -93,14 +98,14 @@ class AssistenceWeekFragment : Fragment(R.layout.fragment_assistencce_week) {
             btAdd.setOnClickListener {
                 EnrollToDayDialog(true,selectDay).show(parentFragmentManager,"Yep")
                 viewModel.getListEmails(selectDay.date)
-                viewModel.addUserToListUsers("diego.maradona@coppl.com")
+                viewModel.addUserToListUsers(accountEmail)
                 viewModel.addUserToDay()
                 activateButton(false)
             }
             btUndo.setOnClickListener {
                 EnrollToDayDialog(false,selectDay).show(parentFragmentManager,"Yep")
                 viewModel.getListEmails(selectDay.date)
-                viewModel.deleteUserOfDay("diego.maradona@coppl.com")
+                viewModel.deleteUserOfDay(accountEmail)
                 viewModel.addUserToDay()
                 activateButton(true)
             }

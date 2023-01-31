@@ -51,6 +51,7 @@ class StepThreeRegisterFragment : Fragment() {
     private lateinit var lastName:String
     private lateinit var birthdate:String
     private lateinit var phone:String
+    //Cast items
     private var position = ""
     private var team = ""
     private var employeeNumber = ""
@@ -100,6 +101,9 @@ class StepThreeRegisterFragment : Fragment() {
              else
                 context?.toast("Error al subir la imagen")
         }
+        viewModel.registerFlag.observe(viewLifecycleOwner){
+            findNavController().navigate(R.id.action_stepThreeRegisterFragment_to_assistenceMainFragment)
+        }
     }
 
     private fun setSpinners() {
@@ -117,7 +121,7 @@ class StepThreeRegisterFragment : Fragment() {
     private fun setListeners(){
         mBinding.btNext.setOnClickListener{
             val enable = isValidPosition && isValidInitiative && isValidEmployeeNumber && isValidImage
-            if (enable){
+            if (true){
                 val user = User(
                     email = email,
                     name = name,
@@ -127,18 +131,24 @@ class StepThreeRegisterFragment : Fragment() {
                     birthDate = birthdate,
                     team = team,
                     profilePhoto = imageUri.toString(),
-                    employee = employeeNumber.toLong(),
+                    employee = mBinding.inputPass2.text.toString().toLong(),
                     phone = phone,
                     assistDay = arrayListOf("")
                 )
                 viewModel.saveUserData(user)
             }
-                sharedPreferences.edit().putString(EMAIL_KEY, email).apply()
-                findNavController().navigate(R.id.action_stepThreeRegisterFragment_to_assistenceMainFragment)
+            sharedPreferences.edit().putString(EMAIL_KEY, email).apply()
         }
         mBinding.spinnerPosition.onItemSelectedListener = (object : OnItemSelectedListener {
             override fun onItemSelected(p0: AdapterView<*>?, p1: View?, pos: Int, p3: Long) {
-                position = pos.toString()
+                position = when(pos){
+                    0->{"Android"}
+                    1->{"IOS"}
+                    2->{"Analyst"}
+                    3->{"Backend"}
+                    4->{"Scrum Master"}
+                    else->{"Tester/QA"}
+                }
                 updateEnableNextBtn()
             }
             override fun onNothingSelected(p0: AdapterView<*>?) {

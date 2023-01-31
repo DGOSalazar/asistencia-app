@@ -37,6 +37,7 @@ class GenerateWeekDaysUseCase @Inject constructor(){
     @RequiresApi(Build.VERSION_CODES.O)
     private fun generateWeek(begin: Int, to :Int, dayOfMonth: Int, dayOfWeek: DayOfWeek, monthSelected: Month) : ArrayList<Day>{
         var dayList : ArrayList<Day> = arrayListOf()
+        var onlyOnce = true
         for (i in begin..to) {
             if (dayOfMonth +i<= monthSelected.length(false) && dayOfMonth+i>0) {
                 dayList.add(
@@ -52,7 +53,7 @@ class GenerateWeekDaysUseCase @Inject constructor(){
                 if ((dayOfMonth+i) <= 0){
                     dayList.add(
                         Day(
-                            num = if(i==-1){(((monthSelected).length(false)))}
+                            num = if(dayOfMonth+i == 0){(((monthSelected).length(false)))}
                             else{(((monthSelected).length(false))+i)},
                             name = setSpanishDay(dayOfWeek + i.toLong()),
                             dayOfWeek = dayOfWeek.value + i,

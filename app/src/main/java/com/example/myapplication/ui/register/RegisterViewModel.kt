@@ -24,12 +24,12 @@ class RegisterViewMode @Inject constructor(
     fun register(name:String,pass:String){
             viewModelScope.launch {
                 registerUseCase.register(name,pass)
-                _registerFlag.value = true
             }
     }
     fun saveUserData(user:User){
             viewModelScope.launch {
                 registerUseCase.registerUserData(user)
+                _registerFlag.value = true
             }
     }
     fun uploadImage(uri: Uri){
