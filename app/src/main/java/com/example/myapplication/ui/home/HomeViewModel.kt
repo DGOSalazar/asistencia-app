@@ -124,7 +124,8 @@ class HomeViewModel @Inject constructor(
     fun getEmail()  = getUser()
 
     fun getAccountData(accountEmail: String) {
-        val listEmails = arrayListOf(accountEmail)
+        val listEmails: ArrayList<String> = arrayListOf()
+        listEmails.add(accountEmail)
         viewModelScope.launch {
             getUserInfoUseCase(listEmails){
                 _accountData.postValue(it[0])
