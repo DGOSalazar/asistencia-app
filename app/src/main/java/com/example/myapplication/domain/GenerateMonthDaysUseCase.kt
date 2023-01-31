@@ -53,7 +53,7 @@ class GenerateMonthDaysUseCase @Inject constructor() {
                         val dia =  pastMonthDays - dayOfWeek + i
                         var freePlaces = 15
 
-                        pastMonthDaysList.forEach {  day->
+                        pastMonthDaysList.forEach { day->
                             if (day.day == pastMonthDays - dayOfWeek + i)
                                 freePlaces = day.freePlaces
                         }

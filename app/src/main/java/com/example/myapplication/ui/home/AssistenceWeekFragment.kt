@@ -45,7 +45,8 @@ class AssistenceWeekFragment : Fragment(R.layout.fragment_assistencce_week) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        accountEmail = viewModel.mail.value!!
+        accountEmail = viewModel.getEmail()
+
         isLoading(true)
         subscribeLiveData()
         setListeners()
@@ -60,10 +61,7 @@ class AssistenceWeekFragment : Fragment(R.layout.fragment_assistencce_week) {
                 isLoading(false)
             }
           }
-          daySelected.observe(viewLifecycleOwner){
-              day = it
-              context?.toast(day)
-          }
+          daySelected.observe(viewLifecycleOwner){ day = it }
           users.observe(viewLifecycleOwner){
               selectDay.userList = it
               setUserAdapter(selectDay.userList)
@@ -72,21 +70,7 @@ class AssistenceWeekFragment : Fragment(R.layout.fragment_assistencce_week) {
               days = it
               setDaysAdapter(days)
           }
-          userEmails.observe(viewLifecycleOwner){
-              if (it.isEmpty()){
-                  setEmptyUserUi(true)
-                  isLoading(false)
-                  setUserAdapter(listOf())
-              }else
-                  setEmptyUserUi(false)
-              if(it.contains(accountEmail)){
-                  activateButton(false)
-              }else{
-                  activateButton(true)
-              }
-              viewModel.enrollUser(day,viewModel.userEmails.value!!)
-              viewModel.getUserDatastore(it)
-          }
+          userEmails.observe(viewLifecycleOwner){changeUser(it)}
       }
     }
     private fun setListeners() {
@@ -112,6 +96,21 @@ class AssistenceWeekFragment : Fragment(R.layout.fragment_assistencce_week) {
         }
     }
 
+    private fun changeUser(users: ArrayList<String>){
+        if (users.isEmpty()){
+            setEmptyUserUi(true)
+            isLoading(false)
+            setUserAdapter(listOf())
+        }else
+            setEmptyUserUi(false)
+        if(users.contains(accountEmail)){
+            activateButton(false)
+        }else{
+            activateButton(true)
+        }
+        viewModel.enrollUser(day,viewModel.userEmails.value!!)
+        viewModel.getUserDatastore(users)
+    }
     private fun isLoading(i:Boolean){
         with(mBinding){
             if (i){
