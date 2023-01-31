@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.example.myapplication.R
+import com.example.myapplication.core.extensionFun.toast
 import com.example.myapplication.databinding.FragmentLoginBinding
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -57,7 +58,7 @@ class LoginFragment: Fragment(R.layout.fragment_login)  {
                 sharedPreferences.edit().putString(EMAIL_KEY, mBinding.inputEmail.text.toString()).apply()
                 findNavController().navigate(R.id.action_loginFragment_to_assistenceMainFragment)
             }
-            else Toast.makeText(mBinding.root.context,("El usuario no aparece en la base de datos"), Toast.LENGTH_SHORT).show()
+            else context?.toast(getString(R.string.user_not_exist))
         }
     }
 

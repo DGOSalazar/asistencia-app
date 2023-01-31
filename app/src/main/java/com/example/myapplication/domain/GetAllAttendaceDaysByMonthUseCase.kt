@@ -9,7 +9,6 @@ import javax.inject.Inject
 class GetAllAttendanceDaysByMonthUseCase @Inject constructor(
     private val firebaseServices: FirebaseServices)
 {
-
     @RequiresApi(Build.VERSION_CODES.O)
     operator fun invoke(
         success:(List<AttendanceDays>) -> Unit,
@@ -20,5 +19,4 @@ class GetAllAttendanceDaysByMonthUseCase @Inject constructor(
             success = success
         )
     }
-
 }
