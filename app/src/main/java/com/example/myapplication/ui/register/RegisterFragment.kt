@@ -55,7 +55,7 @@ class RegisterFragment : Fragment() {
 
     private fun setObserver() {
         viewModel.registerFlag.observe(viewLifecycleOwner){
-            findNavController().navigate(R.id.action_registerFragment_to_assistenceMainFragment)
+            //findNavController().navigate(R.id.action_registerFragment_to_assistenceMainFragment)
         }
         viewModel.urlPhoto.observe(viewLifecycleOwner){
             imageUri = it
@@ -87,7 +87,7 @@ class RegisterFragment : Fragment() {
                 }
             }
             bnBack.setOnClickListener{
-                findNavController().navigate(R.id.action_registerFragment_to_loginFragment)
+                //findNavController().navigate(R.id.action_registerFragment_to_loginFragment)
             }
             btUpload.setOnClickListener {
                 openGallery()

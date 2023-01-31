@@ -27,7 +27,7 @@ class RegisterViewMode @Inject constructor(
     fun register(name:String,pass:String){
             viewModelScope.launch {
                 registerUseCase.register(name,pass)
-                _registerFlag.value=true
+                _registerFlag.value = true
             }
     }
     fun saveUserData(user:User){
@@ -43,4 +43,5 @@ class RegisterViewMode @Inject constructor(
             }
         }
     }
+
 }

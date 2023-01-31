@@ -15,6 +15,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 const val EMAIL_KEY = "email_key"
+const val PASSWORD_KEY = "password_key"
 
 @AndroidEntryPoint
 class LoginFragment: Fragment(R.layout.fragment_login)  {
@@ -45,7 +46,7 @@ class LoginFragment: Fragment(R.layout.fragment_login)  {
                 Toast.makeText(mBinding.root.context, "Hola", Toast.LENGTH_SHORT).show()
             }
             bnRegister.setOnClickListener{
-                findNavController().navigate(R.id.action_loginFragment_to_registerFragment)
+                findNavController().navigate(R.id.action_loginFragment_to_stepOneRegisterFragment2)
             }
         }
     }

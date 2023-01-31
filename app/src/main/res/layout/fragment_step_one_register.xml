@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/grey1"
+    android:background="@color/white"
     tools:context=".ui.register.capture.StepOneRegisterFragment">
 
     <ImageView
@@ -54,7 +54,7 @@
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/il_mail"
             android:layout_width="300dp"
-            android:layout_height="30dp"
+            android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toTopOf="@id/il_pass1"
             app:layout_constraintStart_toStartOf="parent"
@@ -66,6 +66,8 @@
             app:boxBackgroundColor="@color/white2"
             android:gravity="end"
             style="@style/Widget.App.TextInputLayout"
+            app:helperTextTextColor="@color/black"
+            app:helperText="@string/helper_email"
             >
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/input_email"
@@ -85,11 +87,13 @@
             app:layout_constraintTop_toBottomOf="@id/il_mail"
             android:textStyle="italic"
             android:textSize="12sp"
-            android:text="@string/helper_email"/>
+            android:text="@string/helper_email"
+            android:visibility="gone"
+            />
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/il_pass1"
             android:layout_width="300dp"
-            android:layout_height="30dp"
+            android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@id/il_mail"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -102,6 +106,9 @@
             app:boxBackgroundColor="@color/white2"
             android:gravity="end"
             style="@style/Widget.App.TextInputLayout"
+            app:counterMaxLength="8"
+            app:helperTextTextColor="@color/black"
+            app:helperText="@string/helper_pass"
             >
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/input_pass1"
@@ -121,12 +128,13 @@
             app:layout_constraintTop_toBottomOf="@id/il_pass1"
             android:textStyle="italic"
             android:textSize="12sp"
-            android:text="@string/helper_pass"/>
+            android:text="@string/helper_pass"
+            android:visibility="gone"/>
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/il_pass2"
             android:layout_width="300dp"
-            android:layout_height="30dp"
+            android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@id/il_pass1"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -139,6 +147,8 @@
             app:boxBackgroundColor="@color/white2"
             android:gravity="end"
             style="@style/Widget.App.TextInputLayout"
+            app:helperTextTextColor="@color/black"
+            app:helperText="@string/helper_pass2"
             >
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/input_pass2"
@@ -159,7 +169,8 @@
             app:layout_constraintTop_toBottomOf="@id/il_pass2"
             android:textStyle="italic"
             android:textSize="12sp"
-            android:text="@string/helper_pass2"/>
+            android:text="@string/helper_pass2"
+            android:visibility="gone"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
     <com.google.android.material.button.MaterialButton
         android:id="@+id/bt_next"
@@ -174,7 +185,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/field_container"
-        app:layout_constraintBottom_toTopOf="@id/v_icon_advance"/>
+        app:layout_constraintBottom_toTopOf="@id/v_icon_advance"
+        android:enabled="false"/>
 
     <View
         android:id="@+id/v_icon_advance"

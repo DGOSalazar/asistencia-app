@@ -62,7 +62,7 @@
     <string name="succes">Te haz registrado exitosamente.</string>
     <string name="msgAssit">Asistentes</string>
     <string name="free_day">Aun no se ha seleccionado ningun espacio para este dia</string>
-    <string name="title_register">ASISTENCIA <b>GUADALAJARA</b></string>
+    <string name="title_register">ASISTENCIA<b>\nGUADALAJARA</b></string>
     <string name="tv_create_account">Crear una cuenta</string>
     <string name="helper_email">Ingresaa tu correo coppel.</string>
     <string name="hint_pass">Contraseña</string>
@@ -87,4 +87,6 @@
         <item>Rocket</item>
         <item>En espera...</item>
     </string-array>
+
+
 </resources>

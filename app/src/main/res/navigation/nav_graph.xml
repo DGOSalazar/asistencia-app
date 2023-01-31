@@ -26,25 +26,78 @@
             android:id="@+id/action_loginFragment_to_assistenceMainFragment"
             app:destination="@id/assistenceMainFragment" />
         <action
-            android:id="@+id/action_loginFragment_to_registerFragment"
-            app:destination="@id/registerFragment" />
+            android:id="@+id/action_loginFragment_to_stepOneRegisterFragment2"
+            app:destination="@id/stepOneRegisterFragment" />
     </fragment>
-    <fragment
-        android:id="@+id/registerFragment"
-        android:name="com.example.myapplication.ui.register.RegisterFragment"
-        android:label="fragment_register"
-        tools:layout="@layout/fragment_register" >
-        <action
-            android:id="@+id/action_registerFragment_to_loginFragment"
-            app:destination="@id/loginFragment" />
-        <action
-            android:id="@+id/action_registerFragment_to_assistenceMainFragment"
-            app:destination="@id/assistenceMainFragment" />
-    </fragment>
+
     <fragment
         android:id="@+id/assistenceWeekFragment"
         android:name="com.example.myapplication.ui.home.AssistenceWeekFragment"
         android:label="fragment_assistencce_week"
         tools:layout="@layout/fragment_assistencce_week">
+
+    </fragment>
+    <fragment
+        android:id="@+id/stepOneRegisterFragment"
+        android:name="com.example.myapplication.ui.register.capture.StepOneRegisterFragment"
+        android:label="fragment_step_one_register"
+        tools:layout="@layout/fragment_step_one_register" >
+        <action
+            android:id="@+id/action_stepOneRegisterFragment_to_assistenceWeekFragment"
+            app:destination="@id/assistenceWeekFragment" />
+        <action
+            android:id="@+id/action_stepOneRegisterFragment_to_stepTwoRegisterFragment"
+            app:destination="@id/stepTwoRegisterFragment" >
+            <argument
+                android:name="email"
+                app:argType="string" />
+            <argument
+            android:name="password"
+            app:argType="string" />
+
+        </action>
+    </fragment>
+    <fragment
+        android:id="@+id/stepTwoRegisterFragment"
+        android:name="com.example.myapplication.ui.register.capture.StepTwoRegisterFragment"
+        android:label="fragment_step_two_register"
+        tools:layout="@layout/fragment_step_two_register" >
+        <action
+            android:id="@+id/action_stepTwoRegisterFragment_to_stepOneRegisterFragment"
+            app:destination="@id/stepOneRegisterFragment" />
+        <action
+            android:id="@+id/action_stepTwoRegisterFragment_to_stepThreeRegisterFragment"
+            app:destination="@id/stepThreeRegisterFragment" >
+            <argument
+                android:name="email"
+                app:argType="string" />
+            <argument
+                android:name="password"
+                app:argType="string" />
+            <argument
+                android:name="name"
+                app:argType="string" />
+            <argument
+                android:name="lastName"
+                app:argType="string" />
+            <argument
+                android:name="birthDate"
+                app:argType="string" />
+            <argument
+                android:name="phone"
+                app:argType="string" />
+        </action>
+    </fragment>
+    <fragment
+        android:id="@+id/stepThreeRegisterFragment"
+        android:name="com.example.myapplication.ui.register.capture.StepThreeRegisterFragment"
+        android:label="fragment_step_three_register"
+        tools:layout="@layout/fragment_step_three_register" >
+        <action
+            android:id="@+id/action_stepThreeRegisterFragment_to_stepTwoRegisterFragment"
+            app:destination="@id/stepTwoRegisterFragment" />
+        <action
+            android:id="@+id/action_stepThreeRegisterFragment_to_assistenceMainFragment"
+            app:destination="@id/assistenceMainFragment" />
     </fragment>
 </navigation>
