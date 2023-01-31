@@ -38,7 +38,7 @@ class GenerateWeekDaysUseCase @Inject constructor(){
     private fun generateWeek(begin: Int, to :Int, dayOfMonth: Int, dayOfWeek: DayOfWeek, monthSelected: Month) : ArrayList<Day>{
         var dayList : ArrayList<Day> = arrayListOf()
         for (i in begin..to) {
-            if (i <= monthSelected.length(false) && i>=0) {
+            if (dayOfMonth +i<= monthSelected.length(false) && dayOfMonth+i>0) {
                 dayList.add(
                     Day(
                         num = dayOfMonth + i,
@@ -49,27 +49,30 @@ class GenerateWeekDaysUseCase @Inject constructor(){
                     )
                 )
             }else{
-                if (i <= 0){
+                if ((dayOfMonth+i) <= 0){
                     dayList.add(
                         Day(
-                            num = dayOfMonth + i,
+                            num = if(i==-1){(((monthSelected).length(false)))}
+                            else{(((monthSelected).length(false))+i)},
                             name = setSpanishDay(dayOfWeek + i.toLong()),
                             dayOfWeek = dayOfWeek.value + i,
                             selected = i == 0,
-                            date = getFormatDate(dayOfMonth + i, monthSelected.value)
+                            date = getFormatDate(((monthSelected).length(false))+i, monthSelected.value)
                         )
                     )
                 }
                 else{
-                    dayList.add(
-                        Day(
-                            num = dayOfMonth + i,
-                            name = setSpanishDay(dayOfWeek + i.toLong()),
-                            dayOfWeek = dayOfWeek.value + i,
-                            selected = i == 0,
-                            date = getFormatDate(dayOfMonth + i, monthSelected.value)
+                    if ((dayOfMonth+i>monthSelected.length(false))) {
+                        dayList.add(
+                            Day(
+                                num = (dayOfMonth-monthSelected.length(false)) + i,
+                                name = setSpanishDay(dayOfWeek + i.toLong()),
+                                dayOfWeek = dayOfWeek.value + i,
+                                selected = i == 0,
+                                date = getFormatDate((dayOfMonth-monthSelected.length(false)) + i, monthSelected.value)
+                            )
                         )
-                    )
+                    }
                 }
             }
         }
