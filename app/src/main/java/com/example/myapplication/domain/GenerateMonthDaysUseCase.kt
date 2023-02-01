@@ -33,7 +33,7 @@ class GenerateMonthDaysUseCase @Inject constructor() {
         val pastMonthDays = YearMonth.from(pastDate).lengthOfMonth()
         val daysOfMonth = YearMonth.from(currentDate).lengthOfMonth()
         val dayOfWeek = currentDate.withDayOfMonth(1).dayOfWeek.value
-
+        println("past date: $pastDate ....current date: $currentDate")
 
         val tempDays: ArrayList<Day> = arrayListOf()
         val sunDaysAndSaturdays = arrayOf(1,7,8,14,15,21,22,28,29,35,36,42)
@@ -49,7 +49,7 @@ class GenerateMonthDaysUseCase @Inject constructor() {
 
             if(!isSundayOrSaturday) {   //add days if is not weekend
                 if (i <= dayOfWeek || i> daysOfMonth + dayOfWeek ){
-                    if(dayOfWeek !in 6..7 && i <= dayOfWeek){   //add past month days only if the week of current month is not start on monday
+                    if(dayOfWeek !in 6..7 && i <= dayOfWeek){   //add past month days only if the week of current month is not start on weekend
                         val dia =  pastMonthDays - dayOfWeek + i
                         var freePlaces = 15
 

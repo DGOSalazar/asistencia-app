@@ -1,28 +1,22 @@
 package com.example.myapplication.ui.register.capture
 
+
 import android.os.Build
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.annotation.RequiresApi
-import androidx.core.os.bundleOf
-import androidx.core.widget.addTextChangedListener
 import androidx.core.widget.doAfterTextChanged
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.Fragment
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import com.example.myapplication.R
 import com.example.myapplication.databinding.FragmentStepOneRegisterBinding
-import com.example.myapplication.ui.login.EMAIL_KEY
-import com.example.myapplication.ui.login.PASSWORD_KEY
-import com.example.myapplication.ui.register.RegisterViewMode
 import com.example.myapplication.ui.register.Validations
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
+
 
 @AndroidEntryPoint
 class StepOneRegisterFragment : Fragment(R.layout.fragment_step_one_register) {
@@ -72,24 +66,29 @@ class StepOneRegisterFragment : Fragment(R.layout.fragment_step_one_register) {
             updateEnableNextBtn()
         }
         mBinding.btNext.setOnClickListener{
-            if (isValidEmail && isValidPassword){
+            if (isValidEmail && isValidPassword && isValidPassword2){
+
+                val navBuilder = NavOptions.Builder()
+                navBuilder.setEnterAnim(R.anim.enter_from_left).setExitAnim(R.anim.exit_from_left)
+                    .setPopEnterAnim(R.anim.enter_from_right).setPopExitAnim(R.anim.exit_from_right)
+
                 val action = StepOneRegisterFragmentDirections.actionStepOneRegisterFragmentToStepTwoRegisterFragment(
                     mBinding.inputEmail.text.toString(),
                     password1
                 )
-                findNavController().navigate(action)
+                findNavController().navigate(action, navBuilder.build())
             }
         }
     }
 
     @RequiresApi(Build.VERSION_CODES.M)
     private fun updateEnableNextBtn(){
-
-        val textColor = if (isValidEmail && isValidPassword && isValidPassword2) R.color.blue_app else R.color.grey7
-        val backgroundColor = if (isValidEmail && isValidPassword && isValidPassword2) R.color.white else R.color.grey2
+        val isValidData = isValidEmail && isValidPassword && isValidPassword2 && password2 == password1
+        val textColor = if (isValidData) R.color.blue_app else R.color.grey7
+        val backgroundColor = if (isValidData) R.color.white else R.color.grey2
 
         mBinding.btNext.apply {
-            isEnabled = isValidEmail && isValidPassword
+            isEnabled = isValidData
             setBackgroundColor(requireContext().getColor(textColor))
             setTextColor(requireContext().getColor(backgroundColor))
         }

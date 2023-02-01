@@ -80,7 +80,6 @@ class CalendarAdapter(private var days: ArrayList<Day> = arrayListOf(),private v
                             tvDay.setTextColor(ColorStateList.valueOf(ctx.getColor(R.color.grey5)))
                         }else{
                             assistedDay.visibility = View.GONE
-
                             if (day.enable){
                                 val visibilityValue = if(!isAssistedDay && day.num != today ) View.VISIBLE else View.GONE
                                 mcFreePlaces.visibility = visibilityValue
@@ -93,6 +92,7 @@ class CalendarAdapter(private var days: ArrayList<Day> = arrayListOf(),private v
                                 val dayBgColor = if(day.isCurrentMonth) R.color.grey2 else R.color.grey4
                                 tvDay.setTextColor(ColorStateList.valueOf(ctx.getColor(dayBgColor)))
 
+                                container.isEnabled = day.num != today
                             }else{
                                 container.backgroundTintList = ColorStateList.valueOf(ctx.getColor(R.color.white))
                                 tvDay.visibility = View.VISIBLE

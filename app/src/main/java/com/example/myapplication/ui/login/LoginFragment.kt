@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import com.example.myapplication.R
 import com.example.myapplication.databinding.FragmentLoginBinding
@@ -46,7 +47,10 @@ class LoginFragment: Fragment(R.layout.fragment_login)  {
                 Toast.makeText(mBinding.root.context, "Hola", Toast.LENGTH_SHORT).show()
             }
             bnRegister.setOnClickListener{
-                findNavController().navigate(R.id.action_loginFragment_to_stepOneRegisterFragment2)
+                val navBuilder = NavOptions.Builder()
+                navBuilder.setEnterAnim(R.anim.enter_from_left).setExitAnim(R.anim.exit_from_left)
+                    .setPopEnterAnim(R.anim.enter_from_right).setPopExitAnim(R.anim.exit_from_right)
+                findNavController().navigate(R.id.action_loginFragment_to_stepOneRegisterFragment2, null, navBuilder.build())
             }
         }
     }

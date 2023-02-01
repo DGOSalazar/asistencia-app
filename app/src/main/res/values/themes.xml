@@ -12,6 +12,7 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
+
     </style>
 
     <style name="roundedCorners56dp" parent="">
@@ -20,13 +21,21 @@
     </style>
 
     <style name="Widget.App.TextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.FilledBox">
-        <item name="materialThemeOverlay">@style/ThemeOverlay.App.TextInputLayout</item>
         <item name="android:textColorHint">@color/grey3</item>
-        <item name="boxBackgroundColor">@color/grey1</item>
+        <item name="android:colorPrimary">@color/black</item>
         <item name="helperTextEnabled">true</item>
-        <item name="errorEnabled">true</item>
+        <item name="boxStrokeColor">@color/selector_stroke_color</item>
+        <item name="hintTextColor">@color/selector_stroke_color</item>
         <item name="colorError">#BB1C00</item>
         <item name="boxStrokeErrorColor">#BB1C00</item>
+        <item name="shapeAppearance">@style/ShapeAppearance.App.SmallComponent</item>
+        <item name="android:background">@android:color/transparent</item>
+        <item name="boxStrokeWidth">0sp</item>
+    </style>
+
+    <style name="Widget.App.Spinner" parent="@style/Widget.AppCompat.Spinner">
+        <item name="overlapAnchor">true</item>
+        <item name="android:background">@drawable/bg_texview</item>
     </style>
 
     <style name="ThemeOverlay.App.TextInputLayout" parent="">
@@ -41,6 +50,9 @@
         <item name="cornerSize">11dp</item>
     </style>
 
-
+    <style name="ShapeAppearance.App.SmallComponent" parent="ShapeAppearance.MaterialComponents.SmallComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">5dp</item>
+    </style>
 
 </resources>

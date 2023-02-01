@@ -110,7 +110,7 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main) {
     private fun setCalendarDays(daysToAttend:List<AttendanceDays>){
         mCalendarAdapter.statusMonth = actualMonth
         mCalendarAdapter.assistedDays = getDaysToAttend(daysToAttend)
-        viewModel.setCalendarDays(localDate, pastDate, daysToAttend, actualMonth)
+        viewModel.setCalendarDays(localDate, localDate.minusMonths(1), daysToAttend, actualMonth)
     }
 
     private fun getDaysToAttend(daysToAttend: List<AttendanceDays>): List<Int> {

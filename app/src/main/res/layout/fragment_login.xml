@@ -108,6 +108,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="diegogo12@coppel.com"
+                android:background="@drawable/bg_texview"
                 />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -132,6 +133,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="123456"
+                android:background="@drawable/bg_texview"
                 />
         </com.google.android.material.textfield.TextInputLayout>
 

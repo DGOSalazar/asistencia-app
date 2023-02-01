@@ -63,7 +63,6 @@
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
             android:layout_marginTop="16dp"
-            app:boxBackgroundColor="@color/white"
             android:gravity="end"
             style="@style/Widget.App.TextInputLayout"
             >
@@ -75,8 +74,8 @@
                 android:inputType="textWebEmailAddress"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/white2"
                 android:paddingVertical="12dp"
+                android:background="@drawable/bg_texview"
                 />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -91,7 +90,7 @@
             android:textColor="@color/grey2"
             android:textSize="16sp"
             android:text="Nombre"
-            android:layout_marginBottom="22dp"/>
+            />
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/il_lastName"
             android:layout_width="230dp"
@@ -102,8 +101,8 @@
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
             android:layout_marginTop="16dp"
-            app:boxBackgroundColor="@color/white2"
             android:gravity="end"
+            app:boxStrokeWidth="0sp"
             style="@style/Widget.App.TextInputLayout"
             >
             <com.google.android.material.textfield.TextInputEditText
@@ -115,7 +114,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingVertical="12dp"
-
+                android:background="@drawable/bg_texview"
                 />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -130,7 +129,7 @@
             android:textColor="@color/grey2"
             android:textSize="16sp"
             android:text="Apellidos"
-            android:layout_marginBottom="22dp"/>
+            />
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/il_birth"
             android:layout_width="150dp"
@@ -141,7 +140,6 @@
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
             android:layout_marginTop="16dp"
-            app:boxBackgroundColor="@color/white2"
             android:gravity="end"
             style="@style/Widget.App.TextInputLayout"
             >
@@ -154,7 +152,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingVertical="12dp"
-                android:hint="dd/mm/aaaa"
+                android:background="@drawable/bg_texview"
                 />
         </com.google.android.material.textfield.TextInputLayout>
         <TextView
@@ -168,18 +166,18 @@
             android:textColor="@color/grey2"
             android:textSize="16sp"
             android:text="Fecha de Nacimiento"
-            android:layout_marginBottom="22dp" />
+            />
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/il_phone"
             android:layout_width="165dp"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@id/il_birth"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
             android:layout_marginHorizontal="32dp"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
             android:layout_marginTop="16dp"
-            app:boxBackgroundColor="@color/white2"
             android:gravity="end"
             style="@style/Widget.App.TextInputLayout"
             >
@@ -192,20 +190,21 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingVertical="12dp"
+                android:background="@drawable/bg_texview"
                 />
         </com.google.android.material.textfield.TextInputLayout>
+
         <TextView
             android:id="@+id/tv_helper_phone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/il_phone"
-            app:layout_constraintTop_toTopOf="@id/il_phone"
-            app:layout_constraintBottom_toBottomOf="@id/il_phone"
+            android:text="Numero de teléfono"
             android:textColor="@color/grey2"
             android:textSize="16sp"
-            android:text="Numero de teléfono"
-            android:layout_marginBottom="22dp"/>
+            app:layout_constraintBottom_toBottomOf="@id/il_phone"
+            app:layout_constraintEnd_toStartOf="@id/il_phone"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/il_phone" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

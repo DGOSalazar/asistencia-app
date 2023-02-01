@@ -15,6 +15,7 @@ import android.widget.AdapterView
 import android.widget.AdapterView.OnItemClickListener
 import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
 import android.widget.ImageView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
@@ -45,31 +46,28 @@ class StepThreeRegisterFragment : Fragment() {
     private lateinit var mBinding: FragmentStepThreeRegisterBinding
     private val viewModel : RegisterViewMode by activityViewModels()
 
-    private lateinit var email:String
-    private lateinit var password:String
-    private lateinit var name:String
-    private lateinit var lastName:String
-    private lateinit var birthdate:String
-    private lateinit var phone:String
-    private var position = ""
-    private var team = ""
-    private var employeeNumber = ""
+    private lateinit var userData: User
+    private lateinit var password: String
+
+    private var imageUri: Uri? = null
+    private var foto_gallery: ImageView? = null
 
     private var isValidPosition = false
     private var isValidInitiative = false
     private var isValidEmployeeNumber = false
     private var isValidImage = false
-    var imageUri: Uri? = null
-    var foto_gallery: ImageView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        email = arguments?.getString("email")?:""
+        userData = User(
+            email =  arguments?.getString("email")?:"",
+            name =  arguments?.getString("name")?:"",
+            lastName1 = arguments?.getString("lastName")?:"",
+            lastName2 = arguments?.getString("lastName")?:"",
+            birthDate = arguments?.getString("birthdate")?:"",
+            phone = arguments?.getString("phone")?:""
+        )
         password = arguments?.getString("password")?:""
-        name = arguments?.getString("name")?:""
-        lastName = arguments?.getString("lastName")?:""
-        birthdate = arguments?.getString("birthdate")?:""
-        phone = arguments?.getString("phone")?:""
     }
 
     override fun onCreateView(
@@ -93,7 +91,7 @@ class StepThreeRegisterFragment : Fragment() {
     private fun setObservers(){
         viewModel.urlPhoto.observe(viewLifecycleOwner){
             if (it != null) {
-                imageUri = it
+                userData.profilePhoto = it.toString()
                 isValidImage = true
                 updateEnableNextBtn()
             }
@@ -103,10 +101,11 @@ class StepThreeRegisterFragment : Fragment() {
     }
 
     private fun setSpinners() {
-         ArrayAdapter.createFromResource(requireContext(), R.array.positions, android.R.layout.simple_spinner_item).also {adapter ->
+        ArrayAdapter.createFromResource(requireContext(), R.array.positions, android.R.layout.simple_spinner_item).also {adapter ->
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             mBinding.spinnerPosition.adapter = adapter
         }
+
         ArrayAdapter.createFromResource(requireContext(), R.array.teams, android.R.layout.simple_spinner_item).also {adapter ->
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             mBinding.spinnerTeam.adapter = adapter
@@ -118,47 +117,33 @@ class StepThreeRegisterFragment : Fragment() {
         mBinding.btNext.setOnClickListener{
             val enable = isValidPosition && isValidInitiative && isValidEmployeeNumber && isValidImage
             if (enable){
-                val user = User(
-                    email = email,
-                    name = name,
-                    lastName1 = lastName,
-                    lastName2 = lastName,
-                    position = position,
-                    birthDate = birthdate,
-                    team = team,
-                    profilePhoto = imageUri.toString(),
-                    employee = employeeNumber.toLong(),
-                    phone = phone,
-                    assistDay = arrayListOf("")
-                )
-                viewModel.saveUserData(user)
+                userData.employee = it.toString().toLong()
+                viewModel.saveUserData(userData)
             }
-                sharedPreferences.edit().putString(EMAIL_KEY, email).apply()
+                sharedPreferences.edit().putString(EMAIL_KEY, userData.email).apply()
                 findNavController().navigate(R.id.action_stepThreeRegisterFragment_to_assistenceMainFragment)
         }
-        mBinding.spinnerPosition.onItemSelectedListener = (object : OnItemSelectedListener {
-            override fun onItemSelected(p0: AdapterView<*>?, p1: View?, pos: Int, p3: Long) {
-                position = pos.toString()
-                updateEnableNextBtn()
-            }
-            override fun onNothingSelected(p0: AdapterView<*>?) {
-                TODO("Not yet implemented")
-            }
-
-        })
         mBinding.spinnerTeam.onItemSelectedListener = (object : OnItemSelectedListener {
             override fun onItemSelected(p0: AdapterView<*>?, p1: View?, pos: Int, p3: Long) {
-                team = pos.toString()
+                userData.team  = pos.toString()
                 updateEnableNextBtn()
             }
-            override fun onNothingSelected(p0: AdapterView<*>?) {
-                TODO("Not yet implemented")
+            override fun onNothingSelected(p0: AdapterView<*>?) { }
+        })
+        mBinding.spinnerPosition.onItemSelectedListener = (object : OnItemSelectedListener {
+            override fun onItemSelected(p0: AdapterView<*>?, p1: View?, pos: Int, p3: Long) {
+                userData.position  = pos.toString()
+                updateEnableNextBtn()
             }
+            override fun onNothingSelected(p0: AdapterView<*>?) { }
         })
         mBinding.inputPass2.doAfterTextChanged {
-            employeeNumber = it.toString()
             isValidEmployeeNumber = validations.isValidText(it.toString())
-            mBinding.ilNumEmployee.error = if (isValidEmployeeNumber) null else "Contraseña diferente"
+            if (!isValidEmployeeNumber){
+                mBinding.ilNumEmployee.isErrorEnabled = true
+                mBinding.ilNumEmployee.error = if (isValidEmployeeNumber) null else "Ingrese numero de empleado valido"
+            }else
+                mBinding.ilNumEmployee.isErrorEnabled = false
             updateEnableNextBtn()
         }
         mBinding.ivChargePhoto.setOnClickListener {
