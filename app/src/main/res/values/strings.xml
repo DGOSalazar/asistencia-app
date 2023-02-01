@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">My Application</string>
+    <string name="app_name">Asistencia Guadalajara</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="welcome_message">¡Hola Héctor!</string>
@@ -72,6 +72,12 @@
     <string name="tv_personal_data">Datos personales</string>
     <string name="tv_last_steps">¡Último paso!</string>
     <string name="name_user">Diego Salazar Contreras</string>
+    <string name="date_assit">el lunes 9 de Enero?</string>
+    <string name="asssit_name">Juan Carlos ¿Deseas asistir</string>
+    <string name="delete_assit">Eliminar asistencia</string>
+    <string name="user_not_exist">El usuario no aparece en la base de datos</string>
+    <string name="text_confirm_delete">¿Deseas eliminar tu registro?</string>
+    <string name="confirme_delete">Se ah eliminado el registro exitosamente.</string>
 
     <string-array name="positions">
         <item>Android Dev</item>

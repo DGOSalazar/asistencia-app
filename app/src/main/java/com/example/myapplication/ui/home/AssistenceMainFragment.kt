@@ -53,10 +53,10 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main) {
     @Inject
     lateinit var sharedPreferences: SharedPreferences
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         accountEmail = sharedPreferences.getString(EMAIL_KEY, "").toString()
+        viewModel.setEmail(accountEmail)
     }
 
     override fun onCreateView(

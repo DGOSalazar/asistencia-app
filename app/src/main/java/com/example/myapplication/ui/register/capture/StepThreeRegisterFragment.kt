@@ -46,28 +46,32 @@ class StepThreeRegisterFragment : Fragment() {
     private lateinit var mBinding: FragmentStepThreeRegisterBinding
     private val viewModel : RegisterViewMode by activityViewModels()
 
-    private lateinit var userData: User
-    private lateinit var password: String
-
-    private var imageUri: Uri? = null
-    private var foto_gallery: ImageView? = null
+    private lateinit var email:String
+    private lateinit var password:String
+    private lateinit var name:String
+    private lateinit var lastName:String
+    private lateinit var birthdate:String
+    private lateinit var phone:String
+    //Cast items
+    private var position = ""
+    private var team = ""
+    private var employeeNumber = ""
 
     private var isValidPosition = false
     private var isValidInitiative = false
     private var isValidEmployeeNumber = false
     private var isValidImage = false
+    var imageUri: Uri? = null
+    var foto_gallery: ImageView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        userData = User(
-            email =  arguments?.getString("email")?:"",
-            name =  arguments?.getString("name")?:"",
-            lastName1 = arguments?.getString("lastName")?:"",
-            lastName2 = arguments?.getString("lastName")?:"",
-            birthDate = arguments?.getString("birthdate")?:"",
-            phone = arguments?.getString("phone")?:""
-        )
+        email = arguments?.getString("email")?:""
         password = arguments?.getString("password")?:""
+        name = arguments?.getString("name")?:""
+        lastName = arguments?.getString("lastName")?:""
+        birthdate = arguments?.getString("birthdate")?:""
+        phone = arguments?.getString("phone")?:""
     }
 
     override fun onCreateView(
@@ -91,21 +95,23 @@ class StepThreeRegisterFragment : Fragment() {
     private fun setObservers(){
         viewModel.urlPhoto.observe(viewLifecycleOwner){
             if (it != null) {
-                userData.profilePhoto = it.toString()
+                imageUri = it
                 isValidImage = true
                 updateEnableNextBtn()
             }
              else
                 context?.toast("Error al subir la imagen")
         }
+        viewModel.registerFlag.observe(viewLifecycleOwner){
+            findNavController().navigate(R.id.action_stepThreeRegisterFragment_to_assistenceMainFragment)
+        }
     }
 
     private fun setSpinners() {
-        ArrayAdapter.createFromResource(requireContext(), R.array.positions, android.R.layout.simple_spinner_item).also {adapter ->
+         ArrayAdapter.createFromResource(requireContext(), R.array.positions, android.R.layout.simple_spinner_item).also {adapter ->
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             mBinding.spinnerPosition.adapter = adapter
         }
-
         ArrayAdapter.createFromResource(requireContext(), R.array.teams, android.R.layout.simple_spinner_item).also {adapter ->
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             mBinding.spinnerTeam.adapter = adapter
@@ -116,28 +122,47 @@ class StepThreeRegisterFragment : Fragment() {
     private fun setListeners(){
         mBinding.btNext.setOnClickListener{
             val enable = isValidPosition && isValidInitiative && isValidEmployeeNumber && isValidImage
-            if (enable){
-                userData.employee = it.toString().toLong()
-                viewModel.saveUserData(userData)
+            if (true){
+                val user = User(
+                    email = email,
+                    name = name,
+                    lastName1 = lastName,
+                    lastName2 = lastName,
+                    position = position,
+                    birthDate = birthdate,
+                    team = team,
+                    profilePhoto = imageUri.toString(),
+                    employee = mBinding.inputPass2.text.toString().toLong(),
+                    phone = phone,
+                    assistDay = arrayListOf("")
+                )
+                viewModel.saveUserData(user)
             }
-                sharedPreferences.edit().putString(EMAIL_KEY, userData.email).apply()
-                findNavController().navigate(R.id.action_stepThreeRegisterFragment_to_assistenceMainFragment)
+            sharedPreferences.edit().putString(EMAIL_KEY, email).apply()
         }
-        mBinding.spinnerTeam.onItemSelectedListener = (object : OnItemSelectedListener {
+        mBinding.spinnerPosition.onItemSelectedListener = (object : OnItemSelectedListener {
             override fun onItemSelected(p0: AdapterView<*>?, p1: View?, pos: Int, p3: Long) {
-                userData.team  = pos.toString()
+                position = when(pos){
+                    0->{"Android"}
+                    1->{"IOS"}
+                    2->{"Analyst"}
+                    3->{"Backend"}
+                    4->{"Scrum Master"}
+                    else->{"Tester/QA"}
+                }
                 updateEnableNextBtn()
             }
             override fun onNothingSelected(p0: AdapterView<*>?) { }
         })
-        mBinding.spinnerPosition.onItemSelectedListener = (object : OnItemSelectedListener {
+        mBinding.spinnerTeam.onItemSelectedListener = (object : OnItemSelectedListener {
             override fun onItemSelected(p0: AdapterView<*>?, p1: View?, pos: Int, p3: Long) {
-                userData.position  = pos.toString()
+                team = pos.toString()
                 updateEnableNextBtn()
             }
             override fun onNothingSelected(p0: AdapterView<*>?) { }
         })
         mBinding.inputPass2.doAfterTextChanged {
+            employeeNumber = it.toString()
             isValidEmployeeNumber = validations.isValidText(it.toString())
             if (!isValidEmployeeNumber){
                 mBinding.ilNumEmployee.isErrorEnabled = true

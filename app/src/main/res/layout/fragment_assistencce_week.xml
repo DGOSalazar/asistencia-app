@@ -18,14 +18,14 @@
         >
         <ImageView
             android:id="@+id/iv_back"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="@dimen/dp30"
+            android:layout_height="@dimen/dp30"
             android:src="@drawable/ic_back"
             android:backgroundTint="#2A4EA9"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/tv_title"
             app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginTop="52dp"
+            android:layout_marginTop="@dimen/dp52"
             android:layout_marginStart="22dp"
             />
         <TextView
@@ -33,27 +33,27 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Calendario"
-            android:textSize="22dp"
+            android:textSize="@dimen/dp22"
             android:textColor="#2A4EA9"
             app:layout_constraintStart_toEndOf="@id/iv_back"
             app:layout_constraintTop_toTopOf="@id/iv_back"/>
         <ImageView
             android:id="@+id/iv_menu"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="@dimen/dp40"
+            android:layout_height="@dimen/dp40"
             app:tint="@color/blueCoppel"
             android:src="@drawable/ic_baseline_menu_24"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/iv_back"
-            android:layout_marginEnd="22dp"
+            android:layout_marginEnd="@dimen/dp22"
             />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
         <ScrollView
             android:id="@+id/scrool_container"
-            android:layout_width="0sp"
-            android:layout_height="0sp"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/cl_toolbar"
@@ -63,7 +63,7 @@
                 android:id="@+id/cl_main"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="28dp"
+                android:layout_marginStart="@dimen/dp28"
                 app:layout_constraintTop_toBottomOf="@id/mc_calendar"
                 android:layout_marginEnd="28dp">
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -76,64 +76,67 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         app:layout_constraintStart_toStartOf="parent"
-                        android:text="Juan Carlos ¿Deseas asistir"
+                        android:text="@string/asssit_name"
                         app:layout_constraintTop_toTopOf="parent"
-                        android:textSize="24sp"
+                        android:textSize="@dimen/sp24"
                         android:textColor="@color/grey2"
-                        android:layout_marginTop="16dp"/>
+                        android:layout_marginTop="@dimen/dp16"/>
                     <TextView
                         android:id="@+id/tv_title_assist2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="el lunes 9 de Enero?"
+                        android:text="@string/date_assit"
                         app:layout_constraintTop_toBottomOf="@id/tv_title_assist"
                         app:layout_constraintStart_toStartOf="parent"
-                        android:textSize="24sp"
+                        android:textSize="@dimen/sp24"
                         android:textColor="@color/grey2"
                         android:textStyle="bold"/>
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/recycler_week"
                         android:layout_width="0dp"
-                        android:layout_height="100dp"
+                        android:layout_height="@dimen/dp100"
                         tools:listitem="@layout/day_selected_view"
                         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-                        android:layout_marginTop="22dp"
+                        android:layout_marginTop="@dimen/dp22"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/tv_title_assist2"
                         app:layout_constraintBottom_toTopOf="@id/bt_add"
-                        app:layout_goneMarginTop="16dp"
-                        android:paddingBottom="16dp"
+                        app:layout_goneMarginTop="@dimen/dp16"
+                        android:paddingBottom="@dimen/dp16"
+                        android:paddingRight="@dimen/dp8"
                         />
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/bt_add"
-                        android:layout_width="250dp"
-                        android:layout_height="75dp"
+                        android:layout_width="@dimen/dp250"
+                        android:layout_height="@dimen/dp75"
                         android:backgroundTint="@color/blueCoppel"
                         app:layout_constraintTop_toBottomOf="@id/recycler_week"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         android:text="Registrar asistencia"
                         android:textAllCaps="false"
-                        android:textSize="18sp"
-                        app:cornerRadius="30dp"
+                        android:textSize="@dimen/sp18"
+                        app:cornerRadius="@dimen/dp30"
                         android:visibility="visible"
                         />
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/bt_undo"
-                        android:layout_width="250dp"
-                        android:layout_height="75dp"
-                        android:backgroundTint="@color/grey7"
+                        android:layout_width="@dimen/dp250"
+                        android:layout_height="@dimen/dp75"
+                        android:backgroundTint="@color/grayCoppel"
                         app:layout_constraintTop_toBottomOf="@id/recycler_week"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        android:text="Borrar asistencia"
-                        android:textColor="@color/grey2"
+                        android:text="@string/delete_assit"
+                        android:textColor="@color/blue_app"
                         android:textAllCaps="false"
-                        android:textSize="18sp"
-                        app:cornerRadius="30dp"
+                        android:textSize="@dimen/sp18"
+                        app:cornerRadius="@dimen/dp30"
+                        app:strokeWidth="2dp"
+                        app:strokeColor="@color/blue_app"
                         android:visibility="gone"
                         />
 
@@ -144,10 +147,10 @@
                     android:layout_height="wrap_content"
                     app:layout_constraintTop_toBottomOf="@id/cl_question"
                     android:text="@string/msgAssit"
-                    android:textSize="24sp"
+                    android:textSize="@dimen/sp24"
                     android:textColor="@color/grey2"
                     android:textStyle="bold"
-                    android:layout_marginTop="34dp"
+                    android:layout_marginTop="@dimen/dp34"
                     android:visibility="visible"/>
                 <TextView
                     android:id="@+id/tv_free_day"
@@ -155,11 +158,23 @@
                     android:layout_height="wrap_content"
                     app:layout_constraintTop_toBottomOf="@id/cl_question"
                     android:text="@string/free_day"
-                    android:textSize="20sp"
+                    android:textSize="@dimen/sp20"
                     android:textColor="@color/grey2"
                     android:textStyle="bold"
                     android:layout_marginTop="120dp"
                     android:gravity="center"
+                    android:visibility="gone"/>
+
+                <ProgressBar
+                    android:id="@+id/progress"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_free_day"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:layout_marginTop="@dimen/dp100"
+                    android:layout_width="@dimen/dp100"
+                    android:layout_height="@dimen/dp100"
+                    android:indeterminate="true"
                     android:visibility="gone"/>
 
                 <com.google.android.material.card.MaterialCardView
@@ -167,8 +182,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:layout_constraintTop_toBottomOf="@id/tv_actual_month"
-                    app:cardCornerRadius="30dp"
-                    android:layout_marginTop="24dp">
+                    app:cardCornerRadius="@dimen/dp30"
+                    android:layout_marginTop="@dimen/sp24"
+                    android:visibility="visible">
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/recycler_users"

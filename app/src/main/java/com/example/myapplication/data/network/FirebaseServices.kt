@@ -17,15 +17,12 @@ class FirebaseServices @Inject constructor(
     private val firebase: FirebaseClient
 ){
     private var url: Uri? =null
-    var email = "primero"
 
     suspend fun login(mail: String, pass: String): LoginResult = runCatching {
-        this.email = mail
-        firebase.auth.signInWithEmailAndPassword(email,pass).await()
+        firebase.auth.signInWithEmailAndPassword(mail,pass).await()
      }.toLoginResult()
 
     suspend fun register(email: String, pass: String) = runCatching {
-        this.email = email
         firebase.auth.createUserWithEmailAndPassword(email,pass).await()
     }
 
@@ -73,7 +70,7 @@ class FirebaseServices @Inject constructor(
         )
     }.isSuccessful
 
-    fun addUserToDay(currentDay:String, emails: ArrayList<String>)= run{
+    fun updateUsersList(currentDay:String, emails: ArrayList<String>)= run{
         firebase.dayCollection.document(currentDay).set(
             hashMapOf(
                 "currentDay" to currentDay,

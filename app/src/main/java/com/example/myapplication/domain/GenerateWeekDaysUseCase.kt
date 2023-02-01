@@ -5,6 +5,7 @@ import androidx.annotation.RequiresApi
 import com.example.myapplication.data.models.Day
 import java.time.DayOfWeek
 import java.time.LocalDate
+import java.time.Month
 import javax.inject.Inject
 
 class GenerateWeekDaysUseCase @Inject constructor(){
@@ -15,82 +16,68 @@ class GenerateWeekDaysUseCase @Inject constructor(){
     operator fun invoke(day:Day): ArrayList<Day>{
         var dayList : ArrayList<Day> = arrayListOf()
         val dayOfMonth = day.num ; val dayOfWeek = day.nameEng ; val monthSelected = localDate.month
-
         return when (dayOfWeek.value){
             1 -> {
-                for (i in 0..4) {
-                    dayList.add(
-                        Day(
-                            num = dayOfMonth + i,
-                            name = setSpanishDay(dayOfWeek+i.toLong()),
-                            dayOfWeek = dayOfWeek.value + i,
-                            selected = i==0,
-                            date = getFormatDate(dayOfMonth+i, monthSelected.value)
-                        )
-                    )
-                }
-                dayList
+                generateWeek(0,4,dayOfMonth,dayOfWeek,monthSelected)
             }
             2 -> {
-                for (i in -1..3) {
-                    dayList.add(
-                        Day(
-                            num = dayOfMonth + i,
-                            name = setSpanishDay(dayOfWeek+i.toLong()),
-                            dayOfWeek = dayOfWeek.value + i,
-                            selected = i==0,
-                            date = getFormatDate(dayOfMonth+i, monthSelected.value)
-                        )
-                    )
-                }
-                dayList
+                generateWeek(-1,3,day.num,day.nameEng,localDate.month)
             }
             3 -> {
-                for (i in -2..2) {
-                    dayList.add(
-                        Day(
-                            num = dayOfMonth + i,
-                            name = setSpanishDay(dayOfWeek+i.toLong()),
-                            dayOfWeek = dayOfWeek.value + i,
-                            selected = i==0,
-                            date = getFormatDate(dayOfMonth+i, monthSelected.value)
-                        )
-                    )
-                }
-                dayList
+                generateWeek(-2,2,day.num,day.nameEng,localDate.month)
             }
             4 -> {
-                for (i in -3..1) {
-                    dayList.add(
-                        Day(
-                            num = dayOfMonth + i,
-                            name = setSpanishDay(dayOfWeek+i.toLong()),
-                            dayOfWeek = dayOfWeek.value + i,
-                            selected = i==0,
-                            date = getFormatDate(dayOfMonth+i, monthSelected.value)
-                        )
-                    )
-                }
-                dayList
-            }
-            5 -> {
-                for (i in -4..0) {
-                    dayList.add(
-                        Day(
-                            num = dayOfMonth + i,
-                            name = setSpanishDay(dayOfWeek+i.toLong()),
-                            dayOfWeek = dayOfWeek.value + i,
-                            selected = i==0,
-                            date = getFormatDate(dayOfMonth+i, monthSelected.value)
-                        )
-                    )
-                }
-                dayList
+                generateWeek(-3,1,day.num,day.nameEng,localDate.month)
             }
             else -> {
-                arrayListOf(Day())
+                generateWeek(-4,0,day.num,day.nameEng,localDate.month)
             }
         }
+    }
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun generateWeek(begin: Int, to :Int, dayOfMonth: Int, dayOfWeek: DayOfWeek, monthSelected: Month) : ArrayList<Day>{
+        var dayList : ArrayList<Day> = arrayListOf()
+        var onlyOnce = true
+        for (i in begin..to) {
+            if (dayOfMonth +i<= monthSelected.length(false) && dayOfMonth+i>0) {
+                dayList.add(
+                    Day(
+                        num = dayOfMonth + i,
+                        name = setSpanishDay(dayOfWeek + i.toLong()),
+                        dayOfWeek = dayOfWeek.value + i,
+                        selected = i == 0,
+                        date = getFormatDate(dayOfMonth + i, monthSelected.value)
+                    )
+                )
+            }else{
+                if ((dayOfMonth+i) <= 0){
+                    dayList.add(
+                        Day(
+                            num = if(dayOfMonth+i == 0){(((monthSelected).length(false)))}
+                            else{(((monthSelected).length(false))+i)},
+                            name = setSpanishDay(dayOfWeek + i.toLong()),
+                            dayOfWeek = dayOfWeek.value + i,
+                            selected = i == 0,
+                            date = getFormatDate(((monthSelected).length(false))+i, monthSelected.value)
+                        )
+                    )
+                }
+                else{
+                    if ((dayOfMonth+i>monthSelected.length(false))) {
+                        dayList.add(
+                            Day(
+                                num = (dayOfMonth-monthSelected.length(false)) + i,
+                                name = setSpanishDay(dayOfWeek + i.toLong()),
+                                dayOfWeek = dayOfWeek.value + i,
+                                selected = i == 0,
+                                date = getFormatDate((dayOfMonth-monthSelected.length(false)) + i, monthSelected.value)
+                            )
+                        )
+                    }
+                }
+            }
+        }
+        return dayList
     }
     @RequiresApi(Build.VERSION_CODES.O)
     private fun setSpanishDay(day: DayOfWeek): String = when(day){
@@ -102,4 +89,5 @@ class GenerateWeekDaysUseCase @Inject constructor(){
         else->{""}
     }.toString()
     private fun getFormatDate(dayMonth: Int, month:Int): String = "${dayMonth}-0${month}-2023"
+
 }
