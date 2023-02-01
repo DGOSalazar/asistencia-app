@@ -13,6 +13,12 @@ import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import com.example.myapplication.R
 import com.example.myapplication.databinding.FragmentStepOneRegisterBinding
+import com.example.myapplication.ui.home.HomeViewModel
+import androidx.fragment.app.activityViewModels
+import com.example.myapplication.ui.login.EMAIL_KEY
+import com.example.myapplication.ui.login.LoginViewModel
+import com.example.myapplication.ui.login.PASSWORD_KEY
+import com.example.myapplication.ui.register.RegisterViewMode
 import com.example.myapplication.ui.register.Validations
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -31,6 +37,7 @@ class StepOneRegisterFragment : Fragment(R.layout.fragment_step_one_register) {
     private var isValidPassword2 = false
     private var password1 = ""
     private var password2 = ""
+    private val viewModel: RegisterViewMode by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -67,7 +74,7 @@ class StepOneRegisterFragment : Fragment(R.layout.fragment_step_one_register) {
         }
         mBinding.btNext.setOnClickListener{
             if (isValidEmail && isValidPassword && isValidPassword2){
-
+                viewModel.register(mBinding.inputEmail.text.toString(), mBinding.inputPass1.text.toString())
                 val navBuilder = NavOptions.Builder()
                 navBuilder.setEnterAnim(R.anim.enter_from_left).setExitAnim(R.anim.exit_from_left)
                     .setPopEnterAnim(R.anim.enter_from_right).setPopExitAnim(R.anim.exit_from_right)
