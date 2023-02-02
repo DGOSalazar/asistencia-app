@@ -57,14 +57,21 @@ class HomeViewModel @Inject constructor(
     private val _isLoading = MutableLiveData<Status>()
     var isLoading : LiveData<Status> =_isLoading
 
+    private val _dayObject = MutableLiveData<Day>()
+    var dayObject : LiveData<Day> = _dayObject
 
     private val _mail = MutableLiveData<String>()
     var mail : LiveData<String> =_mail
 
+    fun  setObjectDay(day: Day){
+        _dayObject.value= day
+    }
+    fun getDayObject(): Day{
+        return dayObject.value!!
+    }
     fun addUserToDay(){
         enrollUserToDayUseCase(_daySelected.value!!, _userEmails.value!!)
     }
-
     @RequiresApi(Build.VERSION_CODES.O)
     fun setWeekList(day:Day){
         _weekSelected.value = generateWeekDaysUseCase(day)
@@ -76,7 +83,6 @@ class HomeViewModel @Inject constructor(
             success = { _assistanceDays.value = it }
         )
     }
-
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun setCalendarDays(
@@ -117,12 +123,6 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun enrollUser(date: String, emails: ArrayList<String>){
-        viewModelScope.launch {
-            enrollUserToDayUseCase(date,emails)
-        }
-    }
-
     fun addUserToListUsers(email: String) {
         _userEmails.value!!.add(email)
     }
@@ -143,4 +143,10 @@ class HomeViewModel @Inject constructor(
         _mail.value=email
     }
     fun  getEmail(): String = mail.value!!
+
+    fun clearLiveData() {
+        val clean = arrayListOf<User>()
+        _users.value = clean
+        _userEmails.value = arrayListOf()
+    }
 }

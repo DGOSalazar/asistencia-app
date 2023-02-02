@@ -36,6 +36,9 @@
         android:label="fragment_assistencce_week"
         tools:layout="@layout/fragment_assistencce_week">
 
+        <action
+            android:id="@+id/action_assistenceWeekFragment_to_assistenceMainFragment"
+            app:destination="@id/assistenceMainFragment" />
     </fragment>
     <fragment
         android:id="@+id/stepOneRegisterFragment"

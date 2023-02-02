@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="dialogForm" parent="">
+        <item name="android:gravity">center</item>
+        <item name="cornerFamily">rounded</item>
+        <item name="android:layout_marginHorizontal">@dimen/dp14</item>
+        <item name="cornerSize">28dp</item>
+    </style>
+
+    <dimen name="dp14">14dp</dimen>
+</resources>

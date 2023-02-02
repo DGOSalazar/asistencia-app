@@ -14,4 +14,14 @@
     <dimen name="sp18">18sp</dimen>
     <dimen name="dp34">34dp</dimen>
     <dimen name="sp20">20sp</dimen>
+    <dimen name="dp32">32dp</dimen>
+    <dimen name="sp16">16sp</dimen>
+    <dimen name="dp24">24dp</dimen>
+    <dimen name="sp14">14sp</dimen>
+    <dimen name="dp42">42dp</dimen>
+    <dimen name="dp80">80dp</dimen>
+    <dimen name="dp78">78dp</dimen>
+    <dimen name="dp76">76dp</dimen>
+    <dimen name="dp77">77dp</dimen>
+    <dimen name="dp2">2dp</dimen>
 </resources>

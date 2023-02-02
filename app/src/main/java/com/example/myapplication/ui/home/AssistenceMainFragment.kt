@@ -84,6 +84,9 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main) {
         viewModel.newUserEmails.observe(viewLifecycleOwner){
             viewModel.getUserDatastore(it, 1)
         }
+        viewModel.userEmails.observe(viewLifecycleOwner){
+
+        }
     }
 
     @SuppressLint("SetTextI18n")
@@ -234,8 +237,9 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main) {
 
     private fun click(day:Day){
         viewModel.setDay(day.date)
-        viewModel.getListEmails(day.date)
-        viewModel.setWeekList(day)
+        viewModel.setObjectDay(day)
+        //viewModel.getListEmails(day.date)
+        //viewModel.setWeekList(day)
         findNavController().navigate(AssistenceMainFragmentDirections.actionAssistenceMainFragmentToAssistenceWeekFragment())
     }
 }

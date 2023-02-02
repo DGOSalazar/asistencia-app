@@ -76,8 +76,10 @@
     <string name="asssit_name">Juan Carlos ¿Deseas asistir</string>
     <string name="delete_assit">Eliminar asistencia</string>
     <string name="user_not_exist">El usuario no aparece en la base de datos</string>
-    <string name="text_confirm_delete">¿Deseas eliminar tu registro?</string>
-    <string name="confirme_delete">Se ah eliminado el registro exitosamente.</string>
+    <string name="text_confirm_delete"><font color="#C40023">Confirmar Eliminar Asistencia</font></string>
+    <string name="confirme_delete">Se ha eliminado tu asistencia correctamente.</string>
+    <string name="name_dialog_confirm">Yep</string>
+    <string name="tv_messagges_delete">¿Seguro que deseas eliminar tu asistencia?</string>
 
     <string-array name="positions">
         <item>Android Dev</item>
