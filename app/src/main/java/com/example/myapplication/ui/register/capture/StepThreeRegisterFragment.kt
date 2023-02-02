@@ -121,8 +121,6 @@ class StepThreeRegisterFragment : Fragment() {
     @RequiresApi(Build.VERSION_CODES.M)
     private fun setListeners(){
         mBinding.btNext.setOnClickListener{
-            val enable = isValidPosition && isValidInitiative && isValidEmployeeNumber && isValidImage
-            if (true){
                 val user = User(
                     email = email,
                     name = name,
@@ -137,7 +135,7 @@ class StepThreeRegisterFragment : Fragment() {
                     assistDay = arrayListOf("")
                 )
                 viewModel.saveUserData(user)
-            }
+
             sharedPreferences.edit().putString(EMAIL_KEY, email).apply()
         }
         mBinding.spinnerPosition.onItemSelectedListener = (object : OnItemSelectedListener {
@@ -156,7 +154,12 @@ class StepThreeRegisterFragment : Fragment() {
         })
         mBinding.spinnerTeam.onItemSelectedListener = (object : OnItemSelectedListener {
             override fun onItemSelected(p0: AdapterView<*>?, p1: View?, pos: Int, p3: Long) {
-                team = pos.toString()
+                team = when(pos){
+                    0->{"HellFish"}
+                    1->{"Minus"}
+                    2->{"Rocket"}
+                    else->{"En espera..."}
+                }
                 updateEnableNextBtn()
             }
             override fun onNothingSelected(p0: AdapterView<*>?) { }
@@ -178,7 +181,8 @@ class StepThreeRegisterFragment : Fragment() {
 
     @RequiresApi(Build.VERSION_CODES.M)
     private fun updateEnableNextBtn(){
-        val enable =  isValidEmployeeNumber && isValidImage
+        //val enable =  isValidPosition && isValidInitiative && isValidEmployeeNumber && isValidImage
+        val enable = isValidEmployeeNumber && isValidImage
         val textColor = if (enable) R.color.blue_app else R.color.grey7
         val backgroundColor = if (enable) R.color.white else R.color.grey2
 
