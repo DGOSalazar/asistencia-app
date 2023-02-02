@@ -60,6 +60,7 @@ class HomeViewModel @Inject constructor(
     private val _dayObject = MutableLiveData<Day>()
     var dayObject : LiveData<Day> = _dayObject
 
+
     private val _mail = MutableLiveData<String>()
     var mail : LiveData<String> =_mail
 
