@@ -26,9 +26,9 @@ import com.example.myapplication.ui.login.EMAIL_KEY
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeFormatterBuilder
 import java.util.*
 import javax.inject.Inject
-import kotlin.math.absoluteValue
 
 
 const val CURRENT_MONTH = 1
@@ -46,7 +46,6 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main) {
 
     @RequiresApi(Build.VERSION_CODES.O)
     var localDate: LocalDate= LocalDate.now()
-    private var pastDate = localDate.minusMonths(1)
     private var actualMonth = CURRENT_MONTH
     private var accountEmail = ""
 
@@ -56,7 +55,6 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         accountEmail = sharedPreferences.getString(EMAIL_KEY, "").toString()
-        viewModel.setEmail(accountEmail)
     }
 
     override fun onCreateView(
@@ -82,7 +80,11 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main) {
         viewModel.accountData.observe(viewLifecycleOwner, this::setHeader)
         viewModel.newUsers.observe(viewLifecycleOwner, this::updateUsersList)
         viewModel.newUserEmails.observe(viewLifecycleOwner){
-            viewModel.getUserDatastore(it, 1)
+            if(it.isEmpty()) updateUsersList(ArrayList<User>())
+            else viewModel.getUserDatastore(it, 1)
+        }
+        viewModel.userEmails.observe(viewLifecycleOwner){
+
         }
     }
 
@@ -99,12 +101,20 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main) {
                 DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL)
             )
         }
+        mBinding.progress.visibility = View.GONE
     }
 
     @SuppressLint("SetTextI18n", "NotifyDataSetChanged")
     private fun setHeader(user: User) {
         mBinding.tvWelcome.text = "Hola ${user.name}"
-        mBinding.tvDate.text = "Hoy es $pastDate"
+
+        val fmt: DateTimeFormatter = DateTimeFormatterBuilder() // case insensitive
+            .parseCaseInsensitive() // pattern with full month name (MMMM)
+            .appendPattern("dd LLLL yyyy") // set locale
+            .toFormatter(Locale("es", "ES"))
+
+        val formattedString = localDate.format(fmt)
+        mBinding.tvDate.text = "Hoy es $formattedString"
         mCalendarAdapter.imageProfileUrl = user.profilePhoto
         mCalendarAdapter.notifyDataSetChanged()
     }
@@ -158,16 +168,20 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main) {
 
     @SuppressLint("NotifyDataSetChanged", "SimpleDateFormat")
     private fun updateCurrentDateInCalendar(month:Month) {
-        mCalendarAdapter.daysToFormatNextMonth = month.daysToFormatNextMonth.absoluteValue
-        mCalendarAdapter.setCalendarData(month.daysList)
-        mCalendarAdapter.today = month.today
-        mCalendarAdapter.notifyDataSetChanged()
+        mCalendarAdapter.apply {
+            daysToFormatNextMonth = if (month.daysToFormatNextMonth > 0 ) month.daysToFormatNextMonth else 0
+            setCalendarData(month.daysList)
+            today = month.today
+            notifyDataSetChanged()
+        }
         setCalendarTitle()
         mBinding.loader.visibility = View.GONE
     }
 
     private fun setUserAdapter() {
+        viewModel.setEmail(accountEmail)
         viewModel.getAccountData(accountEmail)
+        mBinding.progress.visibility = View.VISIBLE
         val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy")
         val formattedString = localDate.format(formatter)
         viewModel.getListEmails(formattedString, 1)
@@ -188,7 +202,6 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main) {
         if (actualMonth == PAST_MONTH ) return
         mBinding.loader.visibility = View.VISIBLE
         localDate = localDate.minusMonths(1)
-        pastDate = pastDate.minusMonths(1)
         actualMonth = if (actualMonth == NEXT_MONTH) CURRENT_MONTH else PAST_MONTH
         viewModel.getUserDate()
     }
@@ -197,7 +210,6 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main) {
         if (actualMonth == NEXT_MONTH ) return
         mBinding.loader.visibility = View.VISIBLE
         localDate = localDate.plusMonths(1)
-        pastDate = pastDate.minusMonths(1)
         actualMonth = if (actualMonth == PAST_MONTH) CURRENT_MONTH else NEXT_MONTH
         viewModel.getUserDate()
     }
@@ -236,8 +248,9 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main) {
 
     private fun click(day:Day){
         viewModel.setDay(day.date)
-        viewModel.getListEmails(day.date)
-        viewModel.setWeekList(day)
+        viewModel.setObjectDay(day)
+        //viewModel.getListEmails(day.date)
+        //viewModel.setWeekList(day)
         findNavController().navigate(AssistenceMainFragmentDirections.actionAssistenceMainFragmentToAssistenceWeekFragment())
     }
 }

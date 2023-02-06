@@ -250,7 +250,7 @@
             app:layout_constraintTop_toBottomOf="@id/tv_actual_month"
             android:textSize="14sp"
             android:textColor="@color/grey2"
-            android:text="@string/Total_assist"/>
+            tools:text="@string/Total_assist"/>
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/mc_assist"
@@ -271,6 +271,19 @@
             />
 
         </com.google.android.material.card.MaterialCardView>
+
+        <ProgressBar
+            android:id="@+id/progress"
+            app:layout_constraintTop_toBottomOf="@id/tv_assist"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="10dp"
+            android:layout_width="@dimen/dp100"
+            android:layout_height="@dimen/dp100"
+            android:indeterminate="true"
+            android:visibility="visible"
+            android:elevation="@dimen/dp100"/>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     </ScrollView>
@@ -420,7 +433,8 @@
         app:layout_constraintLeft_toLeftOf="parent"
         android:elevation="100sp"
         android:background="@color/transparent_grey"
-        android:gravity="center">
+        android:gravity="center"
+        tools:visibility="gone">
         <ImageView
             android:layout_width="120dp"
             android:layout_height="129dp"

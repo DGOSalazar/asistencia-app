@@ -46,52 +46,63 @@ class AssistenceWeekFragment : Fragment(R.layout.fragment_assistencce_week) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        accountEmail = viewModel.getEmail()
-
-        isLoading(true)
+        setUi()
         subscribeLiveData()
         setListeners()
     }
 
+    private fun setUi() {
+        accountEmail = viewModel.getEmail()
+        selectDay = viewModel.getDayObject()
+        viewModel.setWeekList(selectDay)
+        isLoading(true)
+    }
+
     private fun subscribeLiveData() {
       with(viewModel){
-          isLoading.observe(viewLifecycleOwner){
-            if(it==Status.LOADING){
-                isLoading(true)
-            }else{
-                isLoading(false)
-            }
+          isLoading.observe(viewLifecycleOwner){ if(it==Status.LOADING) isLoading(true)
+            else{ isLoading(false) } }
+
+          daySelected.observe(viewLifecycleOwner){
+              day = it
+              viewModel.getListEmails(it)
           }
-          daySelected.observe(viewLifecycleOwner){ day = it }
+
           users.observe(viewLifecycleOwner){
               selectDay.userList = it
               setUserAdapter(selectDay.userList)
           }
+
           weekSelected.observe(viewLifecycleOwner){
               days = it
+              viewModel.setDay(selectDay.date)
               setDaysAdapter(days)
           }
-          userEmails.observe(viewLifecycleOwner){changeUser(it)}
+
+          userEmails.observe(viewLifecycleOwner){
+              changeUser(it)
+          }
       }
     }
     private fun setListeners() {
         with(mBinding){
-            ivBack.setOnClickListener{
-                cleanUserAdapter()
+            tvTitle.setOnClickListener {
                 activity?.onBackPressed()
+                cleanUserAdapter()
+                viewModel.clearLiveData()
+            }
+            ivBack.setOnClickListener{
+                activity?.onBackPressed()
+                cleanUserAdapter()
             }
             btAdd.setOnClickListener {
-                EnrollToDayDialog(true,selectDay).show(parentFragmentManager,"Yep")
-                viewModel.getListEmails(selectDay.date)
-                viewModel.addUserToListUsers(accountEmail)
-                viewModel.addUserToDay()
+                EnrollToDayDialog(true,selectDay,accountEmail)
+                    .show(parentFragmentManager,getString(R.string.name_dialog_confirm))
                 activateButton(false)
             }
             btUndo.setOnClickListener {
-                EnrollToDayDialog(false,selectDay).show(parentFragmentManager,"Yep")
-                viewModel.getListEmails(selectDay.date)
-                viewModel.deleteUserOfDay(accountEmail)
-                viewModel.addUserToDay()
+                EnrollToDayDialog(false,selectDay,accountEmail)
+                    .show(parentFragmentManager,"Yep")
                 activateButton(true)
             }
         }
@@ -109,7 +120,6 @@ class AssistenceWeekFragment : Fragment(R.layout.fragment_assistencce_week) {
         }else{
             activateButton(true)
         }
-        viewModel.enrollUser(day,viewModel.userEmails.value!!)
         viewModel.getUserDatastore(users)
     }
     private fun isLoading(i:Boolean){

@@ -19,17 +19,23 @@ import com.example.myapplication.data.models.Day
 import com.example.myapplication.databinding.DialogEnrollToDayBinding
 import com.example.myapplication.ui.home.HomeViewModel
 import hilt_aggregated_deps._dagger_hilt_android_internal_managers_ActivityComponentManager_ActivityComponentBuilderEntryPoint
+import javax.inject.Inject
 
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Suppress("UNREACHABLE_CODE")
-class EnrollToDayDialog(var isAdd: Boolean,var selectDay: Day): DialogFragment() {
+class EnrollToDayDialog(
+    var isAdd: Boolean,
+    var selectDay: Day,
+    var email: String
+    ): DialogFragment(R.layout.dialog_enroll_to_day) {
+
     private lateinit var mBinding: DialogEnrollToDayBinding
     private val viewModel: HomeViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setStyle(STYLE_NO_TITLE, android.R.style.Theme_Holo_Light_Dialog_NoActionBar_MinWidth)
+        setStyle(STYLE_NO_TITLE, R.style.dialogForm)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -48,6 +54,7 @@ class EnrollToDayDialog(var isAdd: Boolean,var selectDay: Day): DialogFragment()
                     dismiss()
                 }
                 btConfirm.setOnClickListener {
+                    addOrDelete(true)
                     mBinding.cvMain.visibility=View.GONE
                     mBinding.cvMain2.visibility=View.VISIBLE
                 }
@@ -58,7 +65,11 @@ class EnrollToDayDialog(var isAdd: Boolean,var selectDay: Day): DialogFragment()
         }else{
             setUndoView()
             with(mBinding){
+                btBack.setOnClickListener {
+                    dismiss()
+                }
                 btConfirm.setOnClickListener {
+                    addOrDelete(false)
                     mBinding.cvMain.visibility=View.GONE
                     mBinding.cvMain2.visibility=View.VISIBLE
                 }
@@ -67,15 +78,23 @@ class EnrollToDayDialog(var isAdd: Boolean,var selectDay: Day): DialogFragment()
                 }
             }
         }
-
     }
 
     private fun setUndoView() {
         with(mBinding){
+            ivIconAdd.setImageResource(R.drawable.img_5)
             tvTitle.text = getString(R.string.text_confirm_delete)
+            tvMessage.text=getString(R.string.tv_messagges_delete)
             tvMessage.visibility = View.GONE
             tvTitle2.text = getString(R.string.confirme_delete)
+            ivIcon2.setImageResource(R.drawable.img_6)
         }
+    }
+
+    private fun addOrDelete(b: Boolean){
+        viewModel.getListEmails(selectDay.date)
+        if(b) viewModel.addUserToListUsers(email) else viewModel.deleteUserOfDay(email)
+        viewModel.addUserToDay()
     }
 
 }

@@ -90,6 +90,11 @@
     <string name="scrum">Scrum Master:</string>
     <string name="phone_num">Numero de Telefono:</string>
     <string name="team_name">Team:</string>
+    <string name="text_confirm_delete"><font color="#C40023">Confirmar Eliminar Asistencia</font></string>
+    <string name="confirme_delete">Se ha eliminado tu asistencia correctamente.</string>
+    <string name="name_dialog_confirm">Yep</string>
+    <string name="tv_messagges_delete">¿Seguro que deseas eliminar tu asistencia?</string>
+
     <string-array name="positions">
         <item>Android Dev</item>
         <item>IOS Dev</item>
@@ -104,4 +109,6 @@
         <item>Rocket</item>
         <item>En espera...</item>
     </string-array>
+
+
 </resources>

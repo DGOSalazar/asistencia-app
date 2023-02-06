@@ -53,12 +53,12 @@ class GenerateWeekDaysUseCase @Inject constructor(){
                 if ((dayOfMonth+i) <= 0){
                     dayList.add(
                         Day(
-                            num = if(dayOfMonth+i == 0){(((monthSelected).length(false)))}
+                            num = if(dayOfMonth+i == 0){(((monthSelected-1).length(false)))}
                             else{(((monthSelected).length(false))+i)},
                             name = setSpanishDay(dayOfWeek + i.toLong()),
                             dayOfWeek = dayOfWeek.value + i,
                             selected = i == 0,
-                            date = getFormatDate(((monthSelected).length(false))+i, monthSelected.value)
+                            date = getFormatDate(((monthSelected-1).length(false))+i, monthSelected.value)
                         )
                     )
                 }
