@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.myapplication.R
 import com.example.myapplication.core.dialog.EnrollToDayDialog
+import com.example.myapplication.core.dialog.UserDialog
 import com.example.myapplication.core.extensionFun.toast
 import com.example.myapplication.data.models.Day
 import com.example.myapplication.data.models.Status
@@ -134,7 +135,9 @@ class AssistenceWeekFragment : Fragment(R.layout.fragment_assistencce_week) {
     }
     private fun setUserAdapter(userList: List<User>) {
         mBinding.tvActualMonth.text = "${userList.size} ${getString(R.string.msgAssit)}"
-        mUserAdapter = UserAdapter(userList)
+        mUserAdapter = UserAdapter(userList){
+            clickUser(it)
+        }
         mBinding.recyclerUsers.apply {
             layoutManager = LinearLayoutManager(activity?.applicationContext)
             adapter = mUserAdapter
@@ -177,6 +180,9 @@ class AssistenceWeekFragment : Fragment(R.layout.fragment_assistencce_week) {
         cleanUserAdapter()
         cleanSelected(i.dayOfWeek-1)
         setDaysAdapter(days)
+    }
+    private fun clickUser(u: User){
+        UserDialog(u).show(parentFragmentManager,"Yep")
     }
 
     private fun cleanSelected(t:Int){

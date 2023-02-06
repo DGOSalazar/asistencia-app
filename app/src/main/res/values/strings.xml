@@ -78,7 +78,18 @@
     <string name="user_not_exist">El usuario no aparece en la base de datos</string>
     <string name="text_confirm_delete">¿Deseas eliminar tu registro?</string>
     <string name="confirme_delete">Se ah eliminado el registro exitosamente.</string>
-
+    <string name="nameUserScreen">Diego Salazar Contreras</string>
+    <string name="positionAndTeam">Tester QA | <b>Iniciatiiva Abono Coppel</b></string>
+    <string name="personal_info">Información personal</string>
+    <string name="employee_num">Numero de Colaborador:</string>
+    <string name="cost">Centro de Costos:</string>
+    <string name="manager">Gerente:</string>
+    <string name="positionRol">Puesto:</string>
+    <string name="maanager_sup">Manager:</string>
+    <string name="project">Iniciativa:</string>
+    <string name="scrum">Scrum Master:</string>
+    <string name="phone_num">Numero de Telefono:</string>
+    <string name="team_name">Team:</string>
     <string-array name="positions">
         <item>Android Dev</item>
         <item>IOS Dev</item>
@@ -93,6 +104,4 @@
         <item>Rocket</item>
         <item>En espera...</item>
     </string-array>
-
-
 </resources>

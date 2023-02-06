@@ -89,7 +89,9 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main) {
     @SuppressLint("SetTextI18n")
     private fun updateUsersList(emailList:ArrayList<User>) {
         mBinding.tvAssist.text = "${emailList.size} Asistentes"
-        mUserAdapter = UserAdapter(emailList)
+        mUserAdapter = UserAdapter(emailList){
+
+        }
         mBinding.recyclerUsers.apply {
             layoutManager = LinearLayoutManager(activity?.applicationContext)
             adapter = mUserAdapter
