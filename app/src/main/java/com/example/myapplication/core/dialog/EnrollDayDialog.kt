@@ -42,7 +42,6 @@ class EnrollToDayDialog(
     ): View? {
         mBinding = DialogEnrollToDayBinding.inflate(layoutInflater, container, false)
         setView()
-        //setClick()
         dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         return mBinding.root
     }

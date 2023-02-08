@@ -43,22 +43,22 @@
         app:layout_constraintStart_toStartOf="@id/tv_name"
         app:layout_constraintBottom_toBottomOf="@id/bg_occupation"
         app:layout_constraintTop_toTopOf="@+id/bg_occupation"
-        android:textColor="@color/grey2"
+        android:textColor="@color/white"
+        android:textStyle="normal"
         android:text="@string/position"
-        android:textSize="10sp"
+        android:textSize="@dimen/sp12"
         android:elevation="1dp"
         tools:ignore="SmallSp" />
 
     <View
         android:id="@+id/bg_occupation"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="19dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="@+id/iv_user"
-        android:layout_marginTop="4dp"
-        android:background="@drawable/backgroun_position"
-        android:backgroundTint="@color/android_color"
+        android:layout_marginTop="@dimen/dp4"
+        android:background="@drawable/background_android"
         app:layout_goneMarginTop="16dp"
         android:layout_marginStart="12sp"
          />

@@ -24,4 +24,5 @@ data class Day constructor(var num: Int=12,
                            val date: String = "",
                            val dayOfYear: Year = Year.now(),
                            var enable:Boolean = false,
+                           var isWeekDay: Boolean = false
 )

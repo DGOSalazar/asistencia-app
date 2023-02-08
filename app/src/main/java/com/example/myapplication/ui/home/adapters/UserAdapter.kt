@@ -1,5 +1,7 @@
 package com.example.myapplication.ui.home.adapters
 
+import android.annotation.SuppressLint
+import android.graphics.drawable.ColorDrawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,12 +20,27 @@ class UserAdapter(private var user: List<User>, private var click: (User) -> Uni
         fun mountUsers(){
             with(mBinding) {
                 Glide.with(mBinding.ivUser.context).load(user[adapterPosition].profilePhoto).into(mBinding.ivProfile)
-                tvName.text = user[adapterPosition].name
-                tvPosition.text = ("         ${user[adapterPosition].position}")
+                tvName.text = "${user[adapterPosition].name} ${user[adapterPosition].lastName1}"
+                tvPosition.text = user[adapterPosition].position
+                bgOccupation.setBackgroundResource(getColorPosition(user[adapterPosition].position))
             }
         }
-        fun setClick(){
-            click(user[adapterPosition])
+
+        private fun getColorPosition(position: String): Int {
+            return when(position){
+                "Android" -> {R.drawable.background_android}
+                "IOS" -> {R.drawable.background_ios}
+                "Analyst" -> {R.drawable.background_analyst}
+                "Scrum Master" -> {R.drawable.background_sm}
+                "Tester/QA" -> {R.drawable.background_qa}
+                else ->{R.drawable.background_back}
+            }
+        }
+
+        fun setClick(click: (User) -> Unit){
+            mBinding.root.setOnClickListener {
+                click(user[adapterPosition])
+            }
         }
     }
 
@@ -35,7 +52,7 @@ class UserAdapter(private var user: List<User>, private var click: (User) -> Uni
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         with(holder){
             mountUsers()
-            setClick()
+            setClick(click)
         }
     }
     override fun getItemCount(): Int = user.size

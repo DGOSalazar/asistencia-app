@@ -37,18 +37,33 @@ class GenerateWeekDaysUseCase @Inject constructor(){
     @RequiresApi(Build.VERSION_CODES.O)
     private fun generateWeek(begin: Int, to :Int, dayOfMonth: Int, dayOfWeek: DayOfWeek, monthSelected: Month) : ArrayList<Day>{
         var dayList : ArrayList<Day> = arrayListOf()
-        var onlyOnce = true
-        for (i in begin..to) {
+        var isCurrentWeek = false
+        for (i in begin..to){
             if (dayOfMonth +i<= monthSelected.length(false) && dayOfMonth+i>0) {
-                dayList.add(
-                    Day(
-                        num = dayOfMonth + i,
-                        name = setSpanishDay(dayOfWeek + i.toLong()),
-                        dayOfWeek = dayOfWeek.value + i,
-                        selected = i == 0,
-                        date = getFormatDate(dayOfMonth + i, monthSelected.value)
+
+                if (localDate.dayOfMonth == dayOfMonth+i) {
+                    dayList.add(
+                        Day(
+                            num = dayOfMonth + i,
+                            name = setSpanishDay(dayOfWeek + i.toLong()),
+                            dayOfWeek = dayOfWeek.value + i,
+                            selected = i == 0,
+                            date = getFormatDate(dayOfMonth + i, monthSelected.value),
+                            isWeekDay = true
+                        )
                     )
-                )
+                }else{
+                    dayList.add(
+                        Day(
+                            num = dayOfMonth + i,
+                            name = setSpanishDay(dayOfWeek + i.toLong()),
+                            dayOfWeek = dayOfWeek.value + i,
+                            selected = i == 0,
+                            date = getFormatDate(dayOfMonth + i, monthSelected.value)
+                        )
+                    )
+                }
+
             }else{
                 if ((dayOfMonth+i) <= 0){
                     dayList.add(
@@ -58,7 +73,7 @@ class GenerateWeekDaysUseCase @Inject constructor(){
                             name = setSpanishDay(dayOfWeek + i.toLong()),
                             dayOfWeek = dayOfWeek.value + i,
                             selected = i == 0,
-                            date = getFormatDate(((monthSelected-1).length(false))+i, monthSelected.value)
+                            date = getFormatDate(((monthSelected-1).length(false))+i, monthSelected.value).toString(),
                         )
                     )
                 }
@@ -70,7 +85,7 @@ class GenerateWeekDaysUseCase @Inject constructor(){
                                 name = setSpanishDay(dayOfWeek + i.toLong()),
                                 dayOfWeek = dayOfWeek.value + i,
                                 selected = i == 0,
-                                date = getFormatDate((dayOfMonth-monthSelected.length(false)) + i, monthSelected.value)
+                                date = getFormatDate((dayOfMonth-monthSelected.length(false)) + i, monthSelected.value),
                             )
                         )
                     }
@@ -88,6 +103,11 @@ class GenerateWeekDaysUseCase @Inject constructor(){
         DayOfWeek.FRIDAY ->{"Viernes"}
         else->{""}
     }.toString()
-    private fun getFormatDate(dayMonth: Int, month:Int): String = "${dayMonth}-0${month}-2023"
+
+    private fun getFormatDate(dayMonth: Int, month:Int): String {
+        return if(dayMonth>9) "${dayMonth}-0${month}-2023" else {
+            "0${dayMonth}-0${month}-2023"
+        }
+    }
 
 }

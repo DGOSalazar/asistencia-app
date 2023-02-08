@@ -24,7 +24,7 @@ class SplashActivity : AppCompatActivity() {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
             finish()
-        }, 4000)
+        }, 2000)
     }
     private fun setAnimation(iv: LottieAnimationView, animation: Int){
         iv.setAnimation(animation)

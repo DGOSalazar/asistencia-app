@@ -21,11 +21,11 @@ import com.example.myapplication.data.models.User
 import com.example.myapplication.databinding.FragmentAssistencceWeekBinding
 import com.example.myapplication.ui.home.adapters.UserAdapter
 import com.example.myapplication.ui.home.adapters.WeekAdapter
-import com.example.myapplication.ui.login.EMAIL_KEY
-import javax.inject.Inject
+import java.time.DayOfWeek
+import java.time.LocalDate
 
 @RequiresApi(Build.VERSION_CODES.O)
-class AssistenceWeekFragment : Fragment(R.layout.fragment_assistencce_week) {
+class AssistenceWeekFragment() : Fragment(R.layout.fragment_assistencce_week) {
 
     private lateinit var mBinding: FragmentAssistencceWeekBinding
     private lateinit var mAdapter: WeekAdapter
@@ -72,13 +72,11 @@ class AssistenceWeekFragment : Fragment(R.layout.fragment_assistencce_week) {
               selectDay.userList = it
               setUserAdapter(selectDay.userList)
           }
-
           weekSelected.observe(viewLifecycleOwner){
               days = it
               viewModel.setDay(selectDay.date)
               setDaysAdapter(days)
           }
-
           userEmails.observe(viewLifecycleOwner){
               changeUser(it)
           }
@@ -98,16 +96,15 @@ class AssistenceWeekFragment : Fragment(R.layout.fragment_assistencce_week) {
             btAdd.setOnClickListener {
                 EnrollToDayDialog(true,selectDay,accountEmail)
                     .show(parentFragmentManager,getString(R.string.name_dialog_confirm))
-                activateButton(false)
+                activateButton(2)
             }
             btUndo.setOnClickListener {
                 EnrollToDayDialog(false,selectDay,accountEmail)
-                    .show(parentFragmentManager,"Yep")
-                activateButton(true)
+                    .show(parentFragmentManager,getString(R.string.name_dialog_confirm))
+                activateButton(1)
             }
         }
     }
-
     private fun changeUser(users: ArrayList<String>){
         if (users.isEmpty()){
             setEmptyUserUi(true)
@@ -116,10 +113,14 @@ class AssistenceWeekFragment : Fragment(R.layout.fragment_assistencce_week) {
         }else
             setEmptyUserUi(false)
         if(users.contains(accountEmail)){
-            activateButton(false)
+            activateButton(2)
         }else{
-            activateButton(true)
+            activateButton(1)
         }
+        days.forEach {
+            if(it.isWeekDay) activateButton(3)
+        }
+
         viewModel.getUserDatastore(users)
     }
     private fun isLoading(i:Boolean){
@@ -168,14 +169,21 @@ class AssistenceWeekFragment : Fragment(R.layout.fragment_assistencce_week) {
         }
     }
 
-    private fun activateButton(i: Boolean){
+    private fun activateButton(i: Int){
         with(mBinding) {
-            if(i){
-                btAdd.visibility = View.VISIBLE
-                btUndo.visibility = View.GONE
-            }else{
-                btAdd.visibility = View.GONE
-                btUndo.visibility = View.VISIBLE
+            when(i){
+                1->{
+                    btAdd.visibility = View.VISIBLE
+                    btUndo.visibility = View.GONE
+                }
+                2->{
+                    btAdd.visibility = View.GONE
+                    btUndo.visibility = View.VISIBLE
+                }
+                3->{
+                    btUndo.visibility = View.GONE
+                    btAdd.visibility = View.GONE
+                }
             }
         }
     }

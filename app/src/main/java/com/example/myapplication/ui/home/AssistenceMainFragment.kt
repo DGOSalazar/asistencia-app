@@ -10,11 +10,13 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.myapplication.R
+import com.example.myapplication.core.dialog.UserDialog
 import com.example.myapplication.data.models.AttendanceDays
 import com.example.myapplication.data.models.Day
 import com.example.myapplication.data.models.Month
@@ -48,7 +50,7 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main) {
     var localDate: LocalDate= LocalDate.now()
     private var actualMonth = CURRENT_MONTH
     private var accountEmail = ""
-
+    private var userData: User = User()
     @Inject
     lateinit var sharedPreferences: SharedPreferences
 
@@ -68,8 +70,8 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setObservers()
-        setCalendarAdapter()
         setUserAdapter()
+        setCalendarAdapter()
         setCalendarTitle()
         setListeners()
     }
@@ -78,13 +80,11 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main) {
         viewModel.assistanceDays.observe(viewLifecycleOwner, this::setCalendarDays)
         viewModel.currentMonth.observe(viewLifecycleOwner, this::updateCurrentDateInCalendar)
         viewModel.accountData.observe(viewLifecycleOwner, this::setHeader)
-        viewModel.newUsers.observe(viewLifecycleOwner, this::updateUsersList)
-        viewModel.newUserEmails.observe(viewLifecycleOwner){
-            if(it.isEmpty()) updateUsersList(ArrayList<User>())
-            else viewModel.getUserDatastore(it, 1)
-        }
         viewModel.userEmails.observe(viewLifecycleOwner){
-
+            viewModel.getUserDatastore(it)
+        }
+        viewModel.users.observe(viewLifecycleOwner){
+            updateUsersList(it)
         }
     }
 
@@ -92,7 +92,7 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main) {
     private fun updateUsersList(emailList:ArrayList<User>) {
         mBinding.tvAssist.text = "${emailList.size} Asistentes"
         mUserAdapter = UserAdapter(emailList){
-
+            clickUser(it)
         }
         mBinding.recyclerUsers.apply {
             layoutManager = LinearLayoutManager(activity?.applicationContext)
@@ -107,7 +107,7 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main) {
     @SuppressLint("SetTextI18n", "NotifyDataSetChanged")
     private fun setHeader(user: User) {
         mBinding.tvWelcome.text = "Hola ${user.name}"
-
+        userData = user
         val fmt: DateTimeFormatter = DateTimeFormatterBuilder() // case insensitive
             .parseCaseInsensitive() // pattern with full month name (MMMM)
             .appendPattern("dd LLLL yyyy") // set locale
@@ -155,6 +155,12 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main) {
         }
         mBinding.containerMyProfileNav.setOnClickListener{
             moveNavSelector(it)
+            val navBuilder = NavOptions.Builder()
+            navBuilder.setEnterAnim(R.anim.enter_from_left).setExitAnim(R.anim.exit_from_left)
+                .setPopEnterAnim(R.anim.enter_from_right).setPopExitAnim(R.anim.exit_from_right)
+            findNavController().
+            navigate(AssistenceMainFragmentDirections.
+            actionAssistenceMainFragmentToUserScreenFragment(userData),navBuilder.build())
         }
         mBinding.tvMenuIcon.setOnClickListener{
             Toast.makeText(requireContext(), "Top menu", Toast.LENGTH_SHORT).show()
@@ -184,7 +190,7 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main) {
         mBinding.progress.visibility = View.VISIBLE
         val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy")
         val formattedString = localDate.format(formatter)
-        viewModel.getListEmails(formattedString, 1)
+        viewModel.getListEmails(formattedString)
     }
 
     private fun setCalendarAdapter(){
@@ -245,12 +251,12 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main) {
             }
         }
     }
-
+    private fun clickUser(u: User){
+        UserDialog(u).show(parentFragmentManager,"Yep")
+    }
     private fun click(day:Day){
         viewModel.setDay(day.date)
         viewModel.setObjectDay(day)
-        //viewModel.getListEmails(day.date)
-        //viewModel.setWeekList(day)
         findNavController().navigate(AssistenceMainFragmentDirections.actionAssistenceMainFragmentToAssistenceWeekFragment())
     }
 }

@@ -64,7 +64,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dp28"
-                app:layout_constraintTop_toBottomOf="@id/mc_calendar"
+                app:layout_constraintTop_toTopOf="parent"
                 android:layout_marginEnd="@dimen/dp28">
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/cl_question"
@@ -181,20 +181,19 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:layout_constraintTop_toBottomOf="@id/tv_actual_month"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:cardCornerRadius="@dimen/dp30"
                     android:layout_marginTop="@dimen/sp24"
                     android:visibility="visible">
-
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/recycler_users"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        tools:listitem="@layout/colaborator_view"
-                        android:visibility="visible"
-                        />
-
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/recycler_users"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:visibility="visible"
+                            tools:listitem="@layout/colaborator_view"
+                            android:layout_marginBottom="@dimen/dp8"
+                            android:nestedScrollingEnabled="false"/>
                 </com.google.android.material.card.MaterialCardView>
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
+        </androidx.constraintlayout.widget.ConstraintLayout>
         </ScrollView>
     </androidx.constraintlayout.widget.ConstraintLayout>

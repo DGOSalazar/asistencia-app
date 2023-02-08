@@ -16,6 +16,9 @@
         <action
             android:id="@+id/action_assistenceMainFragment_to_assistenceWeekFragment"
             app:destination="@id/assistenceWeekFragment" />
+        <action
+            android:id="@+id/action_assistenceMainFragment_to_userScreenFragment"
+            app:destination="@id/userScreenFragment" />
     </fragment>
     <fragment
         android:id="@+id/loginFragment"
@@ -102,5 +105,17 @@
         <action
             android:id="@+id/action_stepThreeRegisterFragment_to_assistenceMainFragment"
             app:destination="@id/assistenceMainFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/userScreenFragment"
+        android:name="com.example.myapplication.ui.userScreen.UserScreenFragment"
+        android:label="fragment_user_screen"
+        tools:layout="@layout/fragment_user_screen" >
+        <action
+            android:id="@+id/action_userScreenFragment_to_assistenceMainFragment"
+            app:destination="@id/assistenceMainFragment" />
+        <argument
+            android:name="user"
+            app:argType="com.example.myapplication.data.models.User" />
     </fragment>
 </navigation>

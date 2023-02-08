@@ -54,6 +54,7 @@
         app:cardElevation="@dimen/dp100">
 
         <ImageView
+            android:id="@+id/iv_userPhoto"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:src="@drawable/img_4"/>
@@ -78,7 +79,7 @@
         app:layout_constraintTop_toBottomOf="@id/tv_name_user"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:background="@color/yellow_coppel"
+        android:background="@drawable/background_android"
         android:text="@string/positionAndTeam"
         android:gravity="center"
         android:textSize="@dimen/sp14"
@@ -275,7 +276,7 @@
             app:layout_constraintTop_toBottomOf="@id/tv_title_data1"
             android:textSize="@dimen/dp16"
             android:textStyle="bold"
-            android:text="@string/employee_num"/>
+            android:text="@string/inDate"/>
         <TextView
             android:id="@+id/tv_worker_days"
             android:layout_width="match_parent"
@@ -283,7 +284,7 @@
             app:layout_constraintTop_toBottomOf="@id/tv_date_enroll"
             android:textSize="@dimen/dp16"
             android:textStyle="bold"
-            android:text="@string/cost"/>
+            android:text="@string/workerDays"/>
         <TextView
             android:id="@+id/tv_office_days"
             android:layout_width="match_parent"
@@ -291,8 +292,13 @@
             app:layout_constraintTop_toBottomOf="@id/tv_worker_days"
             android:textSize="@dimen/dp16"
             android:textStyle="bold"
-            android:text="@string/manager"/>
+            android:text="@string/daysInOffice"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="3sp"
+        app:layout_constraintBottom_toTopOf="@+id/nav_bottom_container"
+        android:background="@drawable/bg_nav_container"/>
     <LinearLayout
         android:id="@+id/nav_bottom_container"
         android:layout_width="0sp"
@@ -312,7 +318,6 @@
             app:layout_constraintBottom_toBottomOf="@+id/home"
             app:layout_constraintLeft_toLeftOf="@+id/home"
             app:layout_constraintRight_toRightOf="@+id/home"
-            android:background="@drawable/bg_buttom_nav"
             android:layout_weight="1"
             android:foreground="@drawable/foreground_nav_button">
 
@@ -355,6 +360,7 @@
             app:layout_constraintRight_toRightOf="@+id/home"
             android:layout_weight="1"
             android:foreground="@drawable/foreground_nav_button">
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -390,6 +396,7 @@
             app:layout_constraintLeft_toLeftOf="@+id/home"
             app:layout_constraintRight_toRightOf="@+id/home"
             android:layout_weight="1"
+            android:background="@drawable/bg_buttom_nav"
             android:foreground="@drawable/foreground_nav_button">
             <LinearLayout
                 android:layout_width="match_parent"

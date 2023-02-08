@@ -8,8 +8,8 @@
 
     <ImageView
         android:id="@+id/logo_coppel"
-        android:layout_width="60dp"
-        android:layout_height="55dp"
+        android:layout_width="@dimen/dp60"
+        android:layout_height="@dimen/dp55"
         android:text="@string/hello_blank_fragment"
         app:layout_constraintTop_toTopOf="@id/text_title"
         app:layout_constraintBottom_toBottomOf="@id/text_title"
@@ -19,7 +19,7 @@
 
     <TextView
         android:id="@+id/text_title"
-        android:layout_width="162dp"
+        android:layout_width="@dimen/dp180"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toEndOf="@id/logo_coppel"
         app:layout_constraintTop_toTopOf="parent"

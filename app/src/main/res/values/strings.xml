@@ -4,14 +4,14 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="welcome_message">¡Hola Héctor!</string>
     <string name="welcome_date">Hoy es viernes 6 de enero del 2023</string>
-    <string name="welcome_remember">Recuerda registrarte para la proxima semana.</string>
+    <string name="welcome_remember">Recuerda registrarte para la próxima semana.</string>
     <string name="month">Enero</string>
     <string name="monday">Lun</string>
     <string name="tuesday">Mar</string>
     <string name="Wednesday">Mie</string>
     <string name="Thursday">Jue</string>
     <string name="Friday">Vie</string>
-    <string name="Today_on_office">Hoy Estan en la oficina:</string>
+    <string name="Today_on_office">Hoy están en la oficina:</string>
     <string name="Total_assist">15 Asistentes.</string>
     <string name="name">Jose Alfrredo Jimenez</string>
     <string name="position">Gerente</string>
@@ -22,14 +22,13 @@
     <string name="welcome">¡Bienvenido!</string>
     <string name="enter">Entrar</string>
     <string name="new_account">Crear cuenta</string>
-    <string name="label_new_account">¿Eres nuevo?</string>
+    <string name="label_new_account">¿Eres nuevo? </string>
     <string name="login_background">login background</string>
     <string name="icon_coppel">icon coppel</string>
     <string name="icon_bancoppel">icon bancoppel</string>
     <string name="menu_icon">menu icon</string>
     <string name="back_arrow_button">back arrow button</string>
     <string name="next_arrow_button">next arrow button</string>
-
     <string name="free_days">%1$d Disponibles</string>
     <string name="idAnalyst">2131296340</string>
     <string name="idScrumMaster">2131296699</string>
@@ -66,7 +65,7 @@
     <string name="tv_create_account">Crear una cuenta</string>
     <string name="helper_email">Ingresaa tu correo coppel.</string>
     <string name="hint_pass">Contraseña</string>
-    <string name="hint_pass2">Confirmar contraseña.</string>
+    <string name="hint_pass2">Confirmar contraseña</string>
     <string name="helper_pass">Ingresa tu contraseña.</string>
     <string name="helper_pass2">Vuelve a escribir la contraseña.</string>
     <string name="tv_personal_data">Datos personales</string>
@@ -77,21 +76,25 @@
     <string name="delete_assit">Eliminar asistencia</string>
     <string name="user_not_exist">El usuario no aparece en la base de datos</string>
     <string name="nameUserScreen">Diego Salazar Contreras</string>
-    <string name="positionAndTeam">Tester QA | <b>Iniciatiiva Abono Coppel</b></string>
+    <string name="positionAndTeam">%1$s | <b>Iniciatiiva Abono Coppel</b></string>
     <string name="personal_info">Información personal</string>
-    <string name="employee_num">Numero de Colaborador:</string>
-    <string name="cost">Centro de Costos:</string>
-    <string name="manager">Gerente:</string>
-    <string name="positionRol">Puesto:</string>
-    <string name="maanager_sup">Manager:</string>
-    <string name="project">Iniciativa:</string>
-    <string name="scrum">Scrum Master:</string>
-    <string name="phone_num">Numero de Telefono:</string>
-    <string name="team_name">Team:</string>
+    <string name="employee_num">Numero de Colaborador: %1$s <i></i></string>
+    <string name="cost">Centro de Costos: %1$s</string>
+    <string name="manager">Gerente: %1$s</string>
+    <string name="positionRol">Puesto: %1$s</string>
+    <string name="maanager_sup">Manager:  %1$s</string>
+    <string name="project">Iniciativa: %1$s</string>
+    <string name="scrum">Scrum Master: %1$s</string>
+    <string name="phone_num">Numero de Telefono:%1$s</string>
+    <string name="team_name">Team: %1$s</string>
     <string name="text_confirm_delete"><font color="#C40023">Confirmar Eliminar Asistencia</font></string>
     <string name="confirme_delete">Se ha eliminado tu asistencia correctamente.</string>
     <string name="name_dialog_confirm">Yep</string>
     <string name="tv_messagges_delete">¿Seguro que deseas eliminar tu asistencia?</string>
+    <string name="fullDay">El Día esta completo!</string>
+    <string name="inDate">Fecha de ingres: %1$s</string>
+    <string name="workerDays">Dias laborados: %1$s</string>
+    <string name="daysInOffice">Dias en Oficina: %1$s</string>
 
     <string-array name="positions">
         <item>Android Dev</item>
@@ -107,6 +110,4 @@
         <item>Rocket</item>
         <item>En espera...</item>
     </string-array>
-
-
 </resources>

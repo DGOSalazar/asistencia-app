@@ -5,22 +5,61 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.NavOptions
+import androidx.navigation.fragment.findNavController
 import com.example.myapplication.R
+import com.example.myapplication.core.extensionFun.glide
+import com.example.myapplication.data.models.User
 import com.example.myapplication.databinding.FragmentUserScreenBinding
 
 class UserScreenFragment : Fragment(R.layout.fragment_user_screen) {
 
     private lateinit var mBinding: FragmentUserScreenBinding
+    private var user: User = User()
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
+        arguments?.let {
+            user = UserScreenFragmentArgs.fromBundle(it).user
+        }
         mBinding = FragmentUserScreenBinding.inflate(layoutInflater,container,false)
         return mBinding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setUi()
+        setListeners()
+    }
 
+    private fun setUi() {
+        with(mBinding){
+            ivUserPhoto.glide(user.profilePhoto)
+            tvNameUser.text = user.name
+            tvPositionUser.text = String.format(getString(R.string.positionAndTeam),user.position)
+            tvColaboratorNo.text = String.format(getString(R.string.employee_num),user.employee)
+            tvCostCenter.text = String.format(getString(R.string.cost),"12982")
+            tvManager.text= String.format(getString(R.string.manager),user.name)
+            tvPosition.text = String.format(getString(R.string.positionRol),user.position)
+            tvManagerSup.text = String.format(getString(R.string.maanager_sup),"Diana Estrada")
+            tvProject.text = String.format(getString(R.string.project),"Abono coppel")
+            tvScrum.text = String.format(getString(R.string.scrum),"Esteban Ochoa")
+            tvDateEnroll.text = String.format(getString(R.string.inDate),"01-08-1998")
+            tvWorkerDays.text = String.format(getString(R.string.workerDays),"22")
+            tvOfficeDays.text = String.format(getString(R.string.daysInOffice),"7")
+        }
+    }
+    private fun setListeners(){
+        with(mBinding){
+            containerHomeNav.setOnClickListener {
+                val navBuilder = NavOptions.Builder()
+                navBuilder.setEnterAnim(R.anim.enter_from_right).setExitAnim(R.anim.exit_from_right)
+                    .setPopEnterAnim(R.anim.enter_from_left).setPopExitAnim(R.anim.exit_from_left)
+                findNavController().
+                navigate(UserScreenFragmentDirections.actionUserScreenFragmentToAssistenceMainFragment(),navBuilder.build())
+            }
+        }
     }
 }
