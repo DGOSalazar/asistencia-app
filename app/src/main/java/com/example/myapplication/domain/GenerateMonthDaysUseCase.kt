@@ -165,5 +165,9 @@ class GenerateMonthDaysUseCase @Inject constructor() {
         }
         return filterList
     }
-    private fun getFormatDate(dayMonth: Int, month:Int): String = "${dayMonth}-0${month}-2023"
+    private fun getFormatDate(dayMonth: Int, month:Int): String {
+        return if(dayMonth>9) "${dayMonth}-0${month}-2023" else {
+            "0${dayMonth}-0${month}-2023"
+        }
+    }
 }

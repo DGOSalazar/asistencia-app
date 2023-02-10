@@ -7,6 +7,7 @@ import androidx.annotation.RequiresApi
 import com.example.myapplication.data.models.LoginResult
 import com.example.myapplication.data.models.User
 import com.example.myapplication.data.models.*
+import com.example.myapplication.di.FirebaseClientModule
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.storage.StorageReference
 import kotlinx.coroutines.delay
@@ -14,7 +15,7 @@ import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 class FirebaseServices @Inject constructor(
-    private val firebase: FirebaseClient
+    private val firebase: FirebaseClientModule
 ){
     private var url: Uri? =null
 

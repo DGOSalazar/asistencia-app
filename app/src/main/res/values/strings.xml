@@ -16,12 +16,12 @@
     <string name="name">Jose Alfrredo Jimenez</string>
     <string name="position">Gerente</string>
     <string name="forget_pass">¿Olvidaste tu Contraseña?</string>
-    <string name="email">Correo Electronico</string>
+    <string name="email">Correo electrónico</string>
     <string name="password">Contraseña</string>
     <string name="asistence_title">Asistencia \nGuadalajara</string>
     <string name="welcome">¡Bienvenido!</string>
     <string name="enter">Entrar</string>
-    <string name="new_account">Crear cuenta</string>
+    <string name="new_account">Crear una cuenta.</string>
     <string name="label_new_account">¿Eres nuevo? </string>
     <string name="login_background">login background</string>
     <string name="icon_coppel">icon coppel</string>
@@ -74,7 +74,7 @@
     <string name="date_assit">el lunes 9 de Enero?</string>
     <string name="asssit_name">Juan Carlos ¿Deseas asistir</string>
     <string name="delete_assit">Eliminar asistencia</string>
-    <string name="user_not_exist">El usuario no aparece en la base de datos</string>
+    <string name="user_not_exist">El usuario no aparece en la base de datos o la contraseña es incorrecta</string>
     <string name="nameUserScreen">Diego Salazar Contreras</string>
     <string name="positionAndTeam">%1$s | <b>Iniciatiiva Abono Coppel</b></string>
     <string name="personal_info">Información personal</string>
@@ -95,6 +95,9 @@
     <string name="inDate">Fecha de ingres: %1$s</string>
     <string name="workerDays">Dias laborados: %1$s</string>
     <string name="daysInOffice">Dias en Oficina: %1$s</string>
+    <string name="reminders_notification_channel_id">123456</string>
+    <string name="title_notification_reminder">Registrate!</string>
+    <string name="description_notification_reminder">No olvides Registrar tu asistencia para la siguiente semana :)</string>
 
     <string-array name="positions">
         <item>Android Dev</item>

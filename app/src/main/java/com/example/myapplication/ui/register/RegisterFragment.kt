@@ -112,8 +112,4 @@ class RegisterFragment : Fragment() {
     private fun isValidFields(): Boolean {
         return true
     }
-    private fun validatePassword(password:String) {
-    }
-    private fun validateEmail(email:String) {
-    }
 }

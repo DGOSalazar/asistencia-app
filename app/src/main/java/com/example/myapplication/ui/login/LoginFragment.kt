@@ -1,18 +1,23 @@
 package com.example.myapplication.ui.login
 
 import android.content.SharedPreferences
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import com.example.myapplication.R
+import com.example.myapplication.R.color.*
 import com.example.myapplication.core.extensionFun.toast
 import com.example.myapplication.databinding.FragmentLoginBinding
+import com.example.myapplication.ui.register.Validations
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -22,8 +27,13 @@ const val PASSWORD_KEY = "password_key"
 @AndroidEntryPoint
 class LoginFragment: Fragment(R.layout.fragment_login)  {
 
+    @Inject
+    lateinit var validations: Validations
+
     private lateinit var mBinding :  FragmentLoginBinding
     private val viewModel : LoginViewModel by activityViewModels()
+    private var isValidEmail= true
+    private var isValidPassword= true
 
     @Inject
     lateinit var sharedPreferences: SharedPreferences
@@ -43,9 +53,18 @@ class LoginFragment: Fragment(R.layout.fragment_login)  {
 
     private fun setListeners() {
         with(mBinding) {
+            inputEmail.doAfterTextChanged {
+                isValidEmail = validations.isValidEmail(it.toString())
+                mBinding.ilMail.error = if (isValidEmail) null else "Debe ingresar un correo valido"
+                if(isValidEmail && isValidPassword) else activateButton(false)
+            }
+            inputPass.doAfterTextChanged {
+                isValidPassword = validations.isValidPassword(it.toString())
+                mBinding.ilPass.error = if (isValidPassword) null else "Debes ingresar una contraseña de 8 caracteres"
+                if (isValidPassword && isValidEmail) activateButton(true) else activateButton(false)
+            }
             bnLogin.setOnClickListener {
                 viewModel.login(mBinding.inputEmail.text.toString(),mBinding.inputPass.text.toString())
-                Toast.makeText(mBinding.root.context, "Hola", Toast.LENGTH_SHORT).show()
             }
             bnRegister.setOnClickListener{
                 val navBuilder = NavOptions.Builder()
@@ -66,4 +85,17 @@ class LoginFragment: Fragment(R.layout.fragment_login)  {
         }
     }
 
+    private fun activateButton(n: Boolean){
+        if (n) {
+            with(mBinding.bnLogin) {
+                setBackgroundColor(resources.getColor(blueCoppel))
+                isClickable = true
+            }
+        }else{
+            with(mBinding.bnLogin) {
+                setBackgroundColor(resources.getColor(grey4))
+                isClickable = false
+            }
+        }
+    }
 }

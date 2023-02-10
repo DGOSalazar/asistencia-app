@@ -48,7 +48,7 @@ class GenerateWeekDaysUseCase @Inject constructor(){
                             name = setSpanishDay(dayOfWeek + i.toLong()),
                             dayOfWeek = dayOfWeek.value + i,
                             selected = i == 0,
-                            date = getFormatDate(dayOfMonth + i, monthSelected.value),
+                            date = getFormatDate(dayOfMonth + i, monthSelected.value-1),
                             isWeekDay = true
                         )
                     )
@@ -85,7 +85,7 @@ class GenerateWeekDaysUseCase @Inject constructor(){
                                 name = setSpanishDay(dayOfWeek + i.toLong()),
                                 dayOfWeek = dayOfWeek.value + i,
                                 selected = i == 0,
-                                date = getFormatDate((dayOfMonth-monthSelected.length(false)) + i, monthSelected.value),
+                                date = getFormatDate((dayOfMonth-monthSelected.length(false)) + i, monthSelected.value+1),
                             )
                         )
                     }

@@ -1,4 +1,4 @@
-package com.example.myapplication.data.network
+package com.example.myapplication.di
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
@@ -8,7 +8,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class FirebaseClient @Inject constructor() {
+class FirebaseClientModule @Inject constructor() {
     val auth : FirebaseAuth get() = FirebaseAuth.getInstance()
     val userCollection = Firebase.firestore.collection("UsersCollection")
     val dayCollection = Firebase.firestore.collection("DayCollection")

@@ -196,7 +196,11 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main) {
     private fun setCalendarAdapter(){
         viewModel.getUserDate()
         mCalendarAdapter = CalendarAdapter {
-            click(it)
+            if(it.isCurrentMonth){
+                click(it)
+            }else{
+                nextMonthAction()
+            }
         }
         mBinding.recyclerCalendar.apply {
             layoutManager = GridLayoutManager(activity?.applicationContext,5)

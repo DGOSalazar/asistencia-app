@@ -39,4 +39,7 @@
     <dimen name="dp165">165dp</dimen>
     <dimen name="dp170">170dp</dimen>
     <dimen name="dp180">180dp</dimen>
+    <dimen name="dp64">64dp</dimen>
+    <dimen name="dp48">48dp</dimen>
+    <dimen name="dp35">35dp</dimen>
 </resources>
