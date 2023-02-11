@@ -53,5 +53,4 @@ class AlarmReceiver : BroadcastReceiver() {
     companion object{
         const val NOTIFICATION_ID = 1
     }
-
 }

@@ -1,5 +1,6 @@
 package com.example.myapplication.ui.home
 
+import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
@@ -21,57 +22,65 @@ class HomeViewModel @Inject constructor(
     private val generateWeekDaysUseCase: GenerateWeekDaysUseCase,
     private val enrollUserToDayUseCase: EnrollUserToDayUseCase,
     private val getUserInfoUseCase: GetUserInfoUseCase,
-    private val getAllAttendanceDaysByMonthUseCase: GetAllAttendanceDaysByMonthUseCase
+    private val getAllAttendanceDaysByMonthUseCase: GetAllAttendanceDaysByMonthUseCase,
+    private val getLocationUseCase: GetLocationUseCase
     ):ViewModel() {
 
     private val _daySelected = MutableLiveData<String>()
-    var daySelected : LiveData<String> = _daySelected
+    var daySelected: LiveData<String> = _daySelected
 
     private val _users = MutableLiveData<ArrayList<User>>()
-    var users : LiveData<ArrayList<User>> = _users
+    var users: LiveData<ArrayList<User>> = _users
 
     private val _userEmails = MutableLiveData<ArrayList<String>>()
-    var userEmails : LiveData<ArrayList<String>> = _userEmails
+    var userEmails: LiveData<ArrayList<String>> = _userEmails
 
     private val _assistanceDays = MutableLiveData<List<AttendanceDays>>()
-    var assistanceDays : LiveData<List<AttendanceDays>> = _assistanceDays
+    var assistanceDays: LiveData<List<AttendanceDays>> = _assistanceDays
 
     private val _currentMonth = MutableLiveData<Month>()
-    var currentMonth : LiveData<Month> = _currentMonth
+    var currentMonth: LiveData<Month> = _currentMonth
 
     private val _weekSelected = MutableLiveData<List<Day>>()
-    var weekSelected : LiveData<List<Day>> = _weekSelected
+    var weekSelected: LiveData<List<Day>> = _weekSelected
 
     private val _accountData = MutableLiveData<User>()
-    var accountData : LiveData<User> = _accountData
+    var accountData: LiveData<User> = _accountData
 
     private val _loader = MutableLiveData<Boolean>()
-    var loader : LiveData<Boolean> = _loader
+    var loader: LiveData<Boolean> = _loader
 
     private val _isLoading = MutableLiveData<Status>()
-    var isLoading : LiveData<Status> =_isLoading
+    var isLoading: LiveData<Status> = _isLoading
 
     private val _dayObject = MutableLiveData<Day>()
-    var dayObject : LiveData<Day> = _dayObject
+    var dayObject: LiveData<Day> = _dayObject
 
     private val _mail = MutableLiveData<String>()
-    var mail : LiveData<String> =_mail
+    var mail: LiveData<String> = _mail
 
-    fun  setObjectDay(day: Day){
-        _dayObject.value= day
+    private val _local = MutableLiveData<ArrayList<String>>()
+    var local: LiveData<ArrayList<String>> = _local
+
+    fun setObjectDay(day: Day) {
+        _dayObject.value = day
     }
-    fun getDayObject(): Day{
+
+    fun getDayObject(): Day {
         return dayObject.value!!
     }
-    fun addUserToDay(){
+
+    fun addUserToDay() {
         enrollUserToDayUseCase(_daySelected.value!!, _userEmails.value!!)
     }
+
     @RequiresApi(Build.VERSION_CODES.O)
-    fun setWeekList(day:Day){
+    fun setWeekList(day: Day) {
         _weekSelected.value = generateWeekDaysUseCase(day)
     }
+
     @RequiresApi(Build.VERSION_CODES.O)
-    fun getUserDate(){
+    fun getUserDate() {
         getAllAttendanceDaysByMonthUseCase.invoke(
             errorObserver = { },
             success = { _assistanceDays.value = it }
@@ -83,33 +92,34 @@ class HomeViewModel @Inject constructor(
         localDate: LocalDate,
         pastDate: LocalDate,
         daysToAttend: List<AttendanceDays>,
-        isNextMonth:  Int
-    ){
-        _currentMonth.value = generateMonthDaysUseCase.invoke( localDate, pastDate, daysToAttend, isNextMonth)
+        isNextMonth: Int
+    ) {
+        _currentMonth.value =
+            generateMonthDaysUseCase(localDate, pastDate, daysToAttend, isNextMonth)
     }
 
-    fun setDay(p: String){
+    fun setDay(p: String) {
         _daySelected.value = p
     }
 
-    fun getUserDatastore(listEmails:ArrayList<String>) {
+    fun getUserDatastore(listEmails: ArrayList<String>) {
         viewModelScope.launch {
-            withContext(Dispatchers.IO){
-                getUserInfoUseCase.userInfo(listEmails){
+            withContext(Dispatchers.IO) {
+                getUserInfoUseCase.userInfo(listEmails) {
                     _users.postValue(it)
-                    _isLoading.value= Status.SUCCESS
+                    _isLoading.value = Status.SUCCESS
                 }
             }
         }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun getListEmails(day: String){
-        _isLoading.value= Status.LOADING
+    fun getListEmails(day: String) {
+        _isLoading.value = Status.LOADING
         viewModelScope.launch {
-            withContext(Dispatchers.IO){
-                getUserInfoUseCase.emailList(day){
-                   _userEmails.postValue(it)
+            withContext(Dispatchers.IO) {
+                getUserInfoUseCase.emailList(day) {
+                    _userEmails.postValue(it)
                 }
             }
         }
@@ -123,22 +133,32 @@ class HomeViewModel @Inject constructor(
         val listEmails: ArrayList<String> = arrayListOf()
         listEmails.add(accountEmail)
         viewModelScope.launch {
-            getUserInfoUseCase.userInfo(listEmails){
+            getUserInfoUseCase.userInfo(listEmails) {
                 _accountData.postValue(it[0])
             }
         }
     }
-    fun deleteUserOfDay(email: String){
+
+    fun deleteUserOfDay(email: String) {
         _userEmails.value!!.remove(email)
     }
-    fun  setEmail(email: String){
-        _mail.value=email
+
+    fun setEmail(email: String) {
+        _mail.value = email
     }
-    fun  getEmail(): String = mail.value!!
+
+    fun getEmail(): String = mail.value!!
 
     fun clearLiveData() {
         val clean = arrayListOf<User>()
         _users.value = clean
         _userEmails.value = arrayListOf()
+    }
+
+    fun getCurrentLocation(context: Context) {
+        viewModelScope.launch {
+            getLocationUseCase.getLocationResult(context)
+            _local.postValue(getLocationUseCase.getLocation())
+        }
     }
 }

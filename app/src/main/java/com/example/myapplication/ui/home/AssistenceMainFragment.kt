@@ -1,6 +1,5 @@
 package com.example.myapplication.ui.home
 
-
 import android.annotation.SuppressLint
 import android.content.SharedPreferences
 import android.os.Build
@@ -17,6 +16,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.myapplication.R
 import com.example.myapplication.core.dialog.UserDialog
+import com.example.myapplication.core.extensionFun.toast
 import com.example.myapplication.data.models.AttendanceDays
 import com.example.myapplication.data.models.Day
 import com.example.myapplication.data.models.Month
@@ -25,26 +25,30 @@ import com.example.myapplication.databinding.FragmentAssistenceMainBinding
 import com.example.myapplication.ui.home.adapters.CalendarAdapter
 import com.example.myapplication.ui.home.adapters.UserAdapter
 import com.example.myapplication.ui.login.EMAIL_KEY
+import com.google.android.gms.location.*
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeFormatterBuilder
 import java.util.*
 import javax.inject.Inject
+import kotlin.collections.ArrayList
 
 
 const val CURRENT_MONTH = 1
 const val PAST_MONTH = 2
 const val NEXT_MONTH = 3
 
+
 @AndroidEntryPoint
 @RequiresApi(Build.VERSION_CODES.O)
-class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main) {
+class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main){
 
     private lateinit var mCalendarAdapter: CalendarAdapter
     private lateinit var mUserAdapter: UserAdapter
     private lateinit var mBinding:FragmentAssistenceMainBinding
     private val viewModel: HomeViewModel by activityViewModels()
+
 
     @RequiresApi(Build.VERSION_CODES.O)
     var localDate: LocalDate= LocalDate.now()
@@ -82,10 +86,18 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main) {
         viewModel.accountData.observe(viewLifecycleOwner, this::setHeader)
         viewModel.userEmails.observe(viewLifecycleOwner){
             viewModel.getUserDatastore(it)
+            if (it.contains(userData.email)) showConfirmAssist()
         }
         viewModel.users.observe(viewLifecycleOwner){
             updateUsersList(it)
         }
+        viewModel.local.observe(viewLifecycleOwner){
+            context?.toast(it.toString())
+        }
+    }
+
+    private fun showConfirmAssist() {
+        mBinding.fabConfirmAsit.visibility = View.VISIBLE
     }
 
     @SuppressLint("SetTextI18n")
@@ -163,7 +175,10 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main) {
             actionAssistenceMainFragmentToUserScreenFragment(userData),navBuilder.build())
         }
         mBinding.tvMenuIcon.setOnClickListener{
-            Toast.makeText(requireContext(), "Top menu", Toast.LENGTH_SHORT).show()
+            context?.toast("TopMenu")
+        }
+        mBinding.fabConfirmAsit.setOnClickListener {
+            viewModel.getCurrentLocation(activity?.applicationContext!!)
         }
     }
 

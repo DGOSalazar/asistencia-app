@@ -17,7 +17,8 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/scroll_container"
         android:background="@color/blue_app"
-        android:elevation="51dp">
+        android:elevation="51dp"
+        >
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -287,7 +288,16 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     </ScrollView>
-
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_confirmAsit"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/analyst_color"
+        android:src="@drawable/ic_check_assit"
+        app:layout_constraintBottom_toTopOf="@id/nav_bottom_container"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_margin="@dimen/dp8"
+        android:visibility="gone"/>
     <View
         android:layout_width="match_parent"
         android:layout_height="3sp"

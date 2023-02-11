@@ -98,6 +98,11 @@
     <string name="reminders_notification_channel_id">123456</string>
     <string name="title_notification_reminder">Registrate!</string>
     <string name="description_notification_reminder">No olvides Registrar tu asistencia para la siguiente semana :)</string>
+    <string name="reminders_notification_channel_name">123</string>
+    <string name="dont_accept_message">Por Favor Acepta los permisos desde los ajustes para poder brindarte una mejor experiencia</string>
+    <string name="accept_permission">aceptados</string>
+    <string name="dennied_permission">Permisos rechazados</string>
+    <string name="recordatory">Acepta los permisos en ajustes</string>
 
     <string-array name="positions">
         <item>Android Dev</item>
