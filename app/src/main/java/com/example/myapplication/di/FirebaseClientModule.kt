@@ -12,5 +12,6 @@ class FirebaseClientModule @Inject constructor() {
     val auth : FirebaseAuth get() = FirebaseAuth.getInstance()
     val userCollection = Firebase.firestore.collection("UsersCollection")
     val dayCollection = Firebase.firestore.collection("DayCollection")
+    val dayConfirmCollection = Firebase.firestore.collection("DayConfirmCollection")
     val dataStorage = FirebaseStorage.getInstance().getReference("profilePhotos").child("usersPhotos")
 }

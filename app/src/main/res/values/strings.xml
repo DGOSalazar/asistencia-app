@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Asistencia Guadalajara</string>
     <!-- TODO: Remove or change this placeholder text -->
+    <string name="fullName">%1$s %2$s</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="welcome_message">¡Hola Héctor!</string>
     <string name="welcome_date">Hoy es viernes 6 de enero del 2023</string>

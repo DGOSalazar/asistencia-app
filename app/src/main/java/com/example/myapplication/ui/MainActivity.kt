@@ -1,7 +1,6 @@
 package com.example.myapplication.ui
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.app.AlarmManager
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -18,74 +17,35 @@ import androidx.core.content.ContextCompat
 import com.example.myapplication.R
 import com.example.myapplication.core.extensionFun.toast
 import com.example.myapplication.core.notification.AlarmReceiver
-import com.example.myapplication.di.ReminderManagerModule
+import com.example.myapplication.core.notification.AlarmReceiver.Companion.NOTIFICATION_ID
 import dagger.hilt.android.AndroidEntryPoint
+import java.time.DayOfWeek
+import java.time.LocalDate
 import java.util.*
 
-const val PERMISSION_REQUEST_CODE = 1
-const val REMINDER_NOTIFICATION_REQUEST_CODE = 123456
+
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
+    @RequiresApi(Build.VERSION_CODES.O)
+    private var localDate = LocalDate.now()
+
+    companion object {
+        const val PERMISSION_REQUEST_CODE = 1
+        const val CHANNEL_ID="123456"
+        const val REMINDER_NOTIFICATION_REQUEST_CODE = 123456
+    }
+
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         createNotificationsChannels()
-        RemindersManager.startReminder(this)
         checkPermission()
+        if(localDate.dayOfWeek == DayOfWeek.FRIDAY) scheduleNotification()
     }
 
-    object RemindersManager {
-        @SuppressLint("ServiceCast", "UnspecifiedImmutableFlag")
-        fun startReminder(
-            context: Context,
-            reminderTime: String = "06:02",
-            reminderId: Int = REMINDER_NOTIFICATION_REQUEST_CODE
-        ){
-            val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-            val (hours, min) = reminderTime.split(":").map { it.toInt() }
-            val intent =
-                Intent(context.applicationContext, AlarmReceiver::class.java).let { intent ->
-                    PendingIntent.getBroadcast(
-                        context.applicationContext,
-                        reminderId,
-                        intent,
-                        PendingIntent.FLAG_IMMUTABLE
-                    )
-                }
 
-            val calendar: Calendar = Calendar.getInstance(Locale.ENGLISH).apply {
-                set(Calendar.HOUR_OF_DAY, hours)
-                set(Calendar.MINUTE, min)
-            }
-            if (Calendar.getInstance(Locale.ENGLISH)
-                    .apply { add(Calendar.MINUTE, 1) }.timeInMillis - calendar.timeInMillis > 0
-            ) {
-                calendar.add(Calendar.DATE, 1)
-            }
-            alarmManager.setAlarmClock(
-                AlarmManager.AlarmClockInfo(calendar.timeInMillis, intent),
-                intent
-            )
-        }
-
-        fun stopReminder(
-            context: Context,
-            reminderId: Int = ReminderManagerModule.REMINDER_NOTIFICATION_REQUEST_CODE
-        ) {
-            val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-            val intent = Intent(context, AlarmReceiver::class.java).let { intent ->
-                PendingIntent.getBroadcast(
-                    context,
-                    reminderId,
-                    intent,
-                    0
-                )
-            }
-            alarmManager.cancel(intent)
-        }
-    }
     private fun createNotificationsChannels() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
@@ -97,12 +57,20 @@ class MainActivity : AppCompatActivity() {
                 ?.createNotificationChannel(channel)
         }
     }
+    private fun scheduleNotification(){
+        val intent= Intent(applicationContext,AlarmReceiver::class.java)
+        val pendingIntent = PendingIntent.getBroadcast(applicationContext,NOTIFICATION_ID,intent,PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT )
+
+        val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, Calendar.getInstance().timeInMillis,pendingIntent)
+    }
+
     private fun checkPermission() {
         if (isPermissionGranted()) {
-            requestInternetPermission()
+            requestPermissions()
         }
     }
-    private fun requestInternetPermission() {
+    private fun requestPermissions() {
         if (ActivityCompat.shouldShowRequestPermissionRationale(this,
                 Manifest.permission.CAMERA)) {
             toast(getString(R.string.recordatory))

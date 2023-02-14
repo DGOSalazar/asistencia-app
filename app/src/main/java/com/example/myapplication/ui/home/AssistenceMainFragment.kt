@@ -73,20 +73,24 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main){
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        mBinding.fabConfirmAsit.visibility = View.VISIBLE
         setObservers()
-        setUserAdapter()
+        setLaunch()
         setCalendarAdapter()
         setCalendarTitle()
         setListeners()
     }
 
     private fun setObservers() {
+        viewModel.confirmOk.observe(viewLifecycleOwner){
+            if (it) mBinding.fabConfirmAsit.visibility = View.VISIBLE
+            else mBinding.fabConfirmAsit.visibility = View.VISIBLE
+        }
         viewModel.assistanceDays.observe(viewLifecycleOwner, this::setCalendarDays)
         viewModel.currentMonth.observe(viewLifecycleOwner, this::updateCurrentDateInCalendar)
         viewModel.accountData.observe(viewLifecycleOwner, this::setHeader)
         viewModel.userEmails.observe(viewLifecycleOwner){
             viewModel.getUserDatastore(it)
-            if (it.contains(userData.email)) showConfirmAssist()
         }
         viewModel.users.observe(viewLifecycleOwner){
             updateUsersList(it)
@@ -94,10 +98,6 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main){
         viewModel.local.observe(viewLifecycleOwner){
             context?.toast(it.toString())
         }
-    }
-
-    private fun showConfirmAssist() {
-        mBinding.fabConfirmAsit.visibility = View.VISIBLE
     }
 
     @SuppressLint("SetTextI18n")
@@ -199,13 +199,15 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main){
         mBinding.loader.visibility = View.GONE
     }
 
-    private fun setUserAdapter() {
+    private fun setLaunch() {
         viewModel.setEmail(accountEmail)
         viewModel.getAccountData(accountEmail)
         mBinding.progress.visibility = View.VISIBLE
         val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy")
         val formattedString = localDate.format(formatter)
         viewModel.getListEmails(formattedString)
+        viewModel.setDay(formattedString)
+        viewModel.confirmStatus(accountEmail,formattedString)
     }
 
     private fun setCalendarAdapter(){

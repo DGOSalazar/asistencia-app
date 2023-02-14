@@ -17,11 +17,11 @@
             android:layout_height="match_parent">
             <androidx.cardview.widget.CardView
                 android:id="@+id/user_photo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/dp80"
+                android:layout_height="@dimen/dp80"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:cardCornerRadius="@dimen/dp40"
+                app:cardCornerRadius="@dimen/dp80"
                 android:layout_marginTop="@dimen/dp16"
                 android:layout_marginStart="@dimen/dp16">
             <ImageView
@@ -77,7 +77,7 @@
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toTopOf="@id/tv_phoneNumber"
                     android:textSize="@dimen/sp20"
-                    android:gravity="center"
+                    android:gravity="start"
                     />
                 <TextView
                     android:id="@+id/tv_phoneNumber"
@@ -87,25 +87,16 @@
                     app:layout_constraintTop_toBottomOf="@id/tv_colaborator_num"
                     app:layout_constraintBottom_toBottomOf="@id/tv_team"
                     android:textSize="@dimen/sp20"
-                    android:gravity="center"/>
+                    android:gravity="start"/>
                 <TextView
                     android:id="@+id/tv_team"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/team_name"
                     app:layout_constraintTop_toBottomOf="@id/tv_phoneNumber"
-                    app:layout_constraintBottom_toTopOf="@id/tv_birth"
-                    android:textSize="@dimen/sp20"
-                    android:gravity="center"/>
-                <TextView
-                    android:id="@+id/tv_birth"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/project"
-                    app:layout_constraintTop_toBottomOf="@id/tv_team"
                     app:layout_constraintBottom_toBottomOf="parent"
                     android:textSize="@dimen/sp20"
-                    android:gravity="center"/>
+                    android:gravity="start"/>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>

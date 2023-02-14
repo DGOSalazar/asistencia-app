@@ -5,6 +5,7 @@
         <item name="cornerFamily">rounded</item>
         <item name="android:layout_marginHorizontal">@dimen/dp14</item>
         <item name="cornerSize">28dp</item>
+        <item name="background">@color/grey7</item>
     </style>
 
     <dimen name="dp14">14dp</dimen>

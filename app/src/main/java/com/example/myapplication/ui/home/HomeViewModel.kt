@@ -62,6 +62,16 @@ class HomeViewModel @Inject constructor(
     private val _local = MutableLiveData<ArrayList<String>>()
     var local: LiveData<ArrayList<String>> = _local
 
+    private val _confirmOk = MutableLiveData<Boolean>()
+    var confirmOk: LiveData<Boolean> = _confirmOk
+
+    fun confirmStatus(email:String, day: String){
+        viewModelScope.launch {
+            getLocationUseCase.checkConfirmStatus(day,email)
+            _confirmOk.value = getLocationUseCase.getConfirm()
+        }
+    }
+
     fun setObjectDay(day: Day) {
         _dayObject.value = day
     }
@@ -158,7 +168,6 @@ class HomeViewModel @Inject constructor(
     fun getCurrentLocation(context: Context) {
         viewModelScope.launch {
             getLocationUseCase.getLocationResult(context)
-            _local.postValue(getLocationUseCase.getLocation())
         }
     }
 }

@@ -3,24 +3,45 @@ package com.example.myapplication.domain
 import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
-import android.net.Uri
 import android.os.Looper
 import androidx.core.app.ActivityCompat
+import com.example.myapplication.data.models.AssistConfirm
+import com.example.myapplication.data.models.UserOk
+import com.example.myapplication.data.network.FirebaseServices
 import com.google.android.gms.location.*
 import kotlinx.coroutines.delay
 import javax.inject.Inject
-import kotlin.coroutines.coroutineContext
 
-class GetLocationUseCase @Inject constructor(): LocationCallback() {
+class GetLocationUseCase @Inject constructor(
+    private val firebaseServices: FirebaseServices
+): LocationCallback() {
+
+    private var isConfirm: Boolean? = null
+    private lateinit var today : String
+    private var userOk: UserOk = UserOk()
+
     private val locationRequest = LocationRequest.create().apply {
         interval = 10000
         fastestInterval = 3000
         priority = Priority.PRIORITY_HIGH_ACCURACY
         maxWaitTime = 3000
     }
-    private var list: ArrayList<String> = arrayListOf()
 
-    fun getLocationResult(context: Context){
+    fun checkConfirmStatus(actualDay: String, email: String){
+        today = actualDay
+        userOk.email = email
+        firebaseServices.consultUserConfirmationAssist(actualDay,email){
+            //TODO(Validar lista no contenga el email para cambiar el valor de bandera )
+        }
+    }
+    suspend fun getConfirm(): Boolean{
+        while (isConfirm==null){
+            delay(1000)
+        }
+        return isConfirm as Boolean
+    }
+
+    suspend fun getLocationResult(context: Context){
         if (ActivityCompat.checkSelfPermission(
                 context,
                 Manifest.permission.ACCESS_FINE_LOCATION
@@ -28,7 +49,7 @@ class GetLocationUseCase @Inject constructor(): LocationCallback() {
                 context,
                 Manifest.permission.ACCESS_COARSE_LOCATION
             ) != PackageManager.PERMISSION_GRANTED
-        ) {
+        ){
             return
         }
         LocationServices.getFusedLocationProviderClient(context)
@@ -39,16 +60,53 @@ class GetLocationUseCase @Inject constructor(): LocationCallback() {
                         .removeLocationUpdates(this)
                     if (locationResult != null && locationResult.locations.size > 0) {
                         val latestLocationIndex = locationResult.locations.size - 1
-                        list.add(locationResult.locations[latestLocationIndex].latitude.toString())
-                        list.add(locationResult.locations[latestLocationIndex].longitude.toString())
+                        userOk.lat = locationResult.locations[latestLocationIndex].latitude
+                        userOk.lon = locationResult.locations[latestLocationIndex].longitude
                     }
                 }
             }, Looper.myLooper())
+        setDayWithUsersLocation()
     }
-    suspend fun getLocation(): ArrayList<String> = run {
-        while (list.isEmpty()){
+    private suspend fun setDayWithUsersLocation() {
+        while (userOk.lat.isNaN() && userOk.lon.isNaN()){
             delay(1000)
         }
-        list
+        firebaseServices.consultUserConfirmationAssist(today,userOk.email){
+            if (it[0] != AssistConfirm()){
+                var list = it[0].users
+
+                list.add(
+                    UserOk(
+                        email = userOk.email,
+                        lat = userOk.lat,
+                        lon = userOk.lon,
+                        isInOffice = isOnOffice()
+                    )
+                )
+                firebaseServices.registerUserConfirmationAssist(
+                    AssistConfirm(
+                        day = today,
+                        users =  list
+                    )
+                )
+            }
+            else{
+                firebaseServices.registerUserConfirmationAssist(
+                    (AssistConfirm(day = today,
+                            arrayListOf(UserOk(
+                                email = userOk.email,
+                                lat = userOk.lat,
+                                lon = userOk.lon,
+                                isInOffice = isOnOffice())
+                                )
+                            )
+                        )
+                )
+            }
+        }
+    }
+
+    private fun isOnOffice(): Boolean {
+        return userOk.lat in 20.68107..20.68307 && userOk.lon in -103.38650..-103.38250
     }
 }

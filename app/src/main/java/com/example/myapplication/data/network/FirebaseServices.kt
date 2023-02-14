@@ -18,6 +18,7 @@ class FirebaseServices @Inject constructor(
     private val firebase: FirebaseClientModule
 ){
     private var url: Uri? =null
+    private var isConfirmAssistAlready:Boolean = false
 
     suspend fun login(mail: String, pass: String): LoginResult = runCatching {
         firebase.auth.signInWithEmailAndPassword(mail,pass).await()
@@ -108,7 +109,6 @@ class FirebaseServices @Inject constructor(
     @RequiresApi(Build.VERSION_CODES.O)
     fun getListUsers(day: String, mails:(ArrayList<String>) -> Unit) = runCatching{
         var emails = AttendanceDays(arrayListOf(),"")
-
         firebase.dayCollection.whereEqualTo("currentDay", day).get()
             .addOnSuccessListener {
                 it.forEach { j ->
@@ -155,4 +155,33 @@ class FirebaseServices @Inject constructor(
                 LoginResult.Success(result.user?.isEmailVerified ?: false)
             }
         }
+    fun registerUserConfirmationAssist(assistConfirm: AssistConfirm) = run {
+        firebase.dayConfirmCollection.document(assistConfirm.day).set(
+            hashMapOf(
+                "day" to assistConfirm.day,
+                "userAssist" to assistConfirm.users
+            )
+        )
+    }
+    fun consultUserConfirmationAssist(day: String,email: String, returnData:(List<AssistConfirm>)->Unit) {
+
+        var dayConfirm: ArrayList<AssistConfirm> = arrayListOf()
+        firebase.dayConfirmCollection.whereEqualTo("day", day).get()
+            .addOnSuccessListener { result ->
+                result.documents.forEach { j ->
+                    var newRegister = AssistConfirm(
+                        j.get("day") as String,
+                        j.get("userAssist") as ArrayList<UserOk>
+                    )
+                    dayConfirm.add(newRegister)
+                }
+
+                returnData(dayConfirm)
+            }.addOnFailureListener {
+                returnData(listOf())
+            }
+    }
+    fun containsEmail(email: String){
+
+    }
 }

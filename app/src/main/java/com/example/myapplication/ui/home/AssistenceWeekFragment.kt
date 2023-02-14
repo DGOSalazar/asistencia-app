@@ -14,15 +14,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.myapplication.R
 import com.example.myapplication.core.dialog.EnrollToDayDialog
 import com.example.myapplication.core.dialog.UserDialog
-import com.example.myapplication.core.extensionFun.toast
 import com.example.myapplication.data.models.Day
 import com.example.myapplication.data.models.Status
 import com.example.myapplication.data.models.User
 import com.example.myapplication.databinding.FragmentAssistencceWeekBinding
 import com.example.myapplication.ui.home.adapters.UserAdapter
 import com.example.myapplication.ui.home.adapters.WeekAdapter
-import java.time.DayOfWeek
-import java.time.LocalDate
 
 @RequiresApi(Build.VERSION_CODES.O)
 class AssistenceWeekFragment() : Fragment(R.layout.fragment_assistencce_week) {

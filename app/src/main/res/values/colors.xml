@@ -10,6 +10,7 @@
     <color name="white">#FFFFFFFF</color>
     <color name="grayCoppel">#f2f2f2</color>
     <color name="blueCoppel">#076AB6</color>
+    <color name="backGroundRefused">#85393A3A</color>
 
     <color name="background_login">#94002299</color>
     <color name="blue_app">#2A4EA9</color>
