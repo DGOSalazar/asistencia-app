@@ -72,7 +72,7 @@ class GetLocationUseCase @Inject constructor(
             delay(1000)
         }
         firebaseServices.consultUserConfirmationAssist(today,userOk.email){
-            if (it[0] != AssistConfirm()){
+            if (it.isNotEmpty()){
                 var list = it[0].users
 
                 list.add(
