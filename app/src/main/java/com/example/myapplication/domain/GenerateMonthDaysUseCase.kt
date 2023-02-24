@@ -83,10 +83,10 @@ class GenerateMonthDaysUseCase @Inject constructor() {
                     else{
                         if (pastToday) countEnableDays  += 1
                         val dayEnable = if(isNextMonth == NEXT_MONTH) false else pastToday && countEnableDays <= 15
-                        var freePlaces = 15
+                        var freePlaces = 33
 
                         currentMonthDaysList.forEach {
-                             if( it.day == day ) freePlaces =it.freePlaces
+                             if( it.day == day ) freePlaces = it.freePlaces
                         }
                         tempDays.add( Day(num = day, places = freePlaces,
                             nameEng = currentDate.withDayOfMonth(day).dayOfWeek,
@@ -96,7 +96,7 @@ class GenerateMonthDaysUseCase @Inject constructor() {
                 }
             }
 
-            if (day == currentDay && monthSelected == currentMonth){        //set today
+            if (day == currentDay && monthSelected == currentMonth){//set today
                 todayValue = day
                 todayPosition = i
                 if (!pastToday) pastToday = true

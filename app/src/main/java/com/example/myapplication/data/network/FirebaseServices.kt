@@ -164,7 +164,6 @@ class FirebaseServices @Inject constructor(
         )
     }
     fun consultUserConfirmationAssist(day: String,email: String, returnData:(List<AssistConfirm>)->Unit) {
-
         var dayConfirm: ArrayList<AssistConfirm> = arrayListOf()
         firebase.dayConfirmCollection.whereEqualTo("day", day).get()
             .addOnSuccessListener { result ->
@@ -181,7 +180,48 @@ class FirebaseServices @Inject constructor(
                 returnData(listOf())
             }
     }
-    fun containsEmail(email: String){
-
+    suspend  fun getNotifications(): ArrayList<Notify> {
+        var notifications: ArrayList<Notify> = arrayListOf()
+        firebase.dayCollection.get().addOnSuccessListener { result ->
+            result.documents.forEach{ j ->
+                var newNotify =  Notify(
+                    iconNoty = j.get("iconNoty") as Int,
+                    notifyId = j.get("notifyId") as String,
+                    text = j.get("text") as String,
+                    timer = j.get("timer") as String
+                )
+                notifications.add(newNotify)
+            }
+            notifications
+            return@addOnSuccessListener
+        }.addOnFailureListener {
+            return@addOnFailureListener
+        }
+        while (notifications.isNullOrEmpty()){
+            delay(1000)
+        }
+        return notifications
+    }
+    fun getAllUsers(users: (ArrayList<User>) -> Unit) {
+        val list: ArrayList<User> = arrayListOf()
+        var user1 = User()
+        firebase.userCollection.get().addOnSuccessListener {
+            it.forEach { i ->
+                user1 = User(
+                    i.get("email") as String,
+                    i.get("name") as String,
+                    i.get("lastName1") as String,
+                    i.get("lastName2") as String,
+                    i.get("position") as String,
+                    i.get("birthDate") as String,
+                    i.get("team") as String,
+                    i.get("profilePhoto") as String,
+                    i.get("phone") as String,
+                    i.get("employee") as Long
+                )
+                list.add(user1)
+            }
+            users(list)
+        }
     }
 }

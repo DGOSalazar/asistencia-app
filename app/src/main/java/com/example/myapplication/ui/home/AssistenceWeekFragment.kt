@@ -1,6 +1,5 @@
 package com.example.myapplication.ui.home
 
-
 import android.os.Build
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -91,14 +90,18 @@ class AssistenceWeekFragment() : Fragment(R.layout.fragment_assistencce_week) {
                 cleanUserAdapter()
             }
             btAdd.setOnClickListener {
-                EnrollToDayDialog(true,selectDay,accountEmail)
+                EnrollToDayDialog(true,selectDay,accountEmail){
+                    if (it) activateButton(2)
+                }
                     .show(parentFragmentManager,getString(R.string.name_dialog_confirm))
-                activateButton(2)
+
             }
             btUndo.setOnClickListener {
-                EnrollToDayDialog(false,selectDay,accountEmail)
+                EnrollToDayDialog(false,selectDay,accountEmail){
+                    if (it) activateButton(1)
+                }
                     .show(parentFragmentManager,getString(R.string.name_dialog_confirm))
-                activateButton(1)
+
             }
         }
     }
@@ -166,7 +169,7 @@ class AssistenceWeekFragment() : Fragment(R.layout.fragment_assistencce_week) {
         }
     }
 
-    private fun activateButton(i: Int){
+    fun activateButton(i: Int){
         with(mBinding) {
             when(i){
                 1->{

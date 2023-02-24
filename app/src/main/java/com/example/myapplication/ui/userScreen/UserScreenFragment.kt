@@ -5,17 +5,26 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.myapplication.R
 import com.example.myapplication.core.extensionFun.glide
+import com.example.myapplication.core.extensionFun.toast
+import com.example.myapplication.data.models.Notify
 import com.example.myapplication.data.models.User
 import com.example.myapplication.databinding.FragmentUserScreenBinding
+import com.example.myapplication.ui.home.AssistenceMainFragmentDirections
+import com.example.myapplication.ui.userScreen.adapters.NotifyAdapter
 
 class UserScreenFragment : Fragment(R.layout.fragment_user_screen) {
 
-    private lateinit var mBinding: FragmentUserScreenBinding
     private var user: User = User()
+    private lateinit var mBinding: FragmentUserScreenBinding
+    private val viewModel : UserScreenViewModel by activityViewModels()
+    private lateinit var mAdapter: NotifyAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -32,9 +41,38 @@ class UserScreenFragment : Fragment(R.layout.fragment_user_screen) {
         super.onViewCreated(view, savedInstanceState)
         setUi()
         setListeners()
+        //setObservers()
+    }
+
+    private fun setObservers() {
+        viewModel.notifyData.observe(viewLifecycleOwner){
+            launchAdapter()
+        }
+    }
+
+
+    private fun launchAdapter() {
+        val list = arrayListOf<Notify>(
+            Notify("001","Recuerda registrarte la siguiente semana",
+                R.drawable.icon_timer,"justo ahora"),
+            Notify("001","Recuerda registrarte la siguiente semana",
+                R.drawable.icon_timer,"justo ahora"),
+            Notify("001","Recuerda registrarte la siguiente semana",
+                R.drawable.icon_timer,"justo ahora"),
+            Notify("001","Recuerda registrarte la siguiente semana",
+                R.drawable.icon_timer,"justo ahora"))
+
+        mAdapter = NotifyAdapter(list)
+        mBinding.notifyRecycler.apply {
+            adapter = mAdapter
+            layoutManager = LinearLayoutManager(activity?.applicationContext)
+        }
+        mBinding.notifyRecycler.visibility = View.VISIBLE
+
     }
 
     private fun setUi() {
+        //viewModel.getNotification()
         with(mBinding){
             ivUserPhoto.glide(user.profilePhoto)
             tvNameUser.text = user.name
@@ -58,7 +96,32 @@ class UserScreenFragment : Fragment(R.layout.fragment_user_screen) {
                 navBuilder.setEnterAnim(R.anim.enter_from_right).setExitAnim(R.anim.exit_from_right)
                     .setPopEnterAnim(R.anim.enter_from_left).setPopExitAnim(R.anim.exit_from_left)
                 findNavController().
-                navigate(UserScreenFragmentDirections.actionUserScreenFragmentToAssistenceMainFragment(),navBuilder.build())
+                navigate(UserScreenFragmentDirections.actionUserScreenFragmentToAssistenceMainFragment(),
+                    navBuilder.build())
+            }
+            containerTeamNav.setOnClickListener {
+                val navBuilder = NavOptions.Builder()
+                navBuilder.setEnterAnim(R.anim.enter_from_right).setExitAnim(R.anim.exit_from_right)
+                    .setPopEnterAnim(R.anim.enter_from_left).setPopExitAnim(R.anim.exit_from_left)
+                findNavController().
+                navigate(UserScreenFragmentDirections.actionUserScreenFragmentToTeamMainFragment(),
+                    navBuilder.build())
+            }
+            tvNotification.setOnClickListener{
+                with(mBinding){
+                    ilPersonalData.visibility = View.GONE
+                    ilPersonalHistory.visibility = View.GONE
+                    vSeparation5.visibility = View.INVISIBLE
+                    vActivateNotification.visibility = View.INVISIBLE
+                    tvResumen.setTextColor(resources.getColor(R.color.grey5))
+                    tvNotification.setTextColor(resources.getColor(R.color.blueCoppel))
+                    vActivateResumen.visibility = View.VISIBLE
+                    notifyRecycler.visibility = View.VISIBLE
+                    launchAdapter()
+                }
+            }
+            btEdit.setOnClickListener {
+
             }
         }
     }

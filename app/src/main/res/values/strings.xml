@@ -4,7 +4,7 @@
     <string name="fullName">%1$s %2$s</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="welcome_message">¡Hola Héctor!</string>
-    <string name="welcome_date">Hoy es viernes 6 de enero del 2023</string>
+    <string name="welcome_date">Hoy es %1$s %2$s de %3$s del %4$s</string>
     <string name="welcome_remember">Recuerda registrarte para la próxima semana.</string>
     <string name="month">Enero</string>
     <string name="monday">Lun</string>
@@ -16,10 +16,10 @@
     <string name="Total_assist">15 Asistentes.</string>
     <string name="name">Jose Alfrredo Jimenez</string>
     <string name="position">Gerente</string>
-    <string name="forget_pass">¿Olvidaste tu Contraseña?</string>
+    <string name="forget_pass">¿Olvidaste tu contraseña?</string>
     <string name="email">Correo electrónico</string>
     <string name="password">Contraseña</string>
-    <string name="asistence_title">Asistencia \nGuadalajara</string>
+    <string name="asistence_title">Asistencia \n<b>Guadalajara</b></string>
     <string name="welcome">¡Bienvenido!</string>
     <string name="enter">Entrar</string>
     <string name="new_account">Crear una cuenta.</string>
@@ -64,7 +64,7 @@
     <string name="free_day">Aun no se ha seleccionado ningun espacio para este dia</string>
     <string name="title_register">ASISTENCIA<b>\nGUADALAJARA</b></string>
     <string name="tv_create_account">Crear una cuenta</string>
-    <string name="helper_email">Ingresaa tu correo coppel.</string>
+    <string name="helper_email">Ingresa tu correo coppel.</string>
     <string name="hint_pass">Contraseña</string>
     <string name="hint_pass2">Confirmar contraseña</string>
     <string name="helper_pass">Ingresa tu contraseña.</string>
@@ -104,19 +104,51 @@
     <string name="accept_permission">aceptados</string>
     <string name="dennied_permission">Permisos rechazados</string>
     <string name="recordatory">Acepta los permisos en ajustes</string>
+    <string name="error_mail">Debe ingresar un correo válido</string>
+    <string name="error_pass">Debes ingresar una contraseña de 8 caracteres</string>
+    <string name="birthDate_text">Fecha de nacimiento</string>
+    <string name="text_employeeNum">Número de empleado:</string>
+    <string name="titleTeamsText">%1$s<b>%2$s</b> | %3$s Colaboradores </string>
+    <string name="cNum">%1$s Colaboradores</string>
+    <string name="celula_gdl">Celula Guadalajara</string>
+    <string-array name="days">
+        <item>Lunes</item>
+        <item>Martes</item>
+        <item>Miércoles</item>
+        <item>Jueves</item>
+        <item>Viernes</item>
+    </string-array>
+
+    <string-array name="months">
+        <item>Enero</item>
+        <item>Febrero</item>
+        <item>Marzo</item>
+        <item>Abril</item>
+        <item>Mayo</item>
+        <item>Junio</item>
+        <item>Julio</item>
+        <item>Agosto</item>
+        <item>Septiembre</item>
+        <item>Octubre</item>
+        <item>Noviembre</item>
+        <item>Diciembre</item>
+    </string-array>
 
     <string-array name="positions">
         <item>Android Dev</item>
         <item>IOS Dev</item>
-        <item>Analyst</item>
+        <item>Business Analyst</item>
         <item>Backend Dev</item>
         <item>Scrum Master</item>
         <item>Tester/QA</item>
+        <item>Otro</item>
     </string-array>
     <string-array name="teams">
         <item>HellFish</item>
-        <item>Minus</item>
-        <item>Rocket</item>
-        <item>En espera...</item>
+        <item>Minuts</item>
+        <item>Masters</item>
+        <item>Hashiras</item>
+        <item>C+ExA</item>
+        <item>En espera</item>
     </string-array>
 </resources>

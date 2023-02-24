@@ -29,7 +29,6 @@ import com.google.android.gms.location.*
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-import java.time.format.DateTimeFormatterBuilder
 import java.util.*
 import javax.inject.Inject
 import kotlin.collections.ArrayList
@@ -55,6 +54,7 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main){
     private var actualMonth = CURRENT_MONTH
     private var accountEmail = ""
     private var userData: User = User()
+
     @Inject
     lateinit var sharedPreferences: SharedPreferences
 
@@ -73,7 +73,7 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main){
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        mBinding.fabConfirmAsit.visibility = View.VISIBLE
+        //mBinding.fabConfirmAsit.visibility = View.VISIBLE
         setObservers()
         setLaunch()
         setCalendarAdapter()
@@ -120,13 +120,9 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main){
     private fun setHeader(user: User) {
         mBinding.tvWelcome.text = "Hola ${user.name}"
         userData = user
-        val fmt: DateTimeFormatter = DateTimeFormatterBuilder() // case insensitive
-            .parseCaseInsensitive() // pattern with full month name (MMMM)
-            .appendPattern("dd LLLL yyyy") // set locale
-            .toFormatter(Locale("es", "ES"))
-
-        val formattedString = localDate.format(fmt)
-        mBinding.tvDate.text = "Hoy es $formattedString"
+        mBinding.tvDate.text = String.format(getString(R.string.welcome_date),
+            resources.getStringArray(R.array.days)[localDate.dayOfWeek.value-1],localDate.dayOfMonth,
+            resources.getStringArray(R.array.months)[localDate.monthValue-1],localDate.year)
         mCalendarAdapter.imageProfileUrl = user.profilePhoto
         mCalendarAdapter.notifyDataSetChanged()
     }
@@ -164,6 +160,12 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main){
         }
         mBinding.containerTeamNav.setOnClickListener{
             moveNavSelector(it)
+            val navBuilder = NavOptions.Builder()
+            navBuilder.setEnterAnim(R.anim.enter_from_left).setExitAnim(R.anim.exit_from_left)
+                .setPopEnterAnim(R.anim.enter_from_right).setPopExitAnim(R.anim.exit_from_right)
+            findNavController().
+            navigate(AssistenceMainFragmentDirections.
+            actionAssistenceMainFragmentToTeamMainFragment(),navBuilder.build())
         }
         mBinding.containerMyProfileNav.setOnClickListener{
             moveNavSelector(it)
@@ -178,13 +180,15 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main){
             context?.toast("TopMenu")
         }
         mBinding.fabConfirmAsit.setOnClickListener {
+            mBinding.fabConfirmAsit.visibility = View.GONE
+            context?.toast("Confirmación de asistencia exitosa.")
             viewModel.getCurrentLocation(activity?.applicationContext!!)
         }
     }
 
     @SuppressLint("SetTextI18n")
     private fun setCalendarTitle() {
-        mBinding.tvMonth.text = monthYearFromDate(localDate)
+        mBinding.tvMonth.text = (resources.getStringArray(R.array.months)[localDate.monthValue-1])
     }
 
     @SuppressLint("NotifyDataSetChanged", "SimpleDateFormat")

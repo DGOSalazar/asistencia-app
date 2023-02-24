@@ -109,6 +109,7 @@
         android:layout_width="match_parent"
         android:layout_height="2dp"
         android:background="@color/grey7"
+        android:layout_marginTop="@dimen/dp16"
         app:layout_constraintTop_toBottomOf="@id/bt_edit"/>
     <TextView
         android:id="@+id/tv_resumen"
@@ -153,6 +154,7 @@
         app:layout_constraintStart_toStartOf="@id/tv_notification"
         app:layout_constraintEnd_toEndOf="@id/tv_notification"
         app:layout_constraintTop_toBottomOf="@id/tv_resumen"
+        app:layout_constraintBottom_toTopOf="@id/v_separation4"
         android:visibility="gone"/>
     <View
         android:id="@+id/v_separation4"
@@ -161,6 +163,20 @@
         android:background="@color/grey7"
         android:layout_marginTop="6dp"
         app:layout_constraintTop_toBottomOf="@id/v_activateResumen"/>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/v_separation4"
+        android:visibility="visible">
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/notifyRecycler"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:listitem="@layout/notification_list_view"
+            />
+    </ScrollView>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/il_personalData"
@@ -169,7 +185,7 @@
         app:layout_constraintTop_toBottomOf="@id/v_separation4"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="@dimen/dp32"
+        android:layout_marginTop="@dimen/dp16"
         android:layout_marginHorizontal="@dimen/dp24">
         <TextView
             android:id="@+id/tv_title_data"
@@ -246,7 +262,8 @@
         android:layout_height="2dp"
         android:background="@color/grey7"
         android:layout_marginTop="@dimen/dp16"
-        app:layout_constraintTop_toBottomOf="@id/il_personalData"/>
+        app:layout_constraintTop_toBottomOf="@id/il_personalData"
+        />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/il_personalHistory"
@@ -261,7 +278,7 @@
             android:id="@+id/tv_title_data1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/personal_info"
+            android:text="Historial"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

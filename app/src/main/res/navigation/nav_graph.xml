@@ -19,6 +19,9 @@
         <action
             android:id="@+id/action_assistenceMainFragment_to_userScreenFragment"
             app:destination="@id/userScreenFragment" />
+        <action
+            android:id="@+id/action_assistenceMainFragment_to_teamMainFragment"
+            app:destination="@id/teamMainFragment" />
     </fragment>
     <fragment
         android:id="@+id/loginFragment"
@@ -117,5 +120,20 @@
         <argument
             android:name="user"
             app:argType="com.example.myapplication.data.models.User" />
+        <action
+            android:id="@+id/action_userScreenFragment_to_teamMainFragment"
+            app:destination="@id/teamMainFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/teamMainFragment"
+        android:name="com.example.myapplication.ui.team.TeamMainFragment"
+        android:label="fragment_team_main"
+        tools:layout="@layout/fragment_team_main" >
+        <action
+            android:id="@+id/action_teamMainFragment_to_userScreenFragment"
+            app:destination="@id/userScreenFragment" />
+        <action
+            android:id="@+id/action_teamMainFragment_to_assistenceMainFragment"
+            app:destination="@id/assistenceMainFragment" />
     </fragment>
 </navigation>

@@ -30,11 +30,13 @@
     <color name="blue1">#7FD6EA</color>
     <color name="blue2">#9DB2B7</color>
 
-    <color name="qa_color">#EF067F</color>
-    <color name="android_color">#4CAF50</color>
-    <color name="ios_color">#CAEABF</color>
-    <color name="analyst_color">#00BCD4</color>
-    <color name="back_color">#000EFF</color>
-    <color name="scrum_color">#ED0909</color>
+    <color name="qa_color">#E9F8AD</color>
+    <color name="android_color">#C1F8AD</color>
+    <color name="ios_color">#ADE1F8</color>
+    <color name="analyst_color">#F8ADE7</color>
+    <color name="back_color">#F8CCAD</color>
+    <color name="scrum_color">#ADB9F8</color>s
+
+    <color name="black_shadow">#165A5A5A</color>
 
 </resources>

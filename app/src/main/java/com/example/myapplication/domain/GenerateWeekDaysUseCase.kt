@@ -98,7 +98,7 @@ class GenerateWeekDaysUseCase @Inject constructor(){
     private fun setSpanishDay(day: DayOfWeek): String = when(day){
         DayOfWeek.MONDAY ->{"Lunes"}
         DayOfWeek.TUESDAY ->{"Martes"}
-        DayOfWeek.WEDNESDAY ->{"Miercoles"}
+        DayOfWeek.WEDNESDAY ->{"Miércoles"}
         DayOfWeek.THURSDAY ->{"Jueves"}
         DayOfWeek.FRIDAY ->{"Viernes"}
         else->{""}

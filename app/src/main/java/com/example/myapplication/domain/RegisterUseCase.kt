@@ -9,11 +9,9 @@ import javax.inject.Inject
 class RegisterUseCase @Inject constructor(
     private val firebaseServices: FirebaseServices
 ) {
-    suspend fun register(email: String, password: String) =
-        firebaseServices.register(email, password)
+    suspend fun register(email: String, password: String) = firebaseServices.register(email, password)
 
-    fun registerUserData(user: User) =
-        firebaseServices.registerUserData(user)
+    fun registerUserData(user: User) = firebaseServices.registerUserData(user)
 
     fun upPhoto(uri: Uri) = firebaseServices.uploadPhoto(uri)
 

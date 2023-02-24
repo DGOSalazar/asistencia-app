@@ -17,6 +17,8 @@ import androidx.fragment.app.activityViewModels
 import com.example.myapplication.R
 import com.example.myapplication.data.models.Day
 import com.example.myapplication.databinding.DialogEnrollToDayBinding
+import com.example.myapplication.databinding.FragmentAssistencceWeekBinding
+import com.example.myapplication.ui.home.AssistenceWeekFragment
 import com.example.myapplication.ui.home.HomeViewModel
 import hilt_aggregated_deps._dagger_hilt_android_internal_managers_ActivityComponentManager_ActivityComponentBuilderEntryPoint
 import javax.inject.Inject
@@ -27,8 +29,8 @@ import javax.inject.Inject
 class EnrollToDayDialog(
     var isAdd: Boolean,
     var selectDay: Day,
-    var email: String
-    ): DialogFragment(R.layout.dialog_enroll_to_day) {
+    var email: String,
+    var isConfirm: (Boolean) -> Unit): DialogFragment(R.layout.dialog_enroll_to_day) {
 
     private lateinit var mBinding: DialogEnrollToDayBinding
     private val viewModel: HomeViewModel by activityViewModels()
@@ -50,14 +52,17 @@ class EnrollToDayDialog(
         if(isAdd){
             with(mBinding){
                 btBack.setOnClickListener {
+                    isConfirm(false)
                     dismiss()
                 }
                 btConfirm.setOnClickListener {
                     addOrDelete(true)
                     mBinding.cvMain.visibility=View.GONE
                     mBinding.cvMain2.visibility=View.VISIBLE
+                    isConfirm(true)
                 }
                 btBack2.setOnClickListener {
+                    isConfirm(false)
                     dismiss()
                 }
             }
@@ -65,14 +70,17 @@ class EnrollToDayDialog(
             setUndoView()
             with(mBinding){
                 btBack.setOnClickListener {
+                    isConfirm(false)
                     dismiss()
                 }
                 btConfirm.setOnClickListener {
                     addOrDelete(false)
                     mBinding.cvMain.visibility=View.GONE
                     mBinding.cvMain2.visibility=View.VISIBLE
+                    isConfirm(true)
                 }
                 btBack2.setOnClickListener {
+                    isConfirm(false)
                     dismiss()
                 }
             }

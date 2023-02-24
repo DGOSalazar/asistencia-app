@@ -55,12 +55,12 @@ class LoginFragment: Fragment(R.layout.fragment_login)  {
         with(mBinding) {
             inputEmail.doAfterTextChanged {
                 isValidEmail = validations.isValidEmail(it.toString())
-                mBinding.ilMail.error = if (isValidEmail) null else "Debe ingresar un correo valido"
+                mBinding.ilMail.error = if (isValidEmail) null else getString(R.string.error_mail)
                 if(isValidEmail && isValidPassword) else activateButton(false)
             }
             inputPass.doAfterTextChanged {
                 isValidPassword = validations.isValidPassword(it.toString())
-                mBinding.ilPass.error = if (isValidPassword) null else "Debes ingresar una contraseña de 8 caracteres"
+                mBinding.ilPass.error = if (isValidPassword) null else getString(R.string.error_pass)
                 if (isValidPassword && isValidEmail) activateButton(true) else activateButton(false)
             }
             bnLogin.setOnClickListener {

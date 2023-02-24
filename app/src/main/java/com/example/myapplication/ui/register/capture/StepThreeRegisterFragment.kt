@@ -86,6 +86,7 @@ class StepThreeRegisterFragment : Fragment() {
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        mBinding.tvNameUser.text = "${name} ${lastName}"
         setObservers()
         setSpinners()
         setListeners()
@@ -158,7 +159,7 @@ class StepThreeRegisterFragment : Fragment() {
                     0->{"HellFish"}
                     1->{"Minus"}
                     2->{"Rocket"}
-                    else->{"En espera..."}
+                    else->{"En espera"}
                 }
                 updateEnableNextBtn()
             }

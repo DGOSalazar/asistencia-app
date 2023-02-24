@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/dp8"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/iv_notificationIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/tv_notiText"
+        app:layout_constraintTop_toTopOf="@id/tv_notiText"
+        app:cardCornerRadius="@dimen/dp24"
+        android:layout_marginTop="4dp"
+        android:layout_marginStart="@dimen/dp16">
+    <ImageView
+        android:id="@+id/iv_iconNotify"
+        android:layout_width="@dimen/dp35"
+        android:layout_height="@dimen/dp35"
+        android:src="@drawable/icon_timer"/>
+    </androidx.cardview.widget.CardView>
+
+    <TextView
+        android:id="@+id/tv_notiText"
+        android:layout_width="@dimen/dp280"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dp8"
+        android:text="Recuerda Llenar tu Time Report antes del Lunes"
+        android:textSize="@dimen/dp14"
+        app:layout_constraintStart_toEndOf="@id/iv_notificationIcon"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_timer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/tv_notiText"
+        app:layout_constraintStart_toStartOf="@id/tv_notiText"
+        android:text="Hace un momento."
+        android:textSize="@dimen/dp10"
+        android:textStyle="italic"
+        />
+    <View
+        android:id="@+id/bottom_view"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp2"
+        android:layout_marginTop="@dimen/dp8"
+        app:layout_constraintTop_toBottomOf="@id/tv_timer"
+        android:background="@color/grey6"
+        />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
