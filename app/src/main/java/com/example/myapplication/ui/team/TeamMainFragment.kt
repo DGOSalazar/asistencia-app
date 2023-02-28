@@ -51,6 +51,8 @@ class TeamMainFragment : Fragment(R.layout.fragment_team_main) {
                 cNum += it[i].users.size
             }
             mBinding.tvColaboratorCount.text = String.format(getString(R.string.cNum),cNum)
+            mBinding.progress.visibility = View.GONE
+            mBinding.mainCard.visibility = View.VISIBLE
         }
     }
 
