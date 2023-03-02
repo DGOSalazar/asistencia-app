@@ -108,14 +108,15 @@
             app:boxBackgroundColor="@color/white2"
             android:gravity="end"
             style="@style/Widget.App.TextInputLayout"
-            app:counterMaxLength="8"
+            app:counterMaxLength="12"
             app:helperTextTextColor="@color/black"
             app:helperText="@string/helper_pass"
+            app:counterEnabled="true"
             >
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/input_pass1"
                 android:maxLines="1"
-                android:maxLength="8"
+                android:maxLength="12"
                 android:textSize="16sp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -152,6 +153,8 @@
             style="@style/Widget.App.TextInputLayout"
             app:helperTextTextColor="@color/black"
             app:helperText="@string/helper_pass2"
+            app:counterMaxLength="12"
+            app:counterEnabled="true"
             >
 
             <com.google.android.material.textfield.TextInputEditText
@@ -159,7 +162,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textPassword"
-                android:maxLength="8"
+                android:maxLength="12"
                 android:maxLines="1"
                 android:textSize="16sp"
                 android:background="@drawable/bg_texview"/>

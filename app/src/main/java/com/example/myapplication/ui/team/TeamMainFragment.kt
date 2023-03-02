@@ -8,15 +8,12 @@ import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.myapplication.R
 import com.example.myapplication.core.extensionFun.toast
 import com.example.myapplication.data.models.TeamGroup
 import com.example.myapplication.databinding.FragmentTeamMainBinding
-import com.example.myapplication.ui.home.AssistenceMainFragmentDirections
 import com.example.myapplication.ui.team.adapters.TeamAdapter
-import com.example.myapplication.ui.userScreen.UserScreenFragmentDirections
 
 class TeamMainFragment : Fragment(R.layout.fragment_team_main) {
 
