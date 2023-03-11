@@ -1,5 +1,6 @@
 package com.example.myapplication.ui.team.adapters
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +11,7 @@ import com.example.myapplication.data.models.TeamGroup
 import com.example.myapplication.databinding.TeamViewBinding
 import com.example.myapplication.data.models.User
 
+@Suppress("DEPRECATION")
 class TeamAdapter(var listTeams: ArrayList<TeamGroup>, private var click : (String) -> Unit)
     :RecyclerView.Adapter<TeamAdapter.ViewHolder>() {
 
@@ -18,7 +20,7 @@ class TeamAdapter(var listTeams: ArrayList<TeamGroup>, private var click : (Stri
         var selected :Int = 0
         var mBinding = TeamViewBinding.bind(view)
         private val param = mBinding.clTeam.layoutParams as ViewGroup.MarginLayoutParams
-        lateinit var mAdapter: ColaboratorAdapter
+        private lateinit var mAdapter: ColaboratorAdapter
 
         fun setView(){
             setTitle()
@@ -67,6 +69,7 @@ class TeamAdapter(var listTeams: ArrayList<TeamGroup>, private var click : (Stri
                 }
             }
         }
+        @SuppressLint("NotifyDataSetChanged")
         fun setClick(click:(String)-> Unit){
             mBinding.tvPositionTeam.setOnClickListener {
                 click(listTeams[adapterPosition].team)

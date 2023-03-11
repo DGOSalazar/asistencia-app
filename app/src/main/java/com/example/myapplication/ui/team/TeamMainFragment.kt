@@ -24,7 +24,7 @@ class TeamMainFragment : Fragment(R.layout.fragment_team_main) {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         mBinding = FragmentTeamMainBinding.inflate(layoutInflater, container, false)
         return mBinding.root
     }
@@ -47,9 +47,13 @@ class TeamMainFragment : Fragment(R.layout.fragment_team_main) {
             for(i in 0..5){
                 cNum += it[i].users.size
             }
-            mBinding.tvColaboratorCount.text = String.format(getString(R.string.cNum),cNum)
-            mBinding.progress.visibility = View.GONE
-            mBinding.mainCard.visibility = View.VISIBLE
+            with(mBinding){
+                tvColaboratorCount.text = String.format(getString(R.string.cNum),cNum)
+                progress.visibility = View.GONE
+                toolbar.visibility = View.VISIBLE
+                svTeam.visibility = View.VISIBLE
+                navBottomContainer.visibility = View.VISIBLE
+            }
         }
     }
 

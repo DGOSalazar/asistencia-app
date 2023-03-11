@@ -1,10 +1,6 @@
 package com.example.myapplication.ui.register
 
-import android.os.Build
 import android.text.TextUtils
-import androidx.annotation.RequiresApi
-import com.example.myapplication.R
-import java.time.DayOfWeek
 import javax.inject.Inject
 
 class Validations @Inject constructor() {
@@ -20,13 +16,5 @@ class Validations @Inject constructor() {
     }
     fun isValidPhone(phone:String):Boolean{
         return  phone.length in 8..10
-    }
-
-    fun isValidEmployeeNumber(number:String):Boolean{
-        return number.length >= 8
-    }
-
-    fun formatMonth(){
-        //TODO("Cambiar mes a español")
     }
 }

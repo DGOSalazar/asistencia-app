@@ -111,6 +111,7 @@
     <string name="titleTeamsText">%1$s<b>%2$s</b> | %3$s Colaboradores </string>
     <string name="cNum">%1$s Colaboradores</string>
     <string name="celula_gdl">Celula Guadalajara</string>
+    <string name="thanksfull">Gracias!</string>
     <string-array name="days">
         <item>Lunes</item>
         <item>Martes</item>

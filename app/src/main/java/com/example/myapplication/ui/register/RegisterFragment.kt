@@ -12,7 +12,6 @@ import android.widget.ImageView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.navigation.fragment.findNavController
 import com.example.myapplication.R
 import com.example.myapplication.core.extensionFun.toast
 import com.example.myapplication.data.models.User
@@ -26,15 +25,14 @@ class RegisterFragment : Fragment() {
 
     private var isValidEmail= true
     private var isValidPassword= true
-    private val SELECT_FILE = 1
-    var imageUri: Uri? = null
-    var foto_gallery: ImageView? = null
+    private var imageUri: Uri? = null
+    private var photoGallery: ImageView? = null
 
     private var resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == RESULT_OK) {
             val data: Intent? = result.data
             imageUri = data?.data
-            foto_gallery?.setImageURI(imageUri)
+            photoGallery?.setImageURI(imageUri)
             mBinding.btUpload.setImageURI(imageUri)
             imageUri?.let { viewModel.uploadImage(it) }
         }
@@ -42,7 +40,7 @@ class RegisterFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         mBinding = FragmentRegisterBinding.inflate(layoutInflater, container,false)
         return mBinding.root
     }
@@ -55,7 +53,6 @@ class RegisterFragment : Fragment() {
 
     private fun setObserver() {
         viewModel.registerFlag.observe(viewLifecycleOwner){
-            //findNavController().navigate(R.id.action_registerFragment_to_assistenceMainFragment)
         }
         viewModel.urlPhoto.observe(viewLifecycleOwner){
             imageUri = it
@@ -87,7 +84,6 @@ class RegisterFragment : Fragment() {
                 }
             }
             bnBack.setOnClickListener{
-                //findNavController().navigate(R.id.action_registerFragment_to_loginFragment)
             }
             btUpload.setOnClickListener {
                 openGallery()

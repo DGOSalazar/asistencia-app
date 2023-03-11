@@ -13,11 +13,7 @@ import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import com.example.myapplication.R
 import com.example.myapplication.databinding.FragmentStepOneRegisterBinding
-import com.example.myapplication.ui.home.HomeViewModel
 import androidx.fragment.app.activityViewModels
-import com.example.myapplication.ui.login.EMAIL_KEY
-import com.example.myapplication.ui.login.LoginViewModel
-import com.example.myapplication.ui.login.PASSWORD_KEY
 import com.example.myapplication.ui.register.RegisterViewMode
 import com.example.myapplication.ui.register.Validations
 import dagger.hilt.android.AndroidEntryPoint
@@ -42,7 +38,7 @@ class StepOneRegisterFragment : Fragment(R.layout.fragment_step_one_register) {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         mBinding = FragmentStepOneRegisterBinding.inflate(layoutInflater,container,false)
         return mBinding.root
     }

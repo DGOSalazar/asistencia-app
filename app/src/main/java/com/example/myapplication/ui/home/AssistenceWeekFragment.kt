@@ -63,7 +63,6 @@ class AssistenceWeekFragment() : Fragment(R.layout.fragment_assistencce_week) {
               day = it
               viewModel.getListEmails(it)
           }
-
           users.observe(viewLifecycleOwner){
               selectDay.userList = it
               setUserAdapter(selectDay.userList)
@@ -94,14 +93,12 @@ class AssistenceWeekFragment() : Fragment(R.layout.fragment_assistencce_week) {
                     if (it) activateButton(2)
                 }
                     .show(parentFragmentManager,getString(R.string.name_dialog_confirm))
-
             }
             btUndo.setOnClickListener {
                 EnrollToDayDialog(false,selectDay,accountEmail){
                     if (it) activateButton(1)
                 }
                     .show(parentFragmentManager,getString(R.string.name_dialog_confirm))
-
             }
         }
     }

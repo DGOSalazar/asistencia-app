@@ -24,19 +24,16 @@ import java.time.LocalDate
 import java.util.*
 
 
-
+@RequiresApi(Build.VERSION_CODES.S)
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
-    @RequiresApi(Build.VERSION_CODES.O)
     private var localDate = LocalDate.now()
 
     companion object {
         const val PERMISSION_REQUEST_CODE = 1
         const val CHANNEL_ID="123456"
-        const val REMINDER_NOTIFICATION_REQUEST_CODE = 123456
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -59,7 +56,10 @@ class MainActivity : AppCompatActivity() {
     }
     private fun scheduleNotification(){
         val intent= Intent(applicationContext,AlarmReceiver::class.java)
-        val pendingIntent = PendingIntent.getBroadcast(applicationContext,NOTIFICATION_ID,intent,PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT )
+        val pendingIntent = PendingIntent.getBroadcast(/* context = */ applicationContext,/* requestCode = */
+            NOTIFICATION_ID,/* intent = */
+            intent,/* flags = */
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT )
 
         val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
         alarmManager.setExact(AlarmManager.RTC_WAKEUP, Calendar.getInstance().timeInMillis,pendingIntent)
@@ -86,7 +86,7 @@ class MainActivity : AppCompatActivity() {
         when(requestCode){
             PERMISSION_REQUEST_CODE -> {
                 if(grantResults.isNotEmpty() && grantResults[0]== PackageManager.PERMISSION_GRANTED){
-
+                    toast(getString(R.string.thanksfull))
                 }else{
                     toast(getString(R.string.dennied_permission))
                 }
