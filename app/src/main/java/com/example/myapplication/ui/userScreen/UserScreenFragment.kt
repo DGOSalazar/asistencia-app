@@ -1,22 +1,19 @@
 package com.example.myapplication.ui.userScreen
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.myapplication.R
 import com.example.myapplication.core.extensionFun.glide
-import com.example.myapplication.core.extensionFun.toast
 import com.example.myapplication.data.models.Notify
 import com.example.myapplication.data.models.User
 import com.example.myapplication.databinding.FragmentUserScreenBinding
-import com.example.myapplication.ui.home.AssistenceMainFragmentDirections
 import com.example.myapplication.ui.userScreen.adapters.NotifyAdapter
 
 class UserScreenFragment : Fragment(R.layout.fragment_user_screen) {
@@ -31,7 +28,7 @@ class UserScreenFragment : Fragment(R.layout.fragment_user_screen) {
         savedInstanceState: Bundle?
     ): View {
         arguments?.let {
-            user = UserScreenFragmentArgs.fromBundle(it).user
+           // user = UserScreenFragmentArgs.fromBundle(it).user
         }
         mBinding = FragmentUserScreenBinding.inflate(layoutInflater,container,false)
         return mBinding.root
@@ -92,20 +89,20 @@ class UserScreenFragment : Fragment(R.layout.fragment_user_screen) {
     private fun setListeners(){
         with(mBinding){
             containerHomeNav.setOnClickListener {
-                val navBuilder = NavOptions.Builder()
+               /* val navBuilder = NavOptions.Builder()
                 navBuilder.setEnterAnim(R.anim.enter_from_right).setExitAnim(R.anim.exit_from_right)
                     .setPopEnterAnim(R.anim.enter_from_left).setPopExitAnim(R.anim.exit_from_left)
                 findNavController().
                 navigate(UserScreenFragmentDirections.actionUserScreenFragmentToAssistenceMainFragment(),
-                    navBuilder.build())
+                    navBuilder.build())*/
             }
             containerTeamNav.setOnClickListener {
-                val navBuilder = NavOptions.Builder()
+               /* val navBuilder = NavOptions.Builder()
                 navBuilder.setEnterAnim(R.anim.enter_from_right).setExitAnim(R.anim.exit_from_right)
                     .setPopEnterAnim(R.anim.enter_from_left).setPopExitAnim(R.anim.exit_from_left)
                 findNavController().
                 navigate(UserScreenFragmentDirections.actionUserScreenFragmentToTeamMainFragment(),
-                    navBuilder.build())
+                    navBuilder.build())*/
             }
             tvNotification.setOnClickListener{
                 with(mBinding){

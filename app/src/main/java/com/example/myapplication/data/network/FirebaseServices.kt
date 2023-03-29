@@ -13,23 +13,24 @@ import com.google.firebase.storage.StorageReference
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
+import kotlin.math.log
 
 class FirebaseServices @Inject constructor(
     private val firebase: FirebaseClientModule
-){
-    private var url: Uri? =null
-    private var isConfirmAssistAlready:Boolean = false
+) {
+    private var url: Uri? = null
+    private var isConfirmAssistAlready: Boolean = false
 
     suspend fun login(mail: String, pass: String): LoginResult = runCatching {
-        firebase.auth.signInWithEmailAndPassword(mail,pass).await()
-     }.toLoginResult()
+        firebase.auth.signInWithEmailAndPassword(mail, pass).await()
+    }.toLoginResult()
 
     suspend fun register(email: String, pass: String) = runCatching {
-        firebase.auth.createUserWithEmailAndPassword(email,pass).await()
+        firebase.auth.createUserWithEmailAndPassword(email, pass).await()
     }
 
-    fun uploadPhoto(uri:Uri) = runCatching {
-        val ref: StorageReference = firebase.dataStorage.child("image${uri.lastPathSegment}")
+    fun uploadPhoto(uri: Uri) = runCatching {
+       /* val ref: StorageReference = firebase.dataStorage.child("image${uri.lastPathSegment}")
         val uploadTask = ref.putFile(uri)
 
         uploadTask.continueWithTask { task ->
@@ -46,10 +47,11 @@ class FirebaseServices @Inject constructor(
                 url = task.result!!
                 Log.d("Upload", "successfully upload")
             }
-        }
+        }*/
     }
+
     suspend fun getUrlF(): Uri? = run {
-        while (url==null){
+        while (url == null) {
             delay(1000)
         }
         url
@@ -68,11 +70,12 @@ class FirebaseServices @Inject constructor(
                 "profilePhoto" to user.profilePhoto,
                 "phone" to user.phone,
                 "employee" to user.employee,
-                "assistDay" to user.assistDay)
+                "assistDay" to user.assistDay
+            )
         )
     }.isSuccessful
 
-    fun updateUsersList(currentDay:String, emails: ArrayList<String>)= run{
+    fun updateUsersList(currentDay: String, emails: ArrayList<String>) = run {
         firebase.dayCollection.document(currentDay).set(
             hashMapOf(
                 "currentDay" to currentDay,
@@ -81,34 +84,34 @@ class FirebaseServices @Inject constructor(
         )
     }
 
-    fun getUserInfo(listEmail: ArrayList<String>,user:(ArrayList<User>)-> Unit) = runCatching {
+    fun getUserInfo(listEmail: ArrayList<String>, user: (ArrayList<User>) -> Unit) = runCatching {
         var user1: User
         val list = arrayListOf<User>()
-            for (i in listEmail) {
-                firebase.userCollection.whereEqualTo("email", i).get().addOnSuccessListener {
-                    it.forEach { i ->
-                        user1 = User(
-                            i.get("email") as String,
-                            i.get("name") as String,
-                            i.get("lastName1") as String,
-                            i.get("lastName2") as String,
-                            i.get("position") as String,
-                            i.get("birthDate") as String,
-                            i.get("team") as String,
-                            i.get("profilePhoto") as String,
-                            i.get("phone") as String,
-                            i.get("employee") as Long
-                        )
-                        list.add(user1)
-                    }
-                    user(list)
+        for (i in listEmail) {
+            firebase.userCollection.whereEqualTo("email", i).get().addOnSuccessListener {
+                it.forEach { i ->
+                    user1 = User(
+                        i.get("email") as String,
+                        i.get("name") as String,
+                        i.get("lastName1") as String,
+                        i.get("lastName2") as String,
+                        i.get("position") as String,
+                        i.get("birthDate") as String,
+                        i.get("team") as String,
+                        i.get("profilePhoto") as String,
+                        i.get("phone") as String,
+                        i.get("employee") as Long
+                    )
+                    list.add(user1)
                 }
+                user(list)
             }
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun getListUsers(day: String, mails:(ArrayList<String>) -> Unit) = runCatching{
-        var emails = AttendanceDays(arrayListOf(),"")
+    fun getListUsers(day: String, mails: (ArrayList<String>) -> Unit) = runCatching {
+        var emails = AttendanceDays(arrayListOf(), "")
         firebase.dayCollection.whereEqualTo("currentDay", day).get()
             .addOnSuccessListener {
                 it.forEach { j ->
@@ -123,9 +126,9 @@ class FirebaseServices @Inject constructor(
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun getAllRegistersDays(
-        success:(List<AttendanceDays>) -> Unit,
-        errorObserver:(String) -> Unit
-    ):List<AttendanceDays> {
+        success: (List<AttendanceDays>) -> Unit,
+        errorObserver: (String) -> Unit
+    ): List<AttendanceDays> {
         val list = mutableListOf<AttendanceDays>()
         firebase.dayCollection
             .get()
@@ -147,7 +150,7 @@ class FirebaseServices @Inject constructor(
     }
 
     private fun Result<AuthResult>.toLoginResult() =
-        when (val result = getOrNull()){
+        when (val result = getOrNull()) {
             null -> LoginResult.Error
             else -> {
                 val userId = result.user
@@ -155,6 +158,7 @@ class FirebaseServices @Inject constructor(
                 LoginResult.Success(result.user?.isEmailVerified ?: false)
             }
         }
+
     fun registerUserConfirmationAssist(assistConfirm: AssistConfirm) = run {
         firebase.dayConfirmCollection.document(assistConfirm.day).set(
             hashMapOf(
@@ -163,7 +167,12 @@ class FirebaseServices @Inject constructor(
             )
         )
     }
-    fun consultUserConfirmationAssist(day: String,email: String, returnData:(List<AssistConfirm>)->Unit) {
+
+    fun consultUserConfirmationAssist(
+        day: String,
+        email: String,
+        returnData: (List<AssistConfirm>) -> Unit
+    ) {
         var dayConfirm: ArrayList<AssistConfirm> = arrayListOf()
         firebase.dayConfirmCollection.whereEqualTo("day", day).get()
             .addOnSuccessListener { result ->
@@ -180,11 +189,12 @@ class FirebaseServices @Inject constructor(
                 returnData(listOf())
             }
     }
-    suspend  fun getNotifications(): ArrayList<Notify> {
+
+    suspend fun getNotifications(): ArrayList<Notify> {
         var notifications: ArrayList<Notify> = arrayListOf()
         firebase.dayCollection.get().addOnSuccessListener { result ->
-            result.documents.forEach{ j ->
-                var newNotify =  Notify(
+            result.documents.forEach { j ->
+                var newNotify = Notify(
                     iconNoty = j.get("iconNoty") as Int,
                     notifyId = j.get("notifyId") as String,
                     text = j.get("text") as String,
@@ -197,11 +207,12 @@ class FirebaseServices @Inject constructor(
         }.addOnFailureListener {
             return@addOnFailureListener
         }
-        while (notifications.isNullOrEmpty()){
+        while (notifications.isNullOrEmpty()) {
             delay(1000)
         }
         return notifications
     }
+
     fun getAllUsers(users: (ArrayList<User>) -> Unit) {
         val list: ArrayList<User> = arrayListOf()
         var user1 = User()

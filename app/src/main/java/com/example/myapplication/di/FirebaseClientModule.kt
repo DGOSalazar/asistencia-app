@@ -15,5 +15,5 @@ class FirebaseClientModule @Inject constructor() {
     val teamsCollection = Firebase.firestore.collection("TeamsCollection")
     val notifyCollection = Firebase.firestore.collection("NotifyCollection")
     val dayConfirmCollection = Firebase.firestore.collection("DayConfirmCollection")
-    val dataStorage = FirebaseStorage.getInstance().getReference("profilePhotos").child("usersPhotos")
+   // val dataStorage = FirebaseStorage.getInstance().getReference("profilePhotos").child("usersPhotos")
 }

@@ -1,101 +1,136 @@
 package com.example.myapplication.ui.login
 
-import android.content.SharedPreferences
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
+import android.os.Build
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.core.widget.doAfterTextChanged
-import androidx.fragment.app.activityViewModels
-import androidx.navigation.NavOptions
-import androidx.navigation.fragment.findNavController
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.navigation.findNavController
 import com.example.myapplication.R
 import com.example.myapplication.R.color.*
 import com.example.myapplication.core.extensionFun.toast
+import com.example.myapplication.data.datasource.Login
+import com.example.myapplication.data.statusNetwork.ResponseStatus
 import com.example.myapplication.databinding.FragmentLoginBinding
-import com.example.myapplication.ui.register.Validations
+import com.example.myapplication.sys.utils.checkIfIsValidEmail
+import com.example.myapplication.sys.utils.checkIfIsValidPassword
+import com.example.myapplication.sys.utils.showAndHideError
+import com.example.myapplication.ui.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
-const val EMAIL_KEY = "email_key"
-const val PASSWORD_KEY = "password_key"
 
 @AndroidEntryPoint
-class LoginFragment: Fragment(R.layout.fragment_login)  {
+class LoginFragment : Fragment(R.layout.fragment_login) {
 
-    @Inject
-    lateinit var validations: Validations
-
-    private lateinit var mBinding :  FragmentLoginBinding
-    private val viewModel : LoginViewModel by activityViewModels()
-    private var isValidEmail= true
-    private var isValidPassword= true
-
-    @Inject
-    lateinit var sharedPreferences: SharedPreferences
+    private lateinit var mBinding: FragmentLoginBinding
+    private val viewModel: LoginViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        mBinding = FragmentLoginBinding.inflate(layoutInflater, container,false)
+        mBinding = FragmentLoginBinding.inflate(layoutInflater, container, false)
         return mBinding.root
     }
 
+    @RequiresApi(Build.VERSION_CODES.S)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        initComponent()
         setListeners()
         subscribeLiveData()
+    }
+
+    private fun initComponent() {
+        with(mBinding) {
+            inputEmail.setText(viewModel.getEmail())
+            inputPass.setText(viewModel.getPassWord())
+
+            if (inputEmail.text.toString().isNotEmpty() ||
+                inputPass.text.toString().isNotEmpty()
+            ) activateButton(true)
+            else activateButton(false)
+        }
     }
 
     private fun setListeners() {
         with(mBinding) {
             inputEmail.doAfterTextChanged {
-                isValidEmail = validations.isValidEmail(it.toString())
-                mBinding.ilMail.error = if (isValidEmail) null else getString(R.string.error_mail)
-                if(isValidEmail && isValidPassword) else activateButton(false)
+                if (it.toString().isNotEmpty()) {
+                    mBinding.ilMail.showAndHideError(
+                        it.toString().checkIfIsValidEmail(),
+                        getString(R.string.error_mail)
+                    )
+                }
+                validateInputs()
             }
             inputPass.doAfterTextChanged {
-                isValidPassword = validations.isValidPassword(it.toString())
-                mBinding.ilPass.error = if (isValidPassword) null else getString(R.string.error_pass)
-                if (isValidPassword && isValidEmail) activateButton(true) else activateButton(false)
+                if (it.toString().isNotEmpty()) {
+                    mBinding.ilPass.showAndHideError(
+                        it.toString().checkIfIsValidPassword(),
+                        getString(R.string.error_pass)
+                    )
+                }
+                validateInputs()
             }
             bnLogin.setOnClickListener {
-                viewModel.login(mBinding.inputEmail.text.toString(),mBinding.inputPass.text.toString())
+                viewModel.getDoLogin(
+                    mBinding.inputEmail.text.toString(),
+                    mBinding.inputPass.text.toString()
+                )
             }
-            bnRegister.setOnClickListener{
-                val navBuilder = NavOptions.Builder()
-                navBuilder.setEnterAnim(R.anim.enter_from_left).setExitAnim(R.anim.exit_from_left)
-                    .setPopEnterAnim(R.anim.enter_from_right).setPopExitAnim(R.anim.exit_from_right)
-                findNavController().navigate(R.id.action_loginFragment_to_stepOneRegisterFragment2, null, navBuilder.build())
+
+            bnRegister.setOnClickListener {
+                it.findNavController().navigate(R.id.action_loginFragment2_to_register_navigation)
             }
         }
     }
 
+    private fun validateInputs() {
+        viewModel.validateEmailAndPassword(
+            mBinding.inputEmail.text.toString(),
+            mBinding.inputPass.text.toString()
+        )
+    }
+
+    @RequiresApi(Build.VERSION_CODES.S)
     private fun subscribeLiveData() {
-        viewModel.userExist.observe(viewLifecycleOwner){
-            if (it) {
-                sharedPreferences.edit().putString(EMAIL_KEY, mBinding.inputEmail.text.toString()).apply()
-                findNavController().navigate(R.id.action_loginFragment_to_assistenceMainFragment)
+        viewModel.status.observe(viewLifecycleOwner) {
+            when (it) {
+                is ResponseStatus.Loading -> {
+                    if (isAdded)
+                        (activity as MainActivity).showLoader()
+                }
+                is ResponseStatus.Success -> {
+                    if (isAdded)
+                        (activity as MainActivity).dismissLoader()
+
+                    if ((it.data as Login).isEmailVerified) {
+                        viewModel.saveLogin(
+                            (it.data).email,
+                            mBinding.inputPass.text.toString()
+                        )
+                        context?.toast("isEmailVerified ${it.data.isEmailVerified}")
+                    } else
+                        context?.toast("isEmailVerified ${it.data.isEmailVerified}")
+                }
+                is ResponseStatus.Error -> {
+                    if (isAdded)
+                        (activity as MainActivity).dismissLoader()
+                    context?.toast(getString(it.messageId))
+                }
             }
-            else context?.toast(getString(R.string.user_not_exist))
+        }
+
+        viewModel.activeButton.observe(viewLifecycleOwner) {
+            if (it) activateButton(true) else activateButton(false)
         }
     }
 
-    private fun activateButton(n: Boolean){
-        if (n) {
-            with(mBinding.bnLogin) {
-                setBackgroundColor(resources.getColor(blueCoppel))
-                isClickable = true
-            }
-        }else{
-            with(mBinding.bnLogin) {
-                setBackgroundColor(resources.getColor(grey4))
-                isClickable = false
-            }
-        }
+    private fun activateButton(status: Boolean) {
+        mBinding.bnLogin.isEnabled = status
     }
 }

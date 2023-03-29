@@ -24,14 +24,12 @@ import com.example.myapplication.data.models.User
 import com.example.myapplication.databinding.FragmentAssistenceMainBinding
 import com.example.myapplication.ui.home.adapters.CalendarAdapter
 import com.example.myapplication.ui.home.adapters.UserAdapter
-import com.example.myapplication.ui.login.EMAIL_KEY
 import com.google.android.gms.location.*
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.*
 import javax.inject.Inject
-import kotlin.collections.ArrayList
 
 
 const val CURRENT_MONTH = 1
@@ -60,7 +58,8 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main){
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        accountEmail = sharedPreferences.getString(EMAIL_KEY, "").toString()
+       // accountEmail = sharedPreferences.getString(EMAIL_KEY, "").toString()
+        // TODO: recuperar desde el viewModel
     }
 
     override fun onCreateView(
@@ -163,18 +162,18 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main){
             val navBuilder = NavOptions.Builder()
             navBuilder.setEnterAnim(R.anim.enter_from_left).setExitAnim(R.anim.exit_from_left)
                 .setPopEnterAnim(R.anim.enter_from_right).setPopExitAnim(R.anim.exit_from_right)
-            findNavController().
+           /* findNavController().
             navigate(AssistenceMainFragmentDirections.
-            actionAssistenceMainFragmentToTeamMainFragment(),navBuilder.build())
+            actionAssistenceMainFragmentToTeamMainFragment(),navBuilder.build())*/
         }
         mBinding.containerMyProfileNav.setOnClickListener{
             moveNavSelector(it)
             val navBuilder = NavOptions.Builder()
             navBuilder.setEnterAnim(R.anim.enter_from_left).setExitAnim(R.anim.exit_from_left)
                 .setPopEnterAnim(R.anim.enter_from_right).setPopExitAnim(R.anim.exit_from_right)
-            findNavController().
+            /*findNavController().
             navigate(AssistenceMainFragmentDirections.
-            actionAssistenceMainFragmentToUserScreenFragment(userData),navBuilder.build())
+            actionAssistenceMainFragmentToUserScreenFragment(userData),navBuilder.build())*/
         }
         mBinding.tvMenuIcon.setOnClickListener{
             context?.toast("TopMenu")
@@ -282,6 +281,6 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main){
     private fun click(day:Day){
         viewModel.setDay(day.date)
         viewModel.setObjectDay(day)
-        findNavController().navigate(AssistenceMainFragmentDirections.actionAssistenceMainFragmentToAssistenceWeekFragment())
+       // findNavController().navigate(AssistenceMainFragmentDirections.actionAssistenceMainFragmentToAssistenceWeekFragment())
     }
 }

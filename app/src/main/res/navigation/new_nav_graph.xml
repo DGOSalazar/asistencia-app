@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/new_nav_graph"
+    app:startDestination="@id/loginFragment2">
+
+    <fragment
+        android:id="@+id/loginFragment2"
+        android:name="com.example.myapplication.ui.login.LoginFragment"
+        android:label="fragment_login"
+        tools:layout="@layout/fragment_login">
+        <action
+            android:id="@+id/action_loginFragment2_to_register_navigation"
+            app:destination="@id/register_navigation"
+            app:enterAnim="@anim/enter_from_left"
+            app:exitAnim="@anim/exit_from_left"
+            app:popEnterAnim="@anim/enter_from_right"
+            app:popExitAnim="@anim/exit_from_right" />
+    </fragment>
+
+    <navigation
+        android:id="@+id/register_navigation"
+        app:startDestination="@id/OneRegisterFragment">
+        <fragment
+            android:id="@+id/OneRegisterFragment"
+            android:name="com.example.myapplication.ui.userRegister.stepOne.StepOneRegisterFragment"
+            android:label="fragment_step_one_register"
+            tools:layout="@layout/fragment_step_one_register">
+            <action
+                android:id="@+id/action_stepOneRegisterFragment2_to_stepTwoRegisterFragment2"
+                app:destination="@id/twoRegisterFragment"
+                app:enterAnim="@anim/enter_from_left"
+                app:exitAnim="@anim/exit_from_left"
+                app:popEnterAnim="@anim/enter_from_right"
+                app:popExitAnim="@anim/exit_from_right" />
+        </fragment>
+        <fragment
+            android:id="@+id/twoRegisterFragment"
+            android:name="com.example.myapplication.ui.userRegister.stepTwo.StepTwoRegisterFragment"
+            android:label="fragment_step_two_register"
+            tools:layout="@layout/fragment_step_two_register">
+
+            <argument
+                android:name="userModel"
+                app:argType="com.example.myapplication.data.datasource.UserRegister" />
+            <action
+                android:id="@+id/action_twoRegisterFragment_to_stepThreeRegisterFragment"
+                app:destination="@id/stepThreeRegisterFragment"
+                app:enterAnim="@anim/enter_from_left"
+                app:exitAnim="@anim/exit_from_left"
+                app:popEnterAnim="@anim/enter_from_right"
+                app:popExitAnim="@anim/exit_from_right"/>
+
+        </fragment>
+
+
+        <fragment
+            android:id="@+id/stepThreeRegisterFragment"
+            android:name="com.example.myapplication.ui.userRegister.stepThree.StepThreeRegisterFragment"
+            android:label="fragment_step_three_register"
+            tools:layout="@layout/fragment_step_three_register">
+
+            <argument
+                android:name="userModel"
+                app:argType="com.example.myapplication.data.datasource.UserRegister" />
+
+        </fragment>
+    </navigation>
+</navigation>

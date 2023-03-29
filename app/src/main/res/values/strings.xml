@@ -112,44 +112,18 @@
     <string name="cNum">%1$s Colaboradores</string>
     <string name="celula_gdl">Celula Guadalajara</string>
     <string name="thanksfull">Gracias!</string>
-    <string-array name="days">
-        <item>Lunes</item>
-        <item>Martes</item>
-        <item>Miércoles</item>
-        <item>Jueves</item>
-        <item>Viernes</item>
-    </string-array>
-
-    <string-array name="months">
-        <item>Enero</item>
-        <item>Febrero</item>
-        <item>Marzo</item>
-        <item>Abril</item>
-        <item>Mayo</item>
-        <item>Junio</item>
-        <item>Julio</item>
-        <item>Agosto</item>
-        <item>Septiembre</item>
-        <item>Octubre</item>
-        <item>Noviembre</item>
-        <item>Diciembre</item>
-    </string-array>
-
-    <string-array name="positions">
-        <item>Android Dev</item>
-        <item>IOS Dev</item>
-        <item>Business Analyst</item>
-        <item>Backend Dev</item>
-        <item>Scrum Master</item>
-        <item>Tester/QA</item>
-        <item>Otro</item>
-    </string-array>
-    <string-array name="teams">
-        <item>HellFish</item>
-        <item>Minuts</item>
-        <item>Masters</item>
-        <item>Hashiras</item>
-        <item>C+ExA</item>
-        <item>En espera</item>
-    </string-array>
+    <string name="throwable_exception">Throwable exception</string>
+    <string name="exception">exception</string>
+    <string name="error_confirmation_pass">Contraseña diferente</string>
+    <string name="label_error_text">Ingrese un texto válido</string>
+    <string name="label_error_phone_number">Ingrese un número de teléfono válido</string>
+    <string name="content_description">content_description</string>
+    <string name="hellper_text_il_num_empleye">Ingresa tu número de colaborador</string>
+    <string name="text_employee_hint">N* de empleado</string>
+    <string name="finish_register">Finalizar</string>
+    <string name="name_il">Nombre</string>
+    <string name="lastname_il">Apellidos</string>
+    <string name="password_il">Debe contener 8 caracteres</string>
+    <string name="next">Siguiente</string>
+    <string name="label_error_employee">Ingresa un número de empleado válido</string>
 </resources>

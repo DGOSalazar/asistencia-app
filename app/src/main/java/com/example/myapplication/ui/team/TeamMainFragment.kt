@@ -69,13 +69,13 @@ class TeamMainFragment : Fragment(R.layout.fragment_team_main) {
     private fun setListeners(){
         with(mBinding){
             containerHomeNav.setOnClickListener {
-                val navBuilder = NavOptions.Builder()
+                /*val navBuilder = NavOptions.Builder()
                 navBuilder.setEnterAnim(R.anim.enter_from_right).setExitAnim(R.anim.exit_from_right)
                     .setPopEnterAnim(R.anim.enter_from_left).setPopExitAnim(R.anim.exit_from_left)
                 findNavController().
                 navigate(
                     TeamMainFragmentDirections.actionTeamMainFragmentToAssistenceMainFragment(),
-                    navBuilder.build())
+                    navBuilder.build())*/
             }
         }
     }
