@@ -228,7 +228,8 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     android:nestedScrollingEnabled="false"
                     app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-                    app:spanCount="5"/>
+                    app:spanCount="5"
+                    tools:itemCount="20"/>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </com.google.android.material.card.MaterialCardView>

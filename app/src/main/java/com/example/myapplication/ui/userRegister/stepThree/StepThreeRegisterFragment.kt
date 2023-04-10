@@ -1,8 +1,8 @@
 package com.example.myapplication.ui.userRegister.stepThree
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
-import android.icu.text.Transliterator.Position
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -10,8 +10,6 @@ import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.ImageView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.core.widget.doAfterTextChanged
@@ -21,11 +19,13 @@ import androidx.navigation.fragment.navArgs
 import com.example.myapplication.R
 import com.example.myapplication.core.extensionFun.toast
 import com.example.myapplication.data.datasource.UserRegister
+import com.example.myapplication.data.statusNetwork.ResponseStatus
 import com.example.myapplication.databinding.FragmentStepThreeRegisterBinding
 import com.example.myapplication.sys.utils.getPosition
 import com.example.myapplication.sys.utils.isValidCollaboratorNumber
 import com.example.myapplication.sys.utils.showAndHideError
-import com.google.android.material.navigation.NavigationBarView
+import com.example.myapplication.ui.MainActivity
+import com.example.myapplication.ui.home.HomeActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -36,6 +36,7 @@ class StepThreeRegisterFragment : Fragment() {
     private val args: StepThreeRegisterFragmentArgs by navArgs()
     private var model = UserRegister()
     private var imageUriLocal: Uri? = null
+    private var isAuthRegister = true
 
     private val responseLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
@@ -77,6 +78,7 @@ class StepThreeRegisterFragment : Fragment() {
         viewModel.setModel(args.userModel)
     }
 
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -86,6 +88,7 @@ class StepThreeRegisterFragment : Fragment() {
         return mBinding.root
     }
 
+
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -94,8 +97,28 @@ class StepThreeRegisterFragment : Fragment() {
         setListeners()
     }
 
+    @SuppressLint("NewApi")
     @RequiresApi(Build.VERSION_CODES.M)
     private fun setObservers() {
+        viewModel.status.observe(viewLifecycleOwner) {
+            when (it) {
+                is ResponseStatus.Loading -> {
+                    if (isAdded)
+                        (activity as MainActivity).showLoader()
+                }
+                is ResponseStatus.Success -> {
+                    if (isAdded)
+                        (activity as MainActivity).dismissLoader()
+                    handleStatusSuccess(it)
+                }
+                is ResponseStatus.Error -> {
+                    if (isAdded)
+                        (activity as MainActivity).dismissLoader()
+                    context?.toast(getString(it.messageId))
+                }
+            }
+        }
+
         viewModel.setModel.observe(viewLifecycleOwner) {
             model = it
         }
@@ -123,6 +146,26 @@ class StepThreeRegisterFragment : Fragment() {
          viewModel.registerFlag.observe(viewLifecycleOwner) {
              // findNavController().navigate(R.id.action_stepThreeRegisterFragment_to_assistenceMainFragment)
          }*/
+    }
+
+    private fun handleStatusSuccess(responseStatus: ResponseStatus.Success<Any>) {
+        when(responseStatus.data){
+            is Boolean -> {
+                if(responseStatus.data){
+                    if (isAuthRegister){
+                        isAuthRegister = false
+                        viewModel.saveNewUser(createModel())
+                    } else
+                        viewModel.upLoadImage(imageUriLocal!!)
+                }else
+                    context?.toast("hubo un problema al crear la cuenta")
+            }
+            is Uri->{
+                val intent = Intent(requireContext(), HomeActivity::class.java)
+                startActivity(intent)
+            }
+            else -> return
+        }
     }
 
     /*private fun setSpinners() {
@@ -215,6 +258,7 @@ class StepThreeRegisterFragment : Fragment() {
         */
 
         mBinding.btNext.setOnClickListener {
+            viewModel.createAccount(createModel())
             //  requireContext().toast("${mBinding.spinnerPosition.selectedItemPosition}")
         }
 
@@ -260,6 +304,14 @@ class StepThreeRegisterFragment : Fragment() {
     private fun fromGallery() {
         val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
         responseLauncher.launch(intent)
+    }
+
+    private fun createModel(): UserRegister {
+        return model.apply {
+            position = mBinding.spinnerPosition.selectedItemPosition.toString()
+            team = mBinding.spinnerTeam.selectedItemPosition.toString()
+            profilePhoto = imageUriLocal.toString()
+        }
     }
 
     /*@RequiresApi(Build.VERSION_CODES.M)

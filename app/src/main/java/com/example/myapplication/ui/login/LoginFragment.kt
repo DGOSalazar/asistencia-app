@@ -1,5 +1,6 @@
 package com.example.myapplication.ui.login
 
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -14,12 +15,14 @@ import com.example.myapplication.R
 import com.example.myapplication.R.color.*
 import com.example.myapplication.core.extensionFun.toast
 import com.example.myapplication.data.datasource.Login
+import com.example.myapplication.data.datasource.UserRegister
 import com.example.myapplication.data.statusNetwork.ResponseStatus
 import com.example.myapplication.databinding.FragmentLoginBinding
 import com.example.myapplication.sys.utils.checkIfIsValidEmail
 import com.example.myapplication.sys.utils.checkIfIsValidPassword
 import com.example.myapplication.sys.utils.showAndHideError
 import com.example.myapplication.ui.MainActivity
+import com.example.myapplication.ui.home.HomeActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -108,14 +111,12 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                     if (isAdded)
                         (activity as MainActivity).dismissLoader()
 
-                    if ((it.data as Login).isEmailVerified) {
-                        viewModel.saveLogin(
-                            (it.data).email,
-                            mBinding.inputPass.text.toString()
-                        )
-                        context?.toast("isEmailVerified ${it.data.isEmailVerified}")
-                    } else
-                        context?.toast("isEmailVerified ${it.data.isEmailVerified}")
+                    viewModel.saveLogin(
+                        (it.data as Login).email,
+                        mBinding.inputPass.text.toString()
+                    )
+                    val intent = Intent(requireContext(), HomeActivity::class.java)
+                    startActivity(intent)
                 }
                 is ResponseStatus.Error -> {
                     if (isAdded)

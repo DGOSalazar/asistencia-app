@@ -76,6 +76,8 @@
     <string name="asssit_name">Juan Carlos ¿Deseas asistir</string>
     <string name="delete_assit">Eliminar asistencia</string>
     <string name="user_not_exist">El usuario no aparece en la base de datos o la contraseña es incorrecta</string>
+    <string name="upload_image_error">Error al subir la imagen</string>
+    <string name="problem_registering_user">Hubo un problema al registrar usuario </string>
     <string name="nameUserScreen">Diego Salazar Contreras</string>
     <string name="positionAndTeam">%1$s | <b>Iniciatiiva Abono Coppel</b></string>
     <string name="personal_info">Información personal</string>
