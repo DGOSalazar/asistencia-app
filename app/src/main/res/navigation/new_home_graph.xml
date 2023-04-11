@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/new_home_graph"
+    app:startDestination="@id/assistenceMainFragment">
+
+    <fragment
+        android:id="@+id/assistenceMainFragment"
+        android:name="com.example.myapplication.ui.home.AssistenceMainFragment"
+        android:label="fragment_assistence_main"
+        tools:layout="@layout/fragment_assistence_main" >
+        <action
+            android:id="@+id/action_assistenceMainFragment_to_assistenceWeekFragment"
+            app:destination="@id/assistenceWeekFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/assistenceWeekFragment"
+        android:name="com.example.myapplication.ui.home.AssistenceWeekFragment"
+        android:label="fragment_assistencce_week"
+        tools:layout="@layout/fragment_assistencce_week" >
+        <action
+            android:id="@+id/action_assistenceWeekFragment_to_assistenceMainFragment2"
+            app:destination="@id/assistenceMainFragment" />
+    </fragment>
+</navigation>

@@ -52,7 +52,6 @@ class TeamMainFragment : Fragment(R.layout.fragment_team_main) {
                 progress.visibility = View.GONE
                 toolbar.visibility = View.VISIBLE
                 svTeam.visibility = View.VISIBLE
-                navBottomContainer.visibility = View.VISIBLE
             }
         }
     }
@@ -68,7 +67,7 @@ class TeamMainFragment : Fragment(R.layout.fragment_team_main) {
 
     private fun setListeners(){
         with(mBinding){
-            containerHomeNav.setOnClickListener {
+            //containerHomeNav.setOnClickListener {
                 /*val navBuilder = NavOptions.Builder()
                 navBuilder.setEnterAnim(R.anim.enter_from_right).setExitAnim(R.anim.exit_from_right)
                     .setPopEnterAnim(R.anim.enter_from_left).setPopExitAnim(R.anim.exit_from_left)
@@ -76,7 +75,7 @@ class TeamMainFragment : Fragment(R.layout.fragment_team_main) {
                 navigate(
                     TeamMainFragmentDirections.actionTeamMainFragmentToAssistenceMainFragment(),
                     navBuilder.build())*/
-            }
+            //}
         }
     }
 }

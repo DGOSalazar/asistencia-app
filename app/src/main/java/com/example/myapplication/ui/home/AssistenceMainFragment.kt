@@ -58,7 +58,9 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main){
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
        // accountEmail = sharedPreferences.getString(EMAIL_KEY, "").toString()
+        accountEmail = viewModel.getEmail()
         // TODO: recuperar desde el viewModel
     }
 
@@ -154,27 +156,7 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main){
         mBinding.vNext.setOnClickListener{
             nextMonthAction()
         }
-        mBinding.containerHomeNav.setOnClickListener{
-            moveNavSelector(it)
-        }
-        mBinding.containerTeamNav.setOnClickListener{
-            moveNavSelector(it)
-            val navBuilder = NavOptions.Builder()
-            navBuilder.setEnterAnim(R.anim.enter_from_left).setExitAnim(R.anim.exit_from_left)
-                .setPopEnterAnim(R.anim.enter_from_right).setPopExitAnim(R.anim.exit_from_right)
-           /* findNavController().
-            navigate(AssistenceMainFragmentDirections.
-            actionAssistenceMainFragmentToTeamMainFragment(),navBuilder.build())*/
-        }
-        mBinding.containerMyProfileNav.setOnClickListener{
-            moveNavSelector(it)
-            val navBuilder = NavOptions.Builder()
-            navBuilder.setEnterAnim(R.anim.enter_from_left).setExitAnim(R.anim.exit_from_left)
-                .setPopEnterAnim(R.anim.enter_from_right).setPopExitAnim(R.anim.exit_from_right)
-            /*findNavController().
-            navigate(AssistenceMainFragmentDirections.
-            actionAssistenceMainFragmentToUserScreenFragment(userData),navBuilder.build())*/
-        }
+
         mBinding.tvMenuIcon.setOnClickListener{
             context?.toast("TopMenu")
         }
@@ -249,32 +231,6 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main){
         return date.format(formatter)
     }
 
-    @SuppressLint("UseCompatLoadingForDrawables")
-    private fun moveNavSelector(view: View) {
-        when(view.id){
-            R.id.container_home_nav ->{
-                mBinding.containerHomeNav.setBackgroundResource(R.drawable.bg_buttom_nav)
-                mBinding.containerTeamNav.setBackgroundColor(requireContext().getColor(R.color.grey1))
-                mBinding.containerMyProfileNav.setBackgroundColor(requireContext().getColor(R.color.grey1))
-                Toast.makeText(requireContext(), "Home", Toast.LENGTH_SHORT).show()
-            }
-            R.id.container_team_nav ->{
-                mBinding.containerTeamNav.setBackgroundResource(R.drawable.bg_buttom_nav)
-                mBinding.containerHomeNav.setBackgroundColor(requireContext().getColor(R.color.grey1))
-                mBinding.containerMyProfileNav.setBackgroundColor(requireContext().getColor(R.color.grey1))
-                Toast.makeText(requireContext(), "Equipo", Toast.LENGTH_SHORT).show()
-            }
-            R.id.container_my_profile_nav ->{
-                mBinding.containerMyProfileNav.setBackgroundResource(R.drawable.bg_buttom_nav)
-                mBinding.containerHomeNav.setBackgroundColor(requireContext().getColor(R.color.grey1))
-                mBinding.containerTeamNav.setBackgroundColor(requireContext().getColor(R.color.grey1))
-                Toast.makeText(requireContext(), "Perfil", Toast.LENGTH_SHORT).show()
-            }
-            else -> {
-                //
-            }
-        }
-    }
     private fun clickUser(u: User){
         UserDialog(u).show(parentFragmentManager,"Yep")
     }

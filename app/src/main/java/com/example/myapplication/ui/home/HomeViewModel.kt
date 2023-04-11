@@ -23,7 +23,8 @@ class HomeViewModel @Inject constructor(
     private val enrollUserToDayUseCase: EnrollUserToDayUseCase,
     private val getUserInfoUseCase: GetUserInfoUseCase,
     private val getAllAttendanceDaysByMonthUseCase: GetAllAttendanceDaysByMonthUseCase,
-    private val getLocationUseCase: GetLocationUseCase
+    private val getLocationUseCase: GetLocationUseCase,
+    private val sharePreferenceRepository: SharePreferenceRepository
     ):ViewModel() {
 
     private val _daySelected = MutableLiveData<String>()
@@ -157,7 +158,9 @@ class HomeViewModel @Inject constructor(
         _mail.value = email
     }
 
-    fun getEmail(): String = mail.value!!
+    fun getEmail() = sharePreferenceRepository.getEmail().toString()
+
+    //fun getEmail(): String = mail.value!!
 
     fun clearLiveData() {
         val clean = arrayListOf<User>()

@@ -88,22 +88,6 @@ class UserScreenFragment : Fragment(R.layout.fragment_user_screen) {
     }
     private fun setListeners(){
         with(mBinding){
-            containerHomeNav.setOnClickListener {
-               /* val navBuilder = NavOptions.Builder()
-                navBuilder.setEnterAnim(R.anim.enter_from_right).setExitAnim(R.anim.exit_from_right)
-                    .setPopEnterAnim(R.anim.enter_from_left).setPopExitAnim(R.anim.exit_from_left)
-                findNavController().
-                navigate(UserScreenFragmentDirections.actionUserScreenFragmentToAssistenceMainFragment(),
-                    navBuilder.build())*/
-            }
-            containerTeamNav.setOnClickListener {
-               /* val navBuilder = NavOptions.Builder()
-                navBuilder.setEnterAnim(R.anim.enter_from_right).setExitAnim(R.anim.exit_from_right)
-                    .setPopEnterAnim(R.anim.enter_from_left).setPopExitAnim(R.anim.exit_from_left)
-                findNavController().
-                navigate(UserScreenFragmentDirections.actionUserScreenFragmentToTeamMainFragment(),
-                    navBuilder.build())*/
-            }
             tvNotification.setOnClickListener{
                 with(mBinding){
                     ilPersonalData.visibility = View.GONE
