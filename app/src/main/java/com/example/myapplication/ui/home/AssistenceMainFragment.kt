@@ -237,6 +237,6 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main){
     private fun click(day:Day){
         viewModel.setDay(day.date)
         viewModel.setObjectDay(day)
-       // findNavController().navigate(AssistenceMainFragmentDirections.actionAssistenceMainFragmentToAssistenceWeekFragment())
+        findNavController().navigate(AssistenceMainFragmentDirections.actionAssistenceMainFragmentToAssistenceWeekFragment())
     }
 }
