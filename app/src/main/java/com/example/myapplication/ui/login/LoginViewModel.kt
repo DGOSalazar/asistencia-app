@@ -5,24 +5,26 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.myapplication.data.datasource.Login
-import com.example.myapplication.data.statusNetwork.ResponseStatus
+import com.example.myapplication.core.utils.Resource
+import com.example.myapplication.core.utils.checkIfIsValidEmail
+import com.example.myapplication.core.utils.checkIfIsValidPassword
+import com.example.myapplication.data.remote.response.LoginResponse
 import com.example.myapplication.domain.FirebaseRepository
+import com.example.myapplication.domain.LoginRepository
 import com.example.myapplication.domain.SharePreferenceRepository
-import com.example.myapplication.sys.utils.checkIfIsValidEmail
-import com.example.myapplication.sys.utils.checkIfIsValidPassword
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val firebaseRepository: FirebaseRepository,
+    private val repository:FirebaseRepository,
+    private val loginRepository: LoginRepository,
     private val sharePreferenceRepository: SharePreferenceRepository
 ) : ViewModel() {
 
-    private var _status = MutableLiveData<ResponseStatus<Any>>()
-    val status: LiveData<ResponseStatus<Any>> get() = _status
+    private var _status = MutableLiveData<Resource<LoginResponse>>()
+    val status: LiveData<Resource<LoginResponse>> get() = _status
 
     private var _activeButton = MutableLiveData<Boolean>()
     val activeButton: LiveData<Boolean> get() = _activeButton
@@ -32,15 +34,16 @@ class LoginViewModel @Inject constructor(
         pass: String
     ) {
         viewModelScope.launch {
-            _status.value = ResponseStatus.Loading()
-            handelResponseStatus(firebaseRepository.doLogin(email, pass))
+            _status.value = Resource.loading(null)
+            handelResponseStatus(loginRepository.doLogin(email, pass))
+
         }
     }
 
     @Suppress("UNCHECKED_CAST")
     @SuppressLint("NullSafeMutableLiveData")
-    private fun handelResponseStatus(apiResponseStatus: ResponseStatus<Login>) {
-        _status.value = apiResponseStatus as ResponseStatus<Any>
+    private fun handelResponseStatus(apiResponseStatus: Resource<LoginResponse>) {
+        _status.value = apiResponseStatus
     }
 
 

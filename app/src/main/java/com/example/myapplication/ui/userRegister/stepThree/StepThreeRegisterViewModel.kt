@@ -6,18 +6,20 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.myapplication.core.utils.Resource
 import com.example.myapplication.data.datasource.UserRegister
 import com.example.myapplication.data.statusNetwork.ResponseStatus
 import com.example.myapplication.domain.FirebaseRepository
-import com.example.myapplication.sys.utils.isValidCollaboratorNumber
-import com.example.myapplication.sys.utils.isValidSpinner
+import com.example.myapplication.core.utils.isValidCollaboratorNumber
+import com.example.myapplication.core.utils.isValidSpinner
+import com.example.myapplication.domain.UserRegisterRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class StepThreeRegisterViewModel @Inject constructor(
-    private val firebaseRepository: FirebaseRepository
+    private val userRegisterRepository: UserRegisterRepository
 ) : ViewModel() {
 
     private var _setModel = MutableLiveData<UserRegister>()
@@ -32,9 +34,17 @@ class StepThreeRegisterViewModel @Inject constructor(
     private var _photoUri = MutableLiveData<String>()
     val photoUri: LiveData<String> get() = _photoUri
 
-    private var _status = MutableLiveData<ResponseStatus<Any>>()
-    val status: LiveData<ResponseStatus<Any>> get() = _status
+    private var _status = MutableLiveData<Resource<Boolean>>()
+    val status: LiveData<Resource<Boolean>> get() = _status
 
+    private var _statusForImage = MutableLiveData<Resource<Uri>>()
+    val statusForUrl: LiveData<Resource<Uri>> get() = _statusForImage
+
+    private var _statusForDataUser = MutableLiveData<Resource<Boolean>>()
+    val statusForDataUser: LiveData<Resource<Boolean>> get() = _statusForDataUser
+
+    private var _statusForDoUser  = MutableLiveData<Resource<Boolean>>()
+    val statusForDoUser: LiveData<Resource<Boolean>> get() = _statusForDoUser
 
     fun setModel(userRegister: UserRegister) {
         _setModel.value = userRegister
@@ -57,7 +67,7 @@ class StepThreeRegisterViewModel @Inject constructor(
     @SuppressLint("NullSafeMutableLiveData")
     fun createAccount(user: UserRegister){
         viewModelScope.launch {
-            _status.value = firebaseRepository.doAuthRegister(user.email, user.password) as ResponseStatus<Any>
+            _statusForDoUser.value = userRegisterRepository.doAuthRegister(user.email, user.password)
         }
     }
 
@@ -65,7 +75,7 @@ class StepThreeRegisterViewModel @Inject constructor(
     @SuppressLint("NullSafeMutableLiveData")
     fun saveNewUser(model:UserRegister) {
         viewModelScope.launch {
-            _status.value = firebaseRepository.doUserRegister(model) as ResponseStatus<Any>
+            _statusForDataUser.value = userRegisterRepository.doUserRegister(model)
         }
     }
 
@@ -73,7 +83,7 @@ class StepThreeRegisterViewModel @Inject constructor(
     @SuppressLint("NullSafeMutableLiveData")
     fun upLoadImage(uri:Uri) {
         viewModelScope.launch {
-            _status.value = firebaseRepository.doUploadImage(uri)  as ResponseStatus<Any>
+            _statusForImage.value = userRegisterRepository.doUploadImage(uri)
         }
     }
 

@@ -17,7 +17,7 @@ class GetUserInfoUseCase @Inject constructor(
 
     suspend fun getUsersByTeams (): ArrayList<TeamGroup> {
         var res : ArrayList<User> = arrayListOf()
-        var resTeam : ArrayList<TeamGroup> = arrayListOf(
+        val resTeam : ArrayList<TeamGroup> = arrayListOf(
             TeamGroup(team = "Business Analyst", users = arrayListOf(), isSelected = false),
             TeamGroup(team = "Scrum Master", users = arrayListOf(), isSelected = false),
             TeamGroup(team = "iOS Developers", users = arrayListOf(), isSelected = false),
@@ -51,9 +51,7 @@ class GetUserInfoUseCase @Inject constructor(
                 "Tester/QA" -> {
                     resTeam[5].users.add(user)
                 }
-                else -> {
-
-                }
+                else -> Unit
             }
         }
         return resTeam

@@ -106,8 +106,6 @@ class FirebaseRepository @Inject constructor(
                 }.await()
             isSuccess
         }
-
-
     private suspend fun sendRegisterUser(user: UserRegister): ResponseStatus<Boolean> =
         makeCall {
             var isSuccess = false
