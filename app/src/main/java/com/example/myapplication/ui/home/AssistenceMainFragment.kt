@@ -1,15 +1,13 @@
 package com.example.myapplication.ui.home
 
 import android.annotation.SuppressLint
-import android.content.SharedPreferences
+import android.app.AlertDialog
 import android.os.Build
 import android.os.Bundle
 import android.view.*
-import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
@@ -21,7 +19,9 @@ import com.example.myapplication.data.models.AttendanceDays
 import com.example.myapplication.data.models.Day
 import com.example.myapplication.data.models.Month
 import com.example.myapplication.data.models.User
+import com.example.myapplication.data.statusNetwork.ResponseStatus
 import com.example.myapplication.databinding.FragmentAssistenceMainBinding
+import com.example.myapplication.sys.utils.Tools
 import com.example.myapplication.ui.home.adapters.CalendarAdapter
 import com.example.myapplication.ui.home.adapters.UserAdapter
 import com.google.android.gms.location.*
@@ -46,6 +46,8 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main){
     private lateinit var mBinding:FragmentAssistenceMainBinding
     private val viewModel: HomeViewModel by activityViewModels()
 
+    @Inject
+    lateinit var tools: Tools
 
     @RequiresApi(Build.VERSION_CODES.O)
     var localDate: LocalDate= LocalDate.now()
@@ -53,14 +55,11 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main){
     private var accountEmail = ""
     private var userData: User = User()
 
-    @Inject
-    lateinit var sharedPreferences: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-       // accountEmail = sharedPreferences.getString(EMAIL_KEY, "").toString()
         accountEmail = viewModel.getEmail()
+        viewModel.cleanStatus()
         // TODO: recuperar desde el viewModel
     }
 
@@ -72,9 +71,9 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main){
         return mBinding.root
     }
 
+    @RequiresApi(Build.VERSION_CODES.S)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        //mBinding.fabConfirmAsit.visibility = View.VISIBLE
         setObservers()
         setLaunch()
         setCalendarAdapter()
@@ -82,11 +81,13 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main){
         setListeners()
     }
 
+
+    @RequiresApi(Build.VERSION_CODES.S)
     private fun setObservers() {
-        viewModel.confirmOk.observe(viewLifecycleOwner){
-            if (it) mBinding.fabConfirmAsit.visibility = View.VISIBLE
-            else mBinding.fabConfirmAsit.visibility = View.VISIBLE
-        }
+        //viewModel.confirmOk.observe(viewLifecycleOwner){
+        //    if (it) mBinding.fabConfirmAsit.visibility = View.VISIBLE
+        //    else mBinding.fabConfirmAsit.visibility = View.VISIBLE
+        //}
         viewModel.assistanceDays.observe(viewLifecycleOwner, this::setCalendarDays)
         viewModel.currentMonth.observe(viewLifecycleOwner, this::updateCurrentDateInCalendar)
         viewModel.accountData.observe(viewLifecycleOwner, this::setHeader)
@@ -99,6 +100,52 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main){
         viewModel.local.observe(viewLifecycleOwner){
             context?.toast(it.toString())
         }
+
+        viewModel.status.observe(viewLifecycleOwner) {
+            if (it==null)
+                return@observe
+            when (it) {
+                is ResponseStatus.Loading -> {
+                    if (isAdded)
+                        (activity as HomeActivity).showLoader()
+                }
+                is ResponseStatus.Success -> {
+                    if (isAdded)
+                        (activity as HomeActivity).dismissLoader()
+                    handleStatusSuccess(it)
+                }
+                is ResponseStatus.Error -> {
+                    if (isAdded)
+                        (activity as HomeActivity).dismissLoader()
+                    context?.toast(getString(it.messageId))
+                }
+            }
+        }
+    }
+
+    private fun handleStatusSuccess(responseStatus: ResponseStatus.Success<Any>) {
+        when(responseStatus.data){
+            is Boolean -> {
+                if(responseStatus.data){
+                    mBinding.fabConfirmAsit.visibility = View.GONE
+                    showAlert("Asistencia exitosa!!")
+                }
+                else
+                    showAlert("Debe de estar en oficina para marcar asistencia")
+            }
+            else -> return
+        }
+    }
+
+    private fun showAlert(message:String) {
+        val builder = AlertDialog.Builder(context)
+        builder.setTitle("Title")
+        builder.setMessage(message)
+        builder.setPositiveButton("OK") { view, _ ->
+            view.dismiss()
+        }
+        val dialog = builder.create()
+        dialog.show()
     }
 
     @SuppressLint("SetTextI18n")
@@ -132,6 +179,17 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main){
         mCalendarAdapter.statusMonth = actualMonth
         mCalendarAdapter.assistedDays = getDaysToAttend(daysToAttend)
         viewModel.setCalendarDays(localDate, localDate.minusMonths(1), daysToAttend, actualMonth)
+        showAttendanceButton(daysToAttend)
+    }
+
+    private fun showAttendanceButton(daysToAttend: List<AttendanceDays>) {
+        val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy")
+        val currentDate = LocalDate.now().format(formatter)
+        val isAttendanceDay = daysToAttend.any {  it.currentDay == currentDate}
+        if (isAttendanceDay)
+            mBinding.fabConfirmAsit.visibility = View.VISIBLE
+        else
+            mBinding.fabConfirmAsit.visibility = View.GONE
     }
 
     private fun getDaysToAttend(daysToAttend: List<AttendanceDays>): List<Int> {
@@ -156,20 +214,21 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main){
         mBinding.vNext.setOnClickListener{
             nextMonthAction()
         }
-
         mBinding.tvMenuIcon.setOnClickListener{
             context?.toast("TopMenu")
         }
         mBinding.fabConfirmAsit.setOnClickListener {
-            mBinding.fabConfirmAsit.visibility = View.GONE
-            context?.toast("Confirmación de asistencia exitosa.")
-            viewModel.getCurrentLocation(activity?.applicationContext!!)
+            if(tools.isEnableGeolocation())
+                viewModel.applyAttendance()
+            else
+                context?.toast("Gps apagado")
         }
     }
 
     @SuppressLint("SetTextI18n")
     private fun setCalendarTitle() {
         mBinding.tvMonth.text = (resources.getStringArray(R.array.months)[localDate.monthValue-1])
+        (activity as? HomeActivity)?.hideBottomBar(true)
     }
 
     @SuppressLint("NotifyDataSetChanged", "SimpleDateFormat")
@@ -192,7 +251,7 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main){
         val formattedString = localDate.format(formatter)
         viewModel.getListEmails(formattedString)
         viewModel.setDay(formattedString)
-        viewModel.confirmStatus(accountEmail,formattedString)
+        viewModel.confirmStatus(accountEmail, formattedString)
     }
 
     private fun setCalendarAdapter(){
@@ -239,4 +298,6 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main){
         viewModel.setObjectDay(day)
         findNavController().navigate(AssistenceMainFragmentDirections.actionAssistenceMainFragmentToAssistenceWeekFragment())
     }
+
+
 }

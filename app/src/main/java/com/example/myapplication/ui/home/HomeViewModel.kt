@@ -8,6 +8,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myapplication.data.models.*
+import com.example.myapplication.data.statusNetwork.ResponseStatus
 import com.example.myapplication.domain.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -15,6 +16,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.time.LocalDate
 import javax.inject.Inject
+
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
@@ -24,7 +26,8 @@ class HomeViewModel @Inject constructor(
     private val getUserInfoUseCase: GetUserInfoUseCase,
     private val getAllAttendanceDaysByMonthUseCase: GetAllAttendanceDaysByMonthUseCase,
     private val getLocationUseCase: GetLocationUseCase,
-    private val sharePreferenceRepository: SharePreferenceRepository
+    private val sharePreferenceRepository: SharePreferenceRepository,
+    private val newApplyAttendanceUseCase: ApplyAttendanceUseCase
     ):ViewModel() {
 
     private val _daySelected = MutableLiveData<String>()
@@ -65,6 +68,10 @@ class HomeViewModel @Inject constructor(
 
     private val _confirmOk = MutableLiveData<Boolean>()
     var confirmOk: LiveData<Boolean> = _confirmOk
+
+    private var _status = MutableLiveData<ResponseStatus<Any>?>()
+    val status: LiveData<ResponseStatus<Any>?> get() = _status
+
 
     fun confirmStatus(email:String, day: String){
         viewModelScope.launch {
@@ -173,4 +180,17 @@ class HomeViewModel @Inject constructor(
             getLocationUseCase.getLocationResult(context)
         }
     }
+
+    @Suppress("UNCHECKED_CAST")
+    fun applyAttendance(){
+        viewModelScope.launch {
+            _status.value = newApplyAttendanceUseCase.invoke() as ResponseStatus<Any>
+        }
+    }
+
+    fun cleanStatus() {
+        _status.value= null
+    }
+
+
 }

@@ -13,14 +13,43 @@
         <action
             android:id="@+id/action_assistenceMainFragment_to_assistenceWeekFragment"
             app:destination="@id/assistenceWeekFragment" />
+        <action
+            android:id="@+id/action_assistenceMainFragment_to_userScreenFragment"
+            app:destination="@id/userScreenFragment" />
+        <action
+            android:id="@+id/action_assistenceMainFragment_to_teamMainFragment"
+            app:destination="@id/teamMainFragment" />
     </fragment>
+
     <fragment
         android:id="@+id/assistenceWeekFragment"
         android:name="com.example.myapplication.ui.home.AssistenceWeekFragment"
         android:label="fragment_assistencce_week"
-        tools:layout="@layout/fragment_assistencce_week" >
+        tools:layout="@layout/fragment_assistencce_week" />
+    <fragment
+        android:id="@+id/teamMainFragment"
+        android:name="com.example.myapplication.ui.team.TeamMainFragment"
+        android:label="fragment_team_main"
+        tools:layout="@layout/fragment_team_main" >
         <action
-            android:id="@+id/action_assistenceWeekFragment_to_assistenceMainFragment2"
+            android:id="@+id/action_teamMainFragment_to_userScreenFragment"
+            app:destination="@id/userScreenFragment" />
+        <action
+            android:id="@+id/action_teamMainFragment_to_assistenceMainFragment"
             app:destination="@id/assistenceMainFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/userScreenFragment"
+        android:name="com.example.myapplication.ui.userScreen.UserScreenFragment"
+        android:label="fragment_user_screen"
+        tools:layout="@layout/fragment_user_screen" >
+        <action
+            android:id="@+id/action_userScreenFragment_to_teamMainFragment"
+            app:destination="@id/teamMainFragment" />
+        <action
+            android:id="@+id/action_userScreenFragment_to_assistenceMainFragment"
+            app:destination="@id/assistenceMainFragment" />
+    </fragment>
+
+
 </navigation>

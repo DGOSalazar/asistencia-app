@@ -48,6 +48,7 @@ class AssistenceWeekFragment() : Fragment(R.layout.fragment_assistencce_week) {
     }
 
     private fun setUi() {
+        (activity as? HomeActivity)?.hideBottomBar()
         accountEmail = viewModel.getEmail()
         selectDay = viewModel.getDayObject()
         viewModel.setWeekList(selectDay)

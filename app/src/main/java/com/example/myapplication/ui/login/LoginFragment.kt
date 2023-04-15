@@ -117,6 +117,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                     )
                     val intent = Intent(requireContext(), HomeActivity::class.java)
                     startActivity(intent)
+                    requireActivity().finish()
                 }
                 is ResponseStatus.Error -> {
                     if (isAdded)

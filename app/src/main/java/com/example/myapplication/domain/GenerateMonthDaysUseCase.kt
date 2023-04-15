@@ -57,6 +57,7 @@ class GenerateMonthDaysUseCase @Inject constructor() {
                             if (day.day == pastMonthDays - dayOfWeek + i)
                                 freePlaces = day.freePlaces
                         }
+
                         tempDays.add(
                             Day(
                             num = dia,
