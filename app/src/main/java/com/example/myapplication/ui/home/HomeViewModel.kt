@@ -119,7 +119,7 @@ class HomeViewModel @Inject constructor(
             withContext(Dispatchers.IO) {
                 getUserInfoUseCase.userInfo(listEmails) {
                     _users.postValue(it)
-                    _isLoading.value = Status.SUCCESS
+                    _isLoading.postValue(Status.SUCCESS)
                 }
             }
         }

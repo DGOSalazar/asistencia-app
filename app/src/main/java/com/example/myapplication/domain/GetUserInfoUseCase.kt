@@ -2,19 +2,17 @@ package com.example.myapplication.domain
 
 import android.os.Build
 import androidx.annotation.RequiresApi
-import com.example.myapplication.core.utils.statusNetwork.ResponseStatus
 import com.example.myapplication.data.models.TeamGroup
 import com.example.myapplication.data.remote.api.FirebaseServices
 import com.example.myapplication.data.remote.response.UserHomeResponse
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class GetUserInfoUseCase @Inject constructor(
     private val firebase: FirebaseServices
 ) {
-    fun userInfo(listEmails: ArrayList<String>, users: (ArrayList<UserHomeResponse>) -> Unit) =
+   suspend fun userInfo(listEmails: ArrayList<String>, users: (ArrayList<UserHomeResponse>) -> Unit) =
         firebase.getUserInfo(listEmails, users)
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -33,10 +31,12 @@ class GetUserInfoUseCase @Inject constructor(
                 TeamGroup(team = "Backend Developers", users = arrayListOf(), isSelected = false)
             )
             // while (res.isEmpty()){
-            if(firebase.getAllUsers() is ResponseStatus.Success)
-             firebase.getAllUsers()?.let {
-
+            firebase.getAllUsers()?.let {
+                res = it
             }
+
+
+
             res.forEach { user ->
                 when (user.position) {
                     "Android Dev" -> {

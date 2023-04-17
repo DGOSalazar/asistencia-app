@@ -4,8 +4,6 @@ import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
 import com.example.myapplication.core.utils.FirebaseClientModule
-import com.example.myapplication.core.utils.statusNetwork.ResponseStatus
-import com.example.myapplication.core.utils.statusNetwork.makeCall
 import com.example.myapplication.data.models.*
 import com.example.myapplication.data.remote.response.UserHomeResponse
 import com.google.firebase.auth.AuthResult
@@ -27,26 +25,20 @@ class FirebaseServices @Inject constructor(
         )
     }
 
-    fun getUserInfo(listEmail: ArrayList<String>, user: (ArrayList<UserHomeResponse>) -> Unit) =
-        runCatching {
-            var user1: User
-            val list = arrayListOf<UserHomeResponse>()
-            listEmail.forEach { i ->
-                val documents = firebase.userCollection.whereEqualTo("email", i).get().result
-                documents.forEach { d ->
-                    val netUser = d.toObject<UserHomeResponse>()
-                    list.add(netUser!!)
-                }
-                user(list)
-                /*.addOnSuccessListener {
-                        it.documents.forEach { d ->
-                            val netUser = d.toObject<UserHomeResponse>()
-                            list.add(netUser!!)
-                        }
-                        user(list)
-                    }*/
+    suspend fun getUserInfo(
+        listEmail: ArrayList<String>,
+        users: (ArrayList<UserHomeResponse>) -> Unit
+    ) {
+        val list = arrayListOf<UserHomeResponse>()
+        listEmail.forEach { i ->
+            val documents = firebase.userCollection.whereEqualTo("email", i).get().await().documents
+            documents.forEach { d ->
+                val netUser = d.toObject<UserHomeResponse>()
+                list.add(netUser!!)
             }
+            users(list)
         }
+    }
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun getListUsers(day: String, mails: (ArrayList<String>) -> Unit) = runCatching {
@@ -152,18 +144,17 @@ class FirebaseServices @Inject constructor(
         return notifications
     }
 
-    suspend fun getAllUsers(): ResponseStatus<ArrayList<UserHomeResponse>?> =
-        makeCall {
-            val list: ArrayList<UserHomeResponse> = arrayListOf()
-            val snap = firebase.userCollection.get().await()
-            val documents = snap.documents
-            documents?.let {
-                it.forEach { document ->
-                    val netUser = document.toObject<UserHomeResponse>()
-                    netUser?.let { it1 -> list.add(it1) }
-                }
-                list
+    suspend fun getAllUsers(): ArrayList<UserHomeResponse>? {
+        val list: ArrayList<UserHomeResponse> = arrayListOf()
+        val snap = firebase.userCollection.get().await()
+        val documents = snap.documents
+        return documents?.let {
+            it.forEach { document ->
+                val netUser = document.toObject<UserHomeResponse>()
+                netUser?.let { it1 -> list.add(it1) }
             }
+            list
         }
+    }
 
 }
