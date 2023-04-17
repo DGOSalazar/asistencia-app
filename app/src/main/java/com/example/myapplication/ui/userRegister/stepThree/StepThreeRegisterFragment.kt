@@ -104,16 +104,12 @@ class StepThreeRegisterFragment : Fragment() {
                         (activity as MainActivity).showLoader()
                 }
                 Status.SUCCESS -> {
-                    if (isAdded)
-                        (activity as MainActivity).dismissLoader()
                     if (it.data!!) {
-                        if (isAuthRegister) {
-                            isAuthRegister = false
-                            viewModel.saveNewUser(createModel())
-                        } else
-                            viewModel.upLoadImage(imageUriLocal!!)
+                        viewModel.upLoadImage(imageUriLocal!!)
                     } else {
-                        context?.toast("hubo un problema al crear la cuenta")
+                        context?.toast(getString(R.string.user_register_error))
+                        if (isAdded)
+                            (activity as MainActivity).dismissLoader()
                     }
                 }
                 Status.ERROR -> {
@@ -134,9 +130,12 @@ class StepThreeRegisterFragment : Fragment() {
                     if (isAdded)
                         (activity as MainActivity).dismissLoader()
                     if (it.data!!) {
-                        viewModel.upLoadImage(imageUriLocal!!)
+                        val intent = Intent(requireContext(), HomeActivity::class.java)
+                        startActivity(intent)
                     } else {
-                        context?.toast("hubo un problema al crear la cuenta")
+                        context?.toast(getString(R.string.user_register_error))
+                        if (isAdded)
+                            (activity as MainActivity).dismissLoader()
                     }
                 }
                 Status.ERROR -> {
@@ -153,13 +152,10 @@ class StepThreeRegisterFragment : Fragment() {
                         (activity as MainActivity).showLoader()
                 }
                 Status.SUCCESS -> {
-                    if (isAdded)
-                        (activity as MainActivity).dismissLoader()
                     if (it.data != null) {
-                        val intent = Intent(requireContext(), HomeActivity::class.java)
-                        startActivity(intent)
+                        viewModel.saveNewUser(createModel(it.data.toString()))
                     } else {
-                        context?.toast("hubo un problema al crear la cuenta")
+                        context?.toast(getString(R.string.user_register_error))
                     }
                 }
                 Status.ERROR -> {
@@ -377,11 +373,12 @@ class StepThreeRegisterFragment : Fragment() {
         responseLauncher.launch(intent)
     }
 
-    private fun createModel(): UserRegister {
+    private fun createModel(uri: String=""): UserRegister {
         return model.apply {
-            position = mBinding.spinnerPosition.selectedItemPosition.toString()
-            team = mBinding.spinnerTeam.selectedItemPosition.toString()
-            profilePhoto = imageUriLocal.toString()
+            position = mBinding.spinnerPosition.selectedItem.toString()
+            team = mBinding.spinnerTeam.selectedItem.toString()
+            profilePhoto=uri
+            employeeNumber = mBinding.inputNumEmployee.text.toString().toInt()
         }
     }
 

@@ -15,13 +15,10 @@ import com.example.myapplication.R
 import com.example.myapplication.R.color.*
 import com.example.myapplication.core.extensionFun.toast
 import com.example.myapplication.core.utils.Status
-import com.example.myapplication.data.datasource.Login
-import com.example.myapplication.data.datasource.UserRegister
-import com.example.myapplication.data.statusNetwork.ResponseStatus
-import com.example.myapplication.databinding.FragmentLoginBinding
 import com.example.myapplication.core.utils.checkIfIsValidEmail
 import com.example.myapplication.core.utils.checkIfIsValidPassword
 import com.example.myapplication.core.utils.showAndHideError
+import com.example.myapplication.databinding.FragmentLoginBinding
 import com.example.myapplication.ui.MainActivity
 import com.example.myapplication.ui.home.HomeActivity
 import dagger.hilt.android.AndroidEntryPoint

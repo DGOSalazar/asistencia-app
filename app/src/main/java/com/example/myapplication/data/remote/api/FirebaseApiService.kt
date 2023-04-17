@@ -2,15 +2,11 @@ package com.example.myapplication.data.remote.api
 
 import android.net.Uri
 import com.example.myapplication.core.utils.FirebaseClientModule
-import com.example.myapplication.data.datasource.mappers.UserRegisterMapper
+import com.example.myapplication.core.utils.statusNetwork.ResponseStatus
+import com.example.myapplication.core.utils.statusNetwork.makeCall
 import com.example.myapplication.data.remote.request.UserRegisterRequest
 import com.example.myapplication.data.remote.response.LoginResponse
-import com.example.myapplication.data.statusNetwork.ResponseStatus
-import com.example.myapplication.data.statusNetwork.makeCall
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.StorageReference
-import com.google.firebase.storage.UploadTask
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
@@ -29,19 +25,19 @@ class FirebaseApiService @Inject constructor(private val client: FirebaseClientM
     suspend fun sendRegisterUser(user: UserRegisterRequest): ResponseStatus<Boolean> =
         makeCall {
             var isSuccess = false
-             client.userCollection.document(user.email)
+            client.userCollection.document(user.email)
                 .set(user).addOnCompleteListener {
-                    isSuccess= it.isSuccessful
+                    isSuccess = it.isSuccessful
                 }.await()
             isSuccess
         }
 
 
-    suspend fun sendUploadImage(uri: Uri): ResponseStatus<UploadTask.TaskSnapshot> =
+    suspend fun sendUploadImage(uri: Uri): ResponseStatus<Uri> =
         makeCall {
             val ref: StorageReference = client.storage.child("image${uri.lastPathSegment}")
             val uploadTask = ref.putFile(uri).await()
-            uploadTask
+            uploadTask.storage.downloadUrl.await()
         }
 
     suspend fun sendAuthRegister(
@@ -56,4 +52,5 @@ class FirebaseApiService @Inject constructor(private val client: FirebaseClientM
                 }.await()
             isSuccess
         }
+
 }

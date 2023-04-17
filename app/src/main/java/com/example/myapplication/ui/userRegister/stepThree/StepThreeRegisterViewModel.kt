@@ -7,11 +7,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myapplication.core.utils.Resource
-import com.example.myapplication.data.datasource.UserRegister
-import com.example.myapplication.data.statusNetwork.ResponseStatus
-import com.example.myapplication.domain.FirebaseRepository
 import com.example.myapplication.core.utils.isValidCollaboratorNumber
 import com.example.myapplication.core.utils.isValidSpinner
+import com.example.myapplication.data.datasource.UserRegister
 import com.example.myapplication.domain.UserRegisterRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -67,6 +65,7 @@ class StepThreeRegisterViewModel @Inject constructor(
     @SuppressLint("NullSafeMutableLiveData")
     fun createAccount(user: UserRegister){
         viewModelScope.launch {
+            _statusForDoUser.value=Resource.loading(null)
             _statusForDoUser.value = userRegisterRepository.doAuthRegister(user.email, user.password)
         }
     }

@@ -7,8 +7,8 @@ import com.example.myapplication.data.datasource.LoginDTO
 import com.example.myapplication.data.datasource.UserRegister
 import com.example.myapplication.data.datasource.mappers.LoginMapper
 import com.example.myapplication.data.datasource.mappers.UserRegisterMapper
-import com.example.myapplication.data.statusNetwork.ResponseStatus
-import com.example.myapplication.data.statusNetwork.makeCall
+import com.example.myapplication.core.utils.statusNetwork.ResponseStatus
+import com.example.myapplication.core.utils.statusNetwork.makeCall
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase

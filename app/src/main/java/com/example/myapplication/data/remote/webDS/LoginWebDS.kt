@@ -4,7 +4,7 @@ import com.example.myapplication.R
 import com.example.myapplication.core.utils.Resource
 import com.example.myapplication.data.remote.api.FirebaseApiService
 import com.example.myapplication.data.remote.response.LoginResponse
-import com.example.myapplication.data.statusNetwork.ResponseStatus
+import com.example.myapplication.core.utils.statusNetwork.ResponseStatus
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.withContext
