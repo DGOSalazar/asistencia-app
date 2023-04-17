@@ -9,8 +9,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavDirections
 import androidx.navigation.findNavController
 import com.example.myapplication.R
+import com.example.myapplication.core.generics.loader.LoaderFragment
 import com.example.myapplication.databinding.ActivityHomeBinding
-import com.example.myapplication.sys.generics.loader.LoaderFragment
 import com.example.myapplication.ui.team.TeamMainFragmentDirections
 import com.example.myapplication.ui.userScreen.UserScreenFragmentDirections
 import dagger.hilt.android.AndroidEntryPoint
