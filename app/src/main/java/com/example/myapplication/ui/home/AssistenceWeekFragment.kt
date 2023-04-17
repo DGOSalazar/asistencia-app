@@ -2,11 +2,11 @@ package com.example.myapplication.ui.home
 
 import android.os.Build
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -15,7 +15,7 @@ import com.example.myapplication.core.dialog.EnrollToDayDialog
 import com.example.myapplication.core.dialog.UserDialog
 import com.example.myapplication.data.models.Day
 import com.example.myapplication.data.models.Status
-import com.example.myapplication.data.models.User
+import com.example.myapplication.data.remote.response.UserHomeResponse
 import com.example.myapplication.databinding.FragmentAssistencceWeekBinding
 import com.example.myapplication.ui.home.adapters.UserAdapter
 import com.example.myapplication.ui.home.adapters.WeekAdapter
@@ -142,7 +142,7 @@ class AssistenceWeekFragment() : Fragment(R.layout.fragment_assistencce_week) {
             adapter = mAdapter
         }
     }
-    private fun setUserAdapter(userList: List<User>) {
+    private fun setUserAdapter(userList: List<UserHomeResponse>) {
         mBinding.tvActualMonth.text = "${userList.size} ${getString(R.string.msgAssit)}"
         mUserAdapter = UserAdapter(userList){
             clickUser(it)
@@ -197,7 +197,7 @@ class AssistenceWeekFragment() : Fragment(R.layout.fragment_assistencce_week) {
         cleanSelected(i.dayOfWeek-1)
         setDaysAdapter(days)
     }
-    private fun clickUser(u: User){
+    private fun clickUser(u: UserHomeResponse){
         UserDialog(u).show(parentFragmentManager,"Yep")
     }
 

@@ -18,12 +18,9 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import com.example.myapplication.R
 import com.example.myapplication.core.extensionFun.toast
+import com.example.myapplication.core.utils.*
 import com.example.myapplication.data.datasource.UserRegister
-import com.example.myapplication.data.statusNetwork.ResponseStatus
 import com.example.myapplication.databinding.FragmentStepThreeRegisterBinding
-import com.example.myapplication.sys.utils.getPosition
-import com.example.myapplication.sys.utils.isValidCollaboratorNumber
-import com.example.myapplication.sys.utils.showAndHideError
 import com.example.myapplication.ui.MainActivity
 import com.example.myapplication.ui.home.HomeActivity
 import dagger.hilt.android.AndroidEntryPoint
@@ -100,25 +97,95 @@ class StepThreeRegisterFragment : Fragment() {
     @SuppressLint("NewApi")
     @RequiresApi(Build.VERSION_CODES.M)
     private fun setObservers() {
-        viewModel.status.observe(viewLifecycleOwner) {
-            when (it) {
-                is ResponseStatus.Loading -> {
+        viewModel.statusForDoUser.observe(viewLifecycleOwner) {
+            when (it.status) {
+                Status.LOADING -> {
                     if (isAdded)
                         (activity as MainActivity).showLoader()
                 }
-                is ResponseStatus.Success -> {
-                    if (isAdded)
-                        (activity as MainActivity).dismissLoader()
-                    handleStatusSuccess(it)
+                Status.SUCCESS -> {
+                    if (it.data!!) {
+                        viewModel.upLoadImage(imageUriLocal!!)
+                    } else {
+                        context?.toast(getString(R.string.user_register_error))
+                        if (isAdded)
+                            (activity as MainActivity).dismissLoader()
+                    }
                 }
-                is ResponseStatus.Error -> {
+                Status.ERROR -> {
                     if (isAdded)
                         (activity as MainActivity).dismissLoader()
-                    context?.toast(getString(it.messageId))
+                    context?.toast(getString(it.message!!))
                 }
             }
         }
 
+        viewModel.statusForDataUser.observe(viewLifecycleOwner) {
+            when (it.status) {
+                Status.LOADING -> {
+                    if (isAdded)
+                        (activity as MainActivity).showLoader()
+                }
+                Status.SUCCESS -> {
+                    if (isAdded)
+                        (activity as MainActivity).dismissLoader()
+                    if (it.data!!) {
+                        val intent = Intent(requireContext(), HomeActivity::class.java)
+                        startActivity(intent)
+                    } else {
+                        context?.toast(getString(R.string.user_register_error))
+                        if (isAdded)
+                            (activity as MainActivity).dismissLoader()
+                    }
+                }
+                Status.ERROR -> {
+                    if (isAdded)
+                        (activity as MainActivity).dismissLoader()
+                    context?.toast(getString(it.message!!))
+                }
+            }
+        }
+        viewModel.statusForUrl.observe(viewLifecycleOwner) {
+            when (it.status) {
+                Status.LOADING -> {
+                    if (isAdded)
+                        (activity as MainActivity).showLoader()
+                }
+                Status.SUCCESS -> {
+                    if (it.data != null) {
+                        viewModel.saveNewUser(createModel(it.data.toString()))
+                    } else {
+                        context?.toast(getString(R.string.user_register_error))
+                    }
+                }
+                Status.ERROR -> {
+                    if (isAdded)
+                        (activity as MainActivity).dismissLoader()
+                    context?.toast(getString(it.message!!))
+                }
+            }
+        }
+
+
+        /*     viewModel.status.observe(viewLifecycleOwner) {
+                 when (it.status) {
+                     Status.LOADING -> {
+                         if (isAdded)
+                             (activity as MainActivity).showLoader()
+                     }
+                      Status.SUCCESS -> {
+                         if (isAdded)
+                             (activity as MainActivity).dismissLoader()
+                         handleStatusSuccess(it)
+                     }
+                     Status.ERROR -> {
+                         if (isAdded)
+                             (activity as MainActivity).dismissLoader()
+                         context?.toast(getString(it.message!!))
+                     }
+                 }
+             }
+     */
         viewModel.setModel.observe(viewLifecycleOwner) {
             model = it
         }
@@ -148,7 +215,7 @@ class StepThreeRegisterFragment : Fragment() {
          }*/
     }
 
-    private fun handleStatusSuccess(responseStatus: ResponseStatus.Success<Any>) {
+    /*private fun handleStatusSuccess(responseStatus: Resource<Boolean>) {
         when(responseStatus.data){
             is Boolean -> {
                 if(responseStatus.data){
@@ -160,13 +227,13 @@ class StepThreeRegisterFragment : Fragment() {
                 }else
                     context?.toast("hubo un problema al crear la cuenta")
             }
-            is Uri->{
+            else ->{
                 val intent = Intent(requireContext(), HomeActivity::class.java)
                 startActivity(intent)
             }
             else -> return
         }
-    }
+    }*/
 
     /*private fun setSpinners() {
         ArrayAdapter.createFromResource(
@@ -306,11 +373,12 @@ class StepThreeRegisterFragment : Fragment() {
         responseLauncher.launch(intent)
     }
 
-    private fun createModel(): UserRegister {
+    private fun createModel(uri: String=""): UserRegister {
         return model.apply {
-            position = mBinding.spinnerPosition.selectedItemPosition.toString()
-            team = mBinding.spinnerTeam.selectedItemPosition.toString()
-            profilePhoto = imageUriLocal.toString()
+            position = mBinding.spinnerPosition.selectedItem.toString()
+            team = mBinding.spinnerTeam.selectedItem.toString()
+            profilePhoto=uri
+            employeeNumber = mBinding.inputNumEmployee.text.toString().toInt()
         }
     }
 

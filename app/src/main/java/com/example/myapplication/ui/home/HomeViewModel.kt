@@ -8,6 +8,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myapplication.data.models.*
+import com.example.myapplication.data.remote.response.UserHomeResponse
 import com.example.myapplication.data.statusNetwork.ResponseStatus
 import com.example.myapplication.domain.*
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -16,7 +17,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.time.LocalDate
 import javax.inject.Inject
-
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
@@ -33,8 +33,8 @@ class HomeViewModel @Inject constructor(
     private val _daySelected = MutableLiveData<String>()
     var daySelected: LiveData<String> = _daySelected
 
-    private val _users = MutableLiveData<ArrayList<User>>()
-    var users: LiveData<ArrayList<User>> = _users
+    private val _users = MutableLiveData<ArrayList<UserHomeResponse>>()
+    var users: LiveData<ArrayList<UserHomeResponse>> = _users
 
     private val _userEmails = MutableLiveData<ArrayList<String>>()
     var userEmails: LiveData<ArrayList<String>> = _userEmails
@@ -48,8 +48,8 @@ class HomeViewModel @Inject constructor(
     private val _weekSelected = MutableLiveData<List<Day>>()
     var weekSelected: LiveData<List<Day>> = _weekSelected
 
-    private val _accountData = MutableLiveData<User>()
-    var accountData: LiveData<User> = _accountData
+    private val _accountData = MutableLiveData<UserHomeResponse>()
+    var accountData: LiveData<UserHomeResponse> = _accountData
 
     private val _loader = MutableLiveData<Boolean>()
     var loader: LiveData<Boolean> = _loader
@@ -125,7 +125,7 @@ class HomeViewModel @Inject constructor(
             withContext(Dispatchers.IO) {
                 getUserInfoUseCase.userInfo(listEmails) {
                     _users.postValue(it)
-                    _isLoading.value = Status.SUCCESS
+                    _isLoading.postValue(Status.SUCCESS)
                 }
             }
         }
@@ -170,7 +170,7 @@ class HomeViewModel @Inject constructor(
     //fun getEmail(): String = mail.value!!
 
     fun clearLiveData() {
-        val clean = arrayListOf<User>()
+        val clean = arrayListOf<UserHomeResponse>()
         _users.value = clean
         _userEmails.value = arrayListOf()
     }

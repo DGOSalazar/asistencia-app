@@ -11,10 +11,11 @@ import androidx.fragment.app.activityViewModels
 import com.example.myapplication.R
 import com.example.myapplication.core.extensionFun.glide
 import com.example.myapplication.data.models.User
+import com.example.myapplication.data.remote.response.UserHomeResponse
 import com.example.myapplication.databinding.DialogUserCheckBinding
 import com.example.myapplication.ui.home.HomeViewModel
 
-class UserDialog(var user: User): DialogFragment(R.layout.dialog_user_check) {
+class UserDialog(var user: UserHomeResponse): DialogFragment(R.layout.dialog_user_check) {
     private lateinit var mBinding: DialogUserCheckBinding
     private val viewModel: HomeViewModel by activityViewModels()
 

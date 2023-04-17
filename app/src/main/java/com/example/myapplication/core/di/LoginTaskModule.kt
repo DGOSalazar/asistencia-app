@@ -1,4 +1,4 @@
-package com.example.myapplication.sys.di
+package com.example.myapplication.core.di
 
 import com.example.myapplication.domain.FirebaseRepository
 import com.example.myapplication.domain.FirebaseTask

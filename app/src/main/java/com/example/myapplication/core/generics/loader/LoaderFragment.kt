@@ -1,4 +1,4 @@
-package com.example.myapplication.sys.generics.loader
+package com.example.myapplication.core.generics.loader
 
 import android.annotation.SuppressLint
 import android.graphics.drawable.ColorDrawable

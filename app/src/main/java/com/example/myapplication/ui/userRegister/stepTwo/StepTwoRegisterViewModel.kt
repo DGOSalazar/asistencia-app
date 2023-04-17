@@ -4,8 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.myapplication.data.datasource.UserRegister
-import com.example.myapplication.sys.utils.isValidPhone
-import com.example.myapplication.sys.utils.isValidText
+import com.example.myapplication.core.utils.isValidPhone
+import com.example.myapplication.core.utils.isValidText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 

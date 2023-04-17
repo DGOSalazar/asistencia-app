@@ -1,4 +1,4 @@
-package com.example.myapplication.sys.utils
+package com.example.myapplication.core.utils
 
 object Constants {
     const val EMAIL_KEY = "email_key"

@@ -1,4 +1,4 @@
-package com.example.myapplication.data.statusNetwork
+package com.example.myapplication.core.utils.statusNetwork
 
 sealed class ResponseStatus<T> {
     class Loading<T> : ResponseStatus<T>()

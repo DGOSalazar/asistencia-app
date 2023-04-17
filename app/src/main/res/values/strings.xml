@@ -128,6 +128,7 @@
     <string name="password_il">Debe contener 8 caracteres</string>
     <string name="next">Siguiente</string>
     <string name="label_error_employee">Ingresa un número de empleado válido</string>
+    <string name="user_register_error">hubo un problema al crear la cuenta</string>
     <string name="error_get_location">Error al consultar localizacion de oficina</string>
     <string name="error_get_local_location">Error al consultar localizacion local</string>
 

@@ -10,6 +10,7 @@ import com.example.myapplication.R
 import com.example.myapplication.data.models.TeamGroup
 import com.example.myapplication.databinding.TeamViewBinding
 import com.example.myapplication.data.models.User
+import com.example.myapplication.data.remote.response.UserHomeResponse
 
 @Suppress("DEPRECATION")
 class TeamAdapter(var listTeams: ArrayList<TeamGroup>, private var click : (String) -> Unit)
@@ -77,7 +78,7 @@ class TeamAdapter(var listTeams: ArrayList<TeamGroup>, private var click : (Stri
                 notifyDataSetChanged()
             }
         }
-        private fun launchAdapter(users : ArrayList<User>){
+        private fun launchAdapter(users : ArrayList<UserHomeResponse>){
             mAdapter = ColaboratorAdapter(users)
             mBinding.rvUsers.apply {
                 adapter = mAdapter

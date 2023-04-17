@@ -1,79 +1,20 @@
-package com.example.myapplication.data.network
+package com.example.myapplication.data.remote.api
 
-import android.net.Uri
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
-import com.example.myapplication.data.models.LoginResult
-import com.example.myapplication.data.models.User
+import com.example.myapplication.core.utils.FirebaseClientModule
 import com.example.myapplication.data.models.*
-import com.example.myapplication.di.FirebaseClientModule
+import com.example.myapplication.data.remote.response.UserHomeResponse
 import com.google.firebase.auth.AuthResult
-import com.google.firebase.storage.StorageReference
+import com.google.firebase.firestore.ktx.toObject
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
-import kotlin.math.log
 
 class FirebaseServices @Inject constructor(
     private val firebase: FirebaseClientModule
 ) {
-    private var url: Uri? = null
-    private var isConfirmAssistAlready: Boolean = false
-
-    suspend fun login(mail: String, pass: String): LoginResult = runCatching {
-        firebase.auth.signInWithEmailAndPassword(mail, pass).await()
-    }.toLoginResult()
-
-    suspend fun register(email: String, pass: String) = runCatching {
-        firebase.auth.createUserWithEmailAndPassword(email, pass).await()
-    }
-
-    fun uploadPhoto(uri: Uri) = runCatching {
-       /* val ref: StorageReference = firebase.dataStorage.child("image${uri.lastPathSegment}")
-        val uploadTask = ref.putFile(uri)
-
-        uploadTask.continueWithTask { task ->
-            if (!task.isSuccessful) {
-                task.exception?.let {
-                    throw it
-                }
-            }
-            ref.downloadUrl
-        }.addOnFailureListener {
-            Log.d("Upload", "error to upload image")
-        }.addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                url = task.result!!
-                Log.d("Upload", "successfully upload")
-            }
-        }*/
-    }
-
-    suspend fun getUrlF(): Uri? = run {
-        while (url == null) {
-            delay(1000)
-        }
-        url
-    }
-
-    fun registerUserData(user: User) = run {
-        firebase.userCollection.document(user.email).set(
-            hashMapOf(
-                "email" to user.email,
-                "name" to user.name,
-                "lastName1" to user.lastName1,
-                "lastName2" to user.lastName2,
-                "position" to user.position,
-                "birthDate" to user.birthDate,
-                "team" to user.team,
-                "profilePhoto" to user.profilePhoto,
-                "phone" to user.phone,
-                "employee" to user.employee,
-                "assistDay" to user.assistDay
-            )
-        )
-    }.isSuccessful
 
     fun updateUsersList(currentDay: String, emails: ArrayList<String>) = run {
         firebase.dayCollection.document(currentDay).set(
@@ -84,28 +25,18 @@ class FirebaseServices @Inject constructor(
         )
     }
 
-    fun getUserInfo(listEmail: ArrayList<String>, user: (ArrayList<User>) -> Unit) = runCatching {
-        var user1: User
-        val list = arrayListOf<User>()
-        for (i in listEmail) {
-            firebase.userCollection.whereEqualTo("email", i).get().addOnSuccessListener {
-                it.forEach { i ->
-                    user1 = User(
-                        i.get("email") as String,
-                        i.get("name") as String,
-                        i.get("lastName1") as String,
-                        i.get("lastName2") as String,
-                        i.get("position") as String,
-                        i.get("birthDate") as String,
-                        i.get("team") as String,
-                        i.get("profilePhoto") as String,
-                        i.get("phone") as String,
-                        i.get("employee") as Long
-                    )
-                    list.add(user1)
-                }
-                user(list)
+    suspend fun getUserInfo(
+        listEmail: ArrayList<String>,
+        users: (ArrayList<UserHomeResponse>) -> Unit
+    ) {
+        val list = arrayListOf<UserHomeResponse>()
+        listEmail.forEach { i ->
+            val documents = firebase.userCollection.whereEqualTo("email", i).get().await().documents
+            documents.forEach { d ->
+                val netUser = d.toObject<UserHomeResponse>()
+                list.add(netUser!!)
             }
+            users(list)
         }
     }
 
@@ -213,26 +144,17 @@ class FirebaseServices @Inject constructor(
         return notifications
     }
 
-    fun getAllUsers(users: (ArrayList<User>) -> Unit) {
-        val list: ArrayList<User> = arrayListOf()
-        var user1 = User()
-        firebase.userCollection.get().addOnSuccessListener {
-            it.forEach { i ->
-                user1 = User(
-                    i.get("email") as String,
-                    i.get("name") as String,
-                    i.get("lastName1") as String,
-                    i.get("lastName2") as String,
-                    i.get("position") as String,
-                    i.get("birthDate") as String,
-                    i.get("team") as String,
-                    i.get("profilePhoto") as String,
-                    i.get("phone") as String,
-                    i.get("employee") as Long
-                )
-                list.add(user1)
+    suspend fun getAllUsers(): ArrayList<UserHomeResponse>? {
+        val list: ArrayList<UserHomeResponse> = arrayListOf()
+        val snap = firebase.userCollection.get().await()
+        val documents = snap.documents
+        return documents?.let {
+            it.forEach { document ->
+                val netUser = document.toObject<UserHomeResponse>()
+                netUser?.let { it1 -> list.add(it1) }
             }
-            users(list)
+            list
         }
     }
+
 }

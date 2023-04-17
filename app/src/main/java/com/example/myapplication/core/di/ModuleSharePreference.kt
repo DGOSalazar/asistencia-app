@@ -1,4 +1,4 @@
-package com.example.myapplication.sys.di
+package com.example.myapplication.core.di
 
 import android.content.Context
 import android.content.SharedPreferences

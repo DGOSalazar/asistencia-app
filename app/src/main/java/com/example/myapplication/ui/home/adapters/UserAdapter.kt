@@ -11,9 +11,10 @@ import com.example.myapplication.R
 import com.example.myapplication.core.dialog.UserDialog
 import com.example.myapplication.databinding.ColaboratorViewBinding
 import com.example.myapplication.data.models.User
+import com.example.myapplication.data.remote.response.UserHomeResponse
 import kotlinx.coroutines.NonDisposableHandle.parent
 
-class UserAdapter(private var user: List<User>, private var click: (User) -> Unit): RecyclerView.Adapter<UserAdapter.ViewHolder>() {
+class UserAdapter(private var user: List<UserHomeResponse>, private var click: (UserHomeResponse) -> Unit): RecyclerView.Adapter<UserAdapter.ViewHolder>() {
 
     inner class ViewHolder(view: View):RecyclerView.ViewHolder(view){
         private var mBinding= ColaboratorViewBinding.bind(view)
@@ -37,7 +38,7 @@ class UserAdapter(private var user: List<User>, private var click: (User) -> Uni
             }
         }
 
-        fun setClick(click: (User) -> Unit){
+        fun setClick(click: (UserHomeResponse) -> Unit){
             mBinding.root.setOnClickListener {
                 click(user[adapterPosition])
             }

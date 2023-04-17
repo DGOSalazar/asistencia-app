@@ -14,9 +14,9 @@ import androidx.navigation.fragment.findNavController
 import com.example.myapplication.R
 import com.example.myapplication.data.datasource.UserRegister
 import com.example.myapplication.databinding.FragmentStepOneRegisterBinding
-import com.example.myapplication.sys.utils.checkIfIsValidEmail
-import com.example.myapplication.sys.utils.checkIfIsValidPassword
-import com.example.myapplication.sys.utils.showAndHideError
+import com.example.myapplication.core.utils.checkIfIsValidEmail
+import com.example.myapplication.core.utils.checkIfIsValidPassword
+import com.example.myapplication.core.utils.showAndHideError
 import dagger.hilt.android.AndroidEntryPoint
 
 

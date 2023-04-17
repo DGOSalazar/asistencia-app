@@ -14,13 +14,11 @@ import androidx.navigation.findNavController
 import com.example.myapplication.R
 import com.example.myapplication.R.color.*
 import com.example.myapplication.core.extensionFun.toast
-import com.example.myapplication.data.datasource.Login
-import com.example.myapplication.data.datasource.UserRegister
-import com.example.myapplication.data.statusNetwork.ResponseStatus
+import com.example.myapplication.core.utils.Status
+import com.example.myapplication.core.utils.checkIfIsValidEmail
+import com.example.myapplication.core.utils.checkIfIsValidPassword
+import com.example.myapplication.core.utils.showAndHideError
 import com.example.myapplication.databinding.FragmentLoginBinding
-import com.example.myapplication.sys.utils.checkIfIsValidEmail
-import com.example.myapplication.sys.utils.checkIfIsValidPassword
-import com.example.myapplication.sys.utils.showAndHideError
 import com.example.myapplication.ui.MainActivity
 import com.example.myapplication.ui.home.HomeActivity
 import dagger.hilt.android.AndroidEntryPoint
@@ -102,27 +100,27 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
     @RequiresApi(Build.VERSION_CODES.S)
     private fun subscribeLiveData() {
         viewModel.status.observe(viewLifecycleOwner) {
-            when (it) {
-                is ResponseStatus.Loading -> {
+            when (it.status) {
+                Status.LOADING -> {
                     if (isAdded)
                         (activity as MainActivity).showLoader()
                 }
-                is ResponseStatus.Success -> {
+                Status.SUCCESS -> {
                     if (isAdded)
                         (activity as MainActivity).dismissLoader()
 
                     viewModel.saveLogin(
-                        (it.data as Login).email,
+                        it.data!!.email,
                         mBinding.inputPass.text.toString()
                     )
                     val intent = Intent(requireContext(), HomeActivity::class.java)
                     startActivity(intent)
                     requireActivity().finish()
                 }
-                is ResponseStatus.Error -> {
+               Status.ERROR -> {
                     if (isAdded)
                         (activity as MainActivity).dismissLoader()
-                    context?.toast(getString(it.messageId))
+                    context?.toast(getString(it.message!!))
                 }
             }
         }

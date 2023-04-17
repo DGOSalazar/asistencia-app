@@ -1,4 +1,4 @@
-package com.example.myapplication.sys.di
+package com.example.myapplication.core.di
 
 import android.content.Context
 import dagger.Module
@@ -7,11 +7,11 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 
-@Module
 @InstallIn(SingletonComponent::class)
+@Module
 class UtilModule {
     @Provides
-    fun provideContext(@ApplicationContext context: Context): Context{
+    fun providesContext(@ApplicationContext context: Context): Context{
         return context
     }
 }

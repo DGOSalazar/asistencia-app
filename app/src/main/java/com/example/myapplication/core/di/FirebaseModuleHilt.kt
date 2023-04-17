@@ -1,6 +1,6 @@
-package com.example.myapplication.sys.di
+package com.example.myapplication.core.di
 
-import com.example.myapplication.sys.utils.Constants
+import com.example.myapplication.core.utils.Constants
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
@@ -19,7 +19,7 @@ object FirebaseModuleHilt {
     @Provides
     fun provideFirebaseAuthInstance(): FirebaseAuth = FirebaseAuth.getInstance()
 
-    @Singleton
+
     @Provides
     fun provideFirebaseReferenceStorage(): StorageReference {
         val firebaseStorage = FirebaseStorage.getInstance()

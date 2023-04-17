@@ -7,6 +7,8 @@ import com.example.myapplication.data.datasource.LoginDTO
 import com.example.myapplication.data.datasource.UserRegister
 import com.example.myapplication.data.datasource.mappers.LoginMapper
 import com.example.myapplication.data.datasource.mappers.UserRegisterMapper
+import com.example.myapplication.core.utils.statusNetwork.ResponseStatus
+import com.example.myapplication.core.utils.statusNetwork.makeCall
 import com.example.myapplication.data.models.AttendanceDays
 import com.example.myapplication.data.models.LocationModel
 import com.example.myapplication.data.statusNetwork.ResponseStatus
@@ -122,8 +124,6 @@ class FirebaseRepository @Inject constructor(
                 }.await()
             isSuccess
         }
-
-
     private suspend fun sendRegisterUser(user: UserRegister): ResponseStatus<Boolean> =
         makeCall {
             var isSuccess = false

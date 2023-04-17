@@ -18,8 +18,7 @@ import com.example.myapplication.core.extensionFun.toast
 import com.example.myapplication.data.models.AttendanceDays
 import com.example.myapplication.data.models.Day
 import com.example.myapplication.data.models.Month
-import com.example.myapplication.data.models.User
-import com.example.myapplication.data.statusNetwork.ResponseStatus
+import com.example.myapplication.data.remote.response.UserHomeResponse
 import com.example.myapplication.databinding.FragmentAssistenceMainBinding
 import com.example.myapplication.sys.utils.Tools
 import com.example.myapplication.ui.home.adapters.CalendarAdapter
@@ -53,7 +52,7 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main){
     var localDate: LocalDate= LocalDate.now()
     private var actualMonth = CURRENT_MONTH
     private var accountEmail = ""
-    private var userData: User = User()
+    private var userData: UserHomeResponse = UserHomeResponse()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -149,7 +148,7 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main){
     }
 
     @SuppressLint("SetTextI18n")
-    private fun updateUsersList(emailList:ArrayList<User>) {
+    private fun updateUsersList(emailList:ArrayList<UserHomeResponse>) {
         mBinding.tvAssist.text = "${emailList.size} Asistentes"
         mUserAdapter = UserAdapter(emailList){
             clickUser(it)
@@ -165,7 +164,7 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main){
     }
 
     @SuppressLint("SetTextI18n", "NotifyDataSetChanged")
-    private fun setHeader(user: User) {
+    private fun setHeader(user: UserHomeResponse) {
         mBinding.tvWelcome.text = "Hola ${user.name}"
         userData = user
         mBinding.tvDate.text = String.format(getString(R.string.welcome_date),
@@ -214,6 +213,7 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main){
         mBinding.vNext.setOnClickListener{
             nextMonthAction()
         }
+
         mBinding.tvMenuIcon.setOnClickListener{
             context?.toast("TopMenu")
         }
@@ -290,7 +290,7 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main){
         return date.format(formatter)
     }
 
-    private fun clickUser(u: User){
+    private fun clickUser(u: UserHomeResponse){
         UserDialog(u).show(parentFragmentManager,"Yep")
     }
     private fun click(day:Day){
@@ -298,6 +298,4 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main){
         viewModel.setObjectDay(day)
         findNavController().navigate(AssistenceMainFragmentDirections.actionAssistenceMainFragmentToAssistenceWeekFragment())
     }
-
-
 }
