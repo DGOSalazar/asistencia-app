@@ -18,7 +18,7 @@ import com.example.myapplication.R
 import com.example.myapplication.core.extensionFun.toast
 import com.example.myapplication.core.notification.AlarmReceiver
 import com.example.myapplication.core.notification.AlarmReceiver.Companion.NOTIFICATION_ID
-import com.example.myapplication.sys.generics.loader.LoaderFragment
+import com.example.myapplication.core.generics.loader.LoaderFragment
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.DayOfWeek
 import java.time.LocalDate

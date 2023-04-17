@@ -3,8 +3,8 @@ package com.example.myapplication.ui.userRegister.stepOne
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.myapplication.sys.utils.checkIfIsValidEmail
-import com.example.myapplication.sys.utils.checkIfIsValidPassword
+import com.example.myapplication.core.utils.checkIfIsValidEmail
+import com.example.myapplication.core.utils.checkIfIsValidPassword
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 

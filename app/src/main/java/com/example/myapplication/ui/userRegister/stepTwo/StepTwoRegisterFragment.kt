@@ -14,9 +14,9 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.myapplication.R
+import com.example.myapplication.core.utils.*
 import com.example.myapplication.data.datasource.UserRegister
 import com.example.myapplication.databinding.FragmentStepTwoRegisterBinding
-import com.example.myapplication.sys.utils.*
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
 

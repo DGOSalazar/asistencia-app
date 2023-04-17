@@ -7,6 +7,10 @@ import com.example.myapplication.data.datasource.LoginDTO
 import com.example.myapplication.data.datasource.UserRegister
 import com.example.myapplication.data.datasource.mappers.LoginMapper
 import com.example.myapplication.data.datasource.mappers.UserRegisterMapper
+import com.example.myapplication.core.utils.statusNetwork.ResponseStatus
+import com.example.myapplication.core.utils.statusNetwork.makeCall
+import com.example.myapplication.data.models.AttendanceDays
+import com.example.myapplication.data.models.LocationModel
 import com.example.myapplication.data.statusNetwork.ResponseStatus
 import com.example.myapplication.data.statusNetwork.makeCall
 import com.google.firebase.auth.FirebaseAuth
@@ -27,6 +31,7 @@ interface FirebaseTask {
     suspend fun doUserRegister(user: UserRegister): ResponseStatus<Boolean>
     suspend fun doAuthRegister(email: String, pass: String): ResponseStatus<Boolean>
     suspend fun doUploadImage(uri: Uri): ResponseStatus<Uri>
+    suspend fun doGetOfficeLocation(): ResponseStatus<LocationModel>
 }
 
 @Singleton
@@ -86,6 +91,19 @@ class FirebaseRepository @Inject constructor(
         }
     }
 
+    override suspend fun doGetOfficeLocation(): ResponseStatus<LocationModel> {
+        return withContext(Dispatchers.IO) {
+            val firebaseLocationRequest = async { getOfficeLocation() }
+            val firebaseLocationResponse = firebaseLocationRequest.await()
+
+            if (firebaseLocationResponse is ResponseStatus.Success) {
+                ResponseStatus.Success(firebaseLocationResponse.data)
+            } else {
+                ResponseStatus.Error(R.string.error_get_location)
+            }
+        }
+    }
+
     private suspend fun getDoLogin(email: String, pass: String): ResponseStatus<LoginDTO> =
         makeCall {
             val result = firebaseAuth.signInWithEmailAndPassword(email, pass).await()
@@ -106,8 +124,6 @@ class FirebaseRepository @Inject constructor(
                 }.await()
             isSuccess
         }
-
-
     private suspend fun sendRegisterUser(user: UserRegister): ResponseStatus<Boolean> =
         makeCall {
             var isSuccess = false
@@ -126,4 +142,18 @@ class FirebaseRepository @Inject constructor(
             val uploadTask = ref.putFile(uri).await()
             uploadTask
         }
+
+    private suspend fun getOfficeLocation(): ResponseStatus<LocationModel> =
+        makeCall {
+            val firebaseLocation = LocationModel()
+            Firebase.firestore.collection("office-location").get()
+                .addOnSuccessListener {
+                    it.forEach { j ->
+                        firebaseLocation.latitude = (j.get("latitude") as String).toDouble()
+                        firebaseLocation.longitude = (j.get("longitude") as String).toDouble()
+                    }
+                }.await()
+            firebaseLocation
+        }
+
 }

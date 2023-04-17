@@ -1,6 +1,6 @@
 package com.example.myapplication.domain
 
-import com.example.myapplication.data.network.FirebaseServices
+import com.example.myapplication.data.remote.api.FirebaseServices
 import javax.inject.Inject
 
 class EnrollUserToDayUseCase @Inject constructor(

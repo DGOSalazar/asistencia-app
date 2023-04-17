@@ -7,7 +7,7 @@ import android.os.Looper
 import androidx.core.app.ActivityCompat
 import com.example.myapplication.data.models.AssistConfirm
 import com.example.myapplication.data.models.UserOk
-import com.example.myapplication.data.network.FirebaseServices
+import com.example.myapplication.data.remote.api.FirebaseServices
 import com.google.android.gms.location.*
 import kotlinx.coroutines.delay
 import javax.inject.Inject

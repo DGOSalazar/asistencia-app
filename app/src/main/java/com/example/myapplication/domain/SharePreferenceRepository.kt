@@ -2,7 +2,7 @@ package com.example.myapplication.domain
 
 import android.annotation.SuppressLint
 import android.content.SharedPreferences
-import com.example.myapplication.sys.utils.Constants
+import com.example.myapplication.core.utils.Constants
 import javax.inject.Inject
 import javax.inject.Singleton
 
