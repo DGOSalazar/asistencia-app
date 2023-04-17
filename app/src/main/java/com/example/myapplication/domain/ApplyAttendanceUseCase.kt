@@ -1,7 +1,7 @@
 package com.example.myapplication.domain
 
 import com.example.myapplication.R
-import com.example.myapplication.data.statusNetwork.ResponseStatus
+import com.example.myapplication.core.utils.statusNetwork.ResponseStatus
 import com.example.myapplication.sys.utils.Tools
 import javax.inject.Inject
 
@@ -9,7 +9,7 @@ class ApplyAttendanceUseCase @Inject constructor(
     private val tools: Tools,
     private val repository: FirebaseRepository
 ) {
-    suspend operator fun invoke(): ResponseStatus<Boolean>   {
+    suspend operator fun invoke(): ResponseStatus<Boolean> {
         val localLocation = tools.getLocation() ?: return ResponseStatus.Error(R.string.error_get_local_location)
 
         val response = repository.doGetOfficeLocation()

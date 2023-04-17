@@ -11,8 +11,6 @@ import com.example.myapplication.core.utils.statusNetwork.ResponseStatus
 import com.example.myapplication.core.utils.statusNetwork.makeCall
 import com.example.myapplication.data.models.AttendanceDays
 import com.example.myapplication.data.models.LocationModel
-import com.example.myapplication.data.statusNetwork.ResponseStatus
-import com.example.myapplication.data.statusNetwork.makeCall
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
