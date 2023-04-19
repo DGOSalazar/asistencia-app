@@ -17,5 +17,6 @@ class FirebaseClientModule @Inject constructor() {
     val notifyCollection = Firebase.firestore.collection(Collection.NOTIFY_COLLECTION.value)
     val dayConfirmCollection = Firebase.firestore.collection(Collection.DAY_CONFIRMATION_COLLECTION.value)
     val storage= FirebaseStorage.getInstance().getReference(Constants.PATH_FIREBASE_STORAGE).child(Constants.PATH_CHILD_FIREBASE_STORAGE)
-   // val dataStorage = FirebaseStorage.getInstance().getReference("profilePhotos").child("usersPhotos")
+    val attendanceHistory = Firebase.firestore.collection("AttendanceHistory")
+// val dataStorage = FirebaseStorage.getInstance().getReference("profilePhotos").child("usersPhotos")
 }

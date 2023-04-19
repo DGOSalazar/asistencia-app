@@ -5,7 +5,7 @@ import com.example.myapplication.core.utils.statusNetwork.ResponseStatus
 import com.example.myapplication.sys.utils.Tools
 import javax.inject.Inject
 
-class ApplyAttendanceUseCase @Inject constructor(
+class ValidateGeolocationUseCase @Inject constructor(
     private val tools: Tools,
     private val repository: FirebaseRepository
 ) {
