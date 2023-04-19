@@ -77,7 +77,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:backgroundTint="@color/black"
-                android:entries="@array/spinnerItemsPositions"
                 android:spinnerMode="dropdown" />
         </LinearLayout>
 
@@ -96,7 +95,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:backgroundTint="@color/black"
-                android:entries="@array/spinnerItemsTeam"
                 android:spinnerMode="dropdown" />
         </LinearLayout>
 

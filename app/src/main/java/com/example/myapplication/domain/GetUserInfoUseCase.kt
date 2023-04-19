@@ -12,7 +12,10 @@ import javax.inject.Inject
 class GetUserInfoUseCase @Inject constructor(
     private val firebase: FirebaseServices
 ) {
-   suspend fun userInfo(listEmails: ArrayList<String>, users: (ArrayList<UserHomeResponse>) -> Unit) =
+    suspend fun userInfo(
+        listEmails: ArrayList<String>,
+        users: (ArrayList<UserHomeResponse>) -> Unit
+    ) =
         firebase.getUserInfo(listEmails, users)
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -34,7 +37,6 @@ class GetUserInfoUseCase @Inject constructor(
             firebase.getAllUsers()?.let {
                 res = it
             }
-
 
 
             res.forEach { user ->

@@ -27,7 +27,9 @@ class HomeViewModel @Inject constructor(
     private val getAllAttendanceDaysByMonthUseCase: GetAllAttendanceDaysByMonthUseCase,
     private val getLocationUseCase: GetLocationUseCase,
     private val sharePreferenceRepository: SharePreferenceRepository,
-    private val newApplyAttendanceUseCase: ApplyAttendanceUseCase
+    private val validateGeolocationUseCase: ValidateGeolocationUseCase,
+    private val attendanceHistoryRegisterUseCase: AttendanceHistoryRegisterUseCase,
+    private val showOrHideAttendanceButton:ShowOrHideAttendanceButton
     ):ViewModel() {
 
     private val _daySelected = MutableLiveData<String>()
@@ -71,6 +73,13 @@ class HomeViewModel @Inject constructor(
 
     private var _status = MutableLiveData<ResponseStatus<Any>?>()
     val status: LiveData<ResponseStatus<Any>?> get() = _status
+
+    private var _statusHistoryRegister = MutableLiveData<ResponseStatus<Boolean>?>()
+    val statusHistoryRegister: LiveData<ResponseStatus<Boolean>?> get() = _statusHistoryRegister
+
+    private var _showOrHideAttendanceBtn = MutableLiveData<ResponseStatus<Boolean>?>()
+    val showOrHideAttendanceBtn: LiveData<ResponseStatus<Boolean>?> get() = _showOrHideAttendanceBtn
+
 
 
     fun confirmStatus(email:String, day: String){
@@ -184,12 +193,28 @@ class HomeViewModel @Inject constructor(
     @Suppress("UNCHECKED_CAST")
     fun applyAttendance(){
         viewModelScope.launch {
-            _status.value = newApplyAttendanceUseCase.invoke() as ResponseStatus<Any>
+            _status.value = validateGeolocationUseCase.invoke() as ResponseStatus<Any>
         }
     }
 
-    fun cleanStatus() {
+    fun cleanLiveData() {
         _status.value= null
+        _showOrHideAttendanceBtn.value = null
+        _statusHistoryRegister.value=null
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    fun registerHistoryAttendance(email: String, date:String) {
+        viewModelScope.launch {
+            val request = AttendanceHistoryModel(email, date, 2)
+            _statusHistoryRegister.value = attendanceHistoryRegisterUseCase.invoke(request)
+        }
+    }
+
+    fun showOrHideAttendanceButton(email:String, date: String){
+        viewModelScope.launch {
+            _showOrHideAttendanceBtn.value = showOrHideAttendanceButton.invoke(email = email, currentDate = date)
+        }
     }
 
 

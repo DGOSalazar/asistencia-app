@@ -3,10 +3,9 @@ package com.example.myapplication.data.remote.webDS
 import android.net.Uri
 import com.example.myapplication.R
 import com.example.myapplication.core.utils.Resource
-import com.example.myapplication.core.utils.Status
+import com.example.myapplication.core.utils.statusNetwork.ResponseStatus
 import com.example.myapplication.data.remote.api.FirebaseApiService
 import com.example.myapplication.data.remote.request.UserRegisterRequest
-import com.example.myapplication.core.utils.statusNetwork.ResponseStatus
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.withContext
@@ -48,4 +47,9 @@ class UserRegisterWebDS @Inject constructor(private val service: FirebaseApiServ
             Resource.error(R.string.upload_image_error)
         }
     }
+
+    suspend fun getAllPositions() = service.getAllPositions()
+    suspend fun getAllTeams() = service.getAllTeams()
+
+
 }

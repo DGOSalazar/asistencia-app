@@ -2,17 +2,19 @@ package com.example.myapplication.ui.userRegister.stepThree
 
 import android.annotation.SuppressLint
 import android.net.Uri
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.example.myapplication.core.utils.Resource
 import com.example.myapplication.core.utils.isValidCollaboratorNumber
 import com.example.myapplication.core.utils.isValidSpinner
+import com.example.myapplication.core.utils.statusNetwork.Resource2
 import com.example.myapplication.data.datasource.UserRegister
 import com.example.myapplication.domain.UserRegisterRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collect
+
 import kotlinx.coroutines.launch
+
 import javax.inject.Inject
 
 @HiltViewModel
@@ -41,8 +43,12 @@ class StepThreeRegisterViewModel @Inject constructor(
     private var _statusForDataUser = MutableLiveData<Resource<Boolean>>()
     val statusForDataUser: LiveData<Resource<Boolean>> get() = _statusForDataUser
 
-    private var _statusForDoUser  = MutableLiveData<Resource<Boolean>>()
+    private var _statusForDoUser = MutableLiveData<Resource<Boolean>>()
     val statusForDoUser: LiveData<Resource<Boolean>> get() = _statusForDoUser
+
+
+    private var _positions = MutableLiveData<Resource2<ArrayList<String>>>()
+    val positionsLiveData: LiveData<Resource2<ArrayList<String>>> get() = _positions
 
     fun setModel(userRegister: UserRegister) {
         _setModel.value = userRegister
@@ -52,7 +58,7 @@ class StepThreeRegisterViewModel @Inject constructor(
         _setNameUser.value = name
     }
 
-    fun validateInputs(position: Int, team: Int, employee: String,  imageUriLocal: Uri?) {
+    fun validateInputs(position: Int, team: Int, employee: String, imageUriLocal: Uri?) {
         _activeButton.value =
             position.isValidSpinner() && team.isValidSpinner() && employee.isValidCollaboratorNumber() && imageUriLocal != null
     }
@@ -63,16 +69,17 @@ class StepThreeRegisterViewModel @Inject constructor(
 
     @Suppress("UNCHECKED_CAST")
     @SuppressLint("NullSafeMutableLiveData")
-    fun createAccount(user: UserRegister){
+    fun createAccount(user: UserRegister) {
         viewModelScope.launch {
-            _statusForDoUser.value=Resource.loading(null)
-            _statusForDoUser.value = userRegisterRepository.doAuthRegister(user.email, user.password)
+            _statusForDoUser.value = Resource.loading(null)
+            _statusForDoUser.value =
+                userRegisterRepository.doAuthRegister(user.email, user.password)
         }
     }
 
     @Suppress("UNCHECKED_CAST")
     @SuppressLint("NullSafeMutableLiveData")
-    fun saveNewUser(model:UserRegister) {
+    fun saveNewUser(model: UserRegister) {
         viewModelScope.launch {
             _statusForDataUser.value = userRegisterRepository.doUserRegister(model)
         }
@@ -80,11 +87,22 @@ class StepThreeRegisterViewModel @Inject constructor(
 
     @Suppress("UNCHECKED_CAST")
     @SuppressLint("NullSafeMutableLiveData")
-    fun upLoadImage(uri:Uri) {
+    fun upLoadImage(uri: Uri) {
         viewModelScope.launch {
             _statusForImage.value = userRegisterRepository.doUploadImage(uri)
         }
     }
 
+
+    fun getAllPositions() = liveData(Dispatchers.IO) {
+        userRegisterRepository.getAllPositions().collect { reponse ->
+            emit(reponse)
+        }
+    }
+    fun getAllTeams() = liveData(Dispatchers.IO) {
+        userRegisterRepository.getAllTeams().collect{response ->
+            emit(response)
+        }
+    }
 
 }

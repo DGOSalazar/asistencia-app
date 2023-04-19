@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.myapplication.core.utils.Resource
 import com.example.myapplication.core.utils.checkIfIsValidEmail
 import com.example.myapplication.core.utils.checkIfIsValidPassword
+import com.example.myapplication.data.models.LoginDomainModel
 import com.example.myapplication.data.remote.response.LoginResponse
 import com.example.myapplication.domain.FirebaseRepository
 import com.example.myapplication.domain.LoginRepository
@@ -18,13 +19,12 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val repository:FirebaseRepository,
     private val loginRepository: LoginRepository,
     private val sharePreferenceRepository: SharePreferenceRepository
 ) : ViewModel() {
 
-    private var _status = MutableLiveData<Resource<LoginResponse>>()
-    val status: LiveData<Resource<LoginResponse>> get() = _status
+    private var _status = MutableLiveData<Resource<LoginDomainModel>>()
+    val status: LiveData<Resource<LoginDomainModel>> get() = _status
 
     private var _activeButton = MutableLiveData<Boolean>()
     val activeButton: LiveData<Boolean> get() = _activeButton
@@ -42,7 +42,7 @@ class LoginViewModel @Inject constructor(
 
     @Suppress("UNCHECKED_CAST")
     @SuppressLint("NullSafeMutableLiveData")
-    private fun handelResponseStatus(apiResponseStatus: Resource<LoginResponse>) {
+    private fun handelResponseStatus(apiResponseStatus: Resource<LoginDomainModel>) {
         _status.value = apiResponseStatus
     }
 
