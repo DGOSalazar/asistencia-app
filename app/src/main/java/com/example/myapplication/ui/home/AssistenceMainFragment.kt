@@ -2,8 +2,10 @@ package com.example.myapplication.ui.home
 
 import android.annotation.SuppressLint
 import android.app.AlertDialog
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.view.*
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
@@ -59,7 +61,7 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main){
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         accountEmail = viewModel.getEmail()
-        viewModel.cleanStatus()
+        viewModel.cleanLiveData()
         // TODO: recuperar desde el viewModel
     }
 
@@ -102,7 +104,7 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main){
         }
 
         viewModel.status.observe(viewLifecycleOwner) {
-            if (it==null)
+            if (it == null)
                 return@observe
             when (it) {
                 is ResponseStatus.Loading -> {
@@ -121,27 +123,70 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main){
                 }
             }
         }
+
+        viewModel.statusHistoryRegister.observe(viewLifecycleOwner){
+            if (it == null)
+                return@observe
+            when (it) {
+                is ResponseStatus.Loading -> {
+                    if (isAdded)
+                        (activity as HomeActivity).showLoader()
+                }
+                is ResponseStatus.Success -> {
+                    if (isAdded)
+                        (activity as HomeActivity).dismissLoader()
+                    showAlert("registro exitoso"){}
+                    viewModel.showOrHideAttendanceButton( accountEmail, getCurrentDate())
+                }
+                is ResponseStatus.Error -> {
+                    if (isAdded)
+                        (activity as HomeActivity).dismissLoader()
+                    context?.toast(getString(it.messageId))
+                }
+            }
+        }
+
+        viewModel.showOrHideAttendanceBtn.observe(viewLifecycleOwner){
+            if (it == null)
+                return@observe
+            when (it) {
+                is ResponseStatus.Loading -> {
+                    if (isAdded)
+                        (activity as HomeActivity).showLoader()
+                }
+                is ResponseStatus.Success -> {
+                    if (isAdded)
+                        (activity as HomeActivity).dismissLoader()
+                    mBinding.fabConfirmAsit.visibility = if (it.data) View.VISIBLE else View.GONE
+                }
+                is ResponseStatus.Error -> {
+                    if (isAdded)
+                        (activity as HomeActivity).dismissLoader()
+                    context?.toast(getString(it.messageId))
+                }
+            }
+        }
     }
 
     private fun handleStatusSuccess(responseStatus: ResponseStatus.Success<Any>) {
         when(responseStatus.data){
             is Boolean -> {
                 if(responseStatus.data){
-                    mBinding.fabConfirmAsit.visibility = View.GONE
-                    showAlert("Asistencia exitosa!!")
+                    viewModel.registerHistoryAttendance(accountEmail, getCurrentDate())
                 }
                 else
-                    showAlert("Debe de estar en oficina para marcar asistencia")
+                    showAlert(getString(R.string.error_local_location_not_match)){ }
             }
             else -> return
         }
     }
 
-    private fun showAlert(message:String) {
+    private fun showAlert(message:String, action:() -> Unit) {
         val builder = AlertDialog.Builder(context)
         builder.setTitle("Title")
         builder.setMessage(message)
         builder.setPositiveButton("OK") { view, _ ->
+            action()
             view.dismiss()
         }
         val dialog = builder.create()
@@ -179,13 +224,23 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main){
         mCalendarAdapter.statusMonth = actualMonth
         mCalendarAdapter.assistedDays = getDaysToAttend(daysToAttend)
         viewModel.setCalendarDays(localDate, localDate.minusMonths(1), daysToAttend, actualMonth)
-        showAttendanceButton(daysToAttend)
+        //showAttendanceButton(daysToAttend)
+        val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy")
+        val currentDate = LocalDate.now().format(formatter)
+        viewModel.showOrHideAttendanceButton( accountEmail, currentDate)
     }
 
     private fun showAttendanceButton(daysToAttend: List<AttendanceDays>) {
         val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy")
         val currentDate = LocalDate.now().format(formatter)
-        val isAttendanceDay = daysToAttend.any {  it.currentDay == currentDate}
+
+        val isAttendanceDay = daysToAttend.any {
+            if (it.currentDay == currentDate)
+                it.emails.any{ email -> email == accountEmail }
+            else
+                false
+        }
+
         if (isAttendanceDay)
             mBinding.fabConfirmAsit.visibility = View.VISIBLE
         else
@@ -194,7 +249,6 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main){
 
     private fun getDaysToAttend(daysToAttend: List<AttendanceDays>): List<Int> {
         val userAssistanceDays = arrayListOf<Int>()
-
         daysToAttend.forEach{ day ->
             if(day.emails.any {it == accountEmail}) {
                 val date = day.currentDay.split("-")
@@ -222,7 +276,9 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main){
             if(tools.isEnableGeolocation())
                 viewModel.applyAttendance()
             else
-                context?.toast("Gps apagado")
+                showAlert(getString(R.string.gps_desable_message)){
+                    startActivity( Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
+                }
         }
     }
 
@@ -298,5 +354,10 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main){
         viewModel.setDay(day.date)
         viewModel.setObjectDay(day)
         findNavController().navigate(AssistenceMainFragmentDirections.actionAssistenceMainFragmentToAssistenceWeekFragment())
+    }
+
+    private fun getCurrentDate(): String {
+        val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy")
+        return LocalDate.now().format(formatter)
     }
 }

@@ -8,6 +8,7 @@ import android.location.LocationManager
 import androidx.core.app.ActivityCompat
 import com.example.myapplication.data.models.LocationModel
 import com.google.android.gms.location.*
+import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 
@@ -20,11 +21,14 @@ class Tools @Inject constructor(private val context: Context){
     }
 
     @SuppressLint("MissingPermission")
-    fun getLocation(): LocationModel? {
+    suspend fun getLocation(): LocationModel? {
         if(isLocationPermissionEnable())
             return null
 
-        val location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+        //val location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+        val fusedLocationClient: FusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context)
+        val location = fusedLocationClient.lastLocation.await()
+
         return if (location != null) {
             LocationModel(
                 latitude = location.latitude,

@@ -131,6 +131,10 @@
     <string name="user_register_error">hubo un problema al crear la cuenta</string>
     <string name="error_get_location">Error al consultar localizacion de oficina</string>
     <string name="error_get_local_location">Error al consultar localizacion local</string>
-
-
+    <string name="successful_message_geolocation">Asistencia exitosa!!</string>
+    <string name="gps_turn_off">Gps apagado</string>
+    <string name="error_local_location_not_match">Debe de estar en oficina para marcar asistencia</string>
+    <string name="error_get_attendance_dates">Error al cargar las fechas de firebase</string>
+    <string name="error_get_attendance_history">Error al cargar historial de asistencia de firebase</string>
+    <string name="gps_desable_message">Necisita activar el GPS para marcar asistencia</string>
 </resources>
