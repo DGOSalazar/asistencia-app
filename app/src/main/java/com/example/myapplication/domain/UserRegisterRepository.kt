@@ -13,4 +13,8 @@ class UserRegisterRepository @Inject constructor(private val webDS: UserRegister
     suspend fun doUserRegister(user: UserRegister) = webDS.doUserRegister(UserRequestMapper().map(user))
 
     suspend fun doUploadImage(uri: Uri) = webDS.doUploadImage(uri)
+
+    suspend fun getAllPositions() = webDS.getAllPositions()
+
+    suspend fun getAllTeams() = webDS.getAllTeams()
 }

@@ -10,4 +10,5 @@ data class UserRegisterRequest(
     val team:String,
     val profilePhoto:String,
     val employee:Int,
-    val assistDay:String)
+    val assistDay:String
+    )

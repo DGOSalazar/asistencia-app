@@ -7,9 +7,12 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.core.widget.doAfterTextChanged
@@ -85,11 +88,44 @@ class StepThreeRegisterFragment : Fragment() {
         return mBinding.root
     }
 
-
+    @SuppressLint("NewApi")
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel.setNameTexView("${args.userModel.name} ${args.userModel.lastName}")
+        viewModel.getAllPositions().observe(viewLifecycleOwner){
+            when (it.status) {
+                Status.LOADING -> {
+                    if (isAdded)
+                        (activity as MainActivity).showLoader()
+                }
+                Status.SUCCESS -> {
+                    mBinding.spinnerPosition.adapter= ArrayAdapter<String>(requireContext(),android.R.layout.simple_spinner_dropdown_item,it.data!!)
+                }
+                Status.ERROR -> {
+                    if (isAdded)
+                        (activity as MainActivity).dismissLoader()
+                    context?.toast(it.message!!)
+                }
+            }
+        }
+
+        viewModel.getAllTeams().observe(viewLifecycleOwner){
+            when (it.status) {
+                Status.LOADING -> {
+                    if (isAdded)
+                        (activity as MainActivity).showLoader()
+                }
+                Status.SUCCESS -> {
+                    mBinding.spinnerTeam.adapter= ArrayAdapter<String>(requireContext(),android.R.layout.simple_spinner_dropdown_item,it.data!!)
+                }
+                Status.ERROR -> {
+                    if (isAdded)
+                        (activity as MainActivity).dismissLoader()
+                    context?.toast(it.message!!)
+                }
+            }
+        }
         setObservers()
         setListeners()
     }
@@ -373,11 +409,11 @@ class StepThreeRegisterFragment : Fragment() {
         responseLauncher.launch(intent)
     }
 
-    private fun createModel(uri: String=""): UserRegister {
+    private fun createModel(uri: String = ""): UserRegister {
         return model.apply {
             position = mBinding.spinnerPosition.selectedItem.toString()
             team = mBinding.spinnerTeam.selectedItem.toString()
-            profilePhoto=uri
+            profilePhoto = uri
             employeeNumber = mBinding.inputNumEmployee.text.toString().toInt()
         }
     }

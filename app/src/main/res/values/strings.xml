@@ -131,6 +131,8 @@
     <string name="user_register_error">hubo un problema al crear la cuenta</string>
     <string name="error_get_location">Error al consultar localizacion de oficina</string>
     <string name="error_get_local_location">Error al consultar localizacion local</string>
+    <string name="error_get_all_users">error al obtener los usuarios</string>
+    <string name="error_get_list_user">Error al obtener los correos</string>
 
 
 </resources>
