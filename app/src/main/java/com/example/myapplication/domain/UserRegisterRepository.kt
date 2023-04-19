@@ -4,6 +4,7 @@ import android.net.Uri
 import com.example.myapplication.data.datasource.UserRegister
 import com.example.myapplication.data.mappers.UserRequestMapper
 import com.example.myapplication.data.remote.webDS.UserRegisterWebDS
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class UserRegisterRepository @Inject constructor(private val webDS: UserRegisterWebDS) {
