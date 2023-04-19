@@ -1,6 +1,5 @@
 package com.example.myapplication.data.remote.api
 
-import android.icu.text.Transliterator.Position
 import android.net.Uri
 import com.example.myapplication.core.utils.FirebaseClientModule
 import com.example.myapplication.core.utils.statusNetwork.Resource2
@@ -9,15 +8,12 @@ import com.example.myapplication.core.utils.statusNetwork.makeCall
 import com.example.myapplication.data.remote.request.UserRegisterRequest
 import com.example.myapplication.data.remote.response.AttendanceDaysResponse
 import com.example.myapplication.data.remote.response.LoginResponse
-import com.example.myapplication.data.remote.response.PositionResponse
 import com.example.myapplication.data.remote.response.UserHomeResponse
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.storage.StorageReference
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.tasks.await
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 
@@ -32,14 +28,12 @@ class FirebaseApiService @Inject constructor(private val client: FirebaseClientM
             response
         }
 
-    suspend fun sendRegisterUser(user: UserRegisterRequest): ResponseStatus<Boolean> = makeCall {
-        withContext(Dispatchers.IO) {
-            var isSuccess = false
-            client.userCollection.document(user.email).set(user).addOnCompleteListener {
-                isSuccess = it.isSuccessful
-            }.await()
-            isSuccess
-        }
+    suspend fun sendRegisterUser(user: UserRegisterRequest) = makeCall {
+        var isSuccess = false
+        client.userCollection.document(user.email).set(user).addOnCompleteListener {
+            isSuccess = it.isSuccessful
+        }.await()
+        isSuccess
     }
 
 
@@ -59,7 +53,7 @@ class FirebaseApiService @Inject constructor(private val client: FirebaseClientM
         isSuccess
     }
 
-
+/*
     suspend fun getUserInfo(
         listEmail: ArrayList<String>,
     ) = makeCall {
@@ -72,6 +66,30 @@ class FirebaseApiService @Inject constructor(private val client: FirebaseClientM
             }
         }
         list
+    }
+
+ */
+
+    suspend fun getUserInfo(
+        listEmail: ArrayList<String>,
+    ) = flow {
+        val list = arrayListOf<UserHomeResponse>()
+        emit(listEmail.let {
+            listEmail.forEach { i ->
+                val documents =
+                    client.userCollection.whereEqualTo("email", i).get().await().documents
+                documents.forEach { d ->
+                    val netUser = d.toObject<UserHomeResponse>()
+                    list.add(netUser!!)
+                }
+            }
+            Resource2.success(list)
+        }
+        )
+    }.catch { error ->
+        error.message?.let {
+            emit(Resource2.error(it))
+        }
     }
 
     suspend fun getListUser(day: String) = makeCall {
@@ -134,7 +152,7 @@ class FirebaseApiService @Inject constructor(private val client: FirebaseClientM
             }
             list
         }))
-    }.catch { error->
+    }.catch { error ->
         error.message?.let {
             emit(Resource2.error(it))
         }

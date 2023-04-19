@@ -7,12 +7,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.myapplication.core.utils.statusNetwork.Resource2
 import com.example.myapplication.core.utils.statusNetwork.ResponseStatus
 import com.example.myapplication.data.models.*
 import com.example.myapplication.data.remote.response.UserHomeResponse
 import com.example.myapplication.domain.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.time.LocalDate
@@ -27,7 +29,8 @@ class HomeViewModel @Inject constructor(
     private val getAllAttendanceDaysByMonthUseCase: GetAllAttendanceDaysByMonthUseCase,
     private val getLocationUseCase: GetLocationUseCase,
     private val sharePreferenceRepository: SharePreferenceRepository,
-    private val newApplyAttendanceUseCase: ApplyAttendanceUseCase
+    private val newApplyAttendanceUseCase: ApplyAttendanceUseCase,
+    private val userHomeRepository: UserHomeRepository
     ):ViewModel() {
 
     private val _daySelected = MutableLiveData<String>()
@@ -129,6 +132,7 @@ class HomeViewModel @Inject constructor(
                 }
             }
         }
+
     }
 
     @RequiresApi(Build.VERSION_CODES.O)

@@ -3,15 +3,11 @@ package com.example.myapplication.data.remote.webDS
 import android.net.Uri
 import com.example.myapplication.R
 import com.example.myapplication.core.utils.Resource
-import com.example.myapplication.core.utils.statusNetwork.Resource2
 import com.example.myapplication.core.utils.statusNetwork.ResponseStatus
 import com.example.myapplication.data.remote.api.FirebaseApiService
 import com.example.myapplication.data.remote.request.UserRegisterRequest
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
@@ -52,16 +48,8 @@ class UserRegisterWebDS @Inject constructor(private val service: FirebaseApiServ
         }
     }
 
-
     suspend fun getAllPositions() = service.getAllPositions()
+    suspend fun getAllTeams() = service.getAllTeams()
 
-
-    suspend fun getAllTeams() :Flow<Resource2<ArrayList<String>>>{
-      return  service.getAllTeams().map {
-            it
-        }.onEach {
-
-        }
-    }
 
 }

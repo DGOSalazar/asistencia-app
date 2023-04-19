@@ -100,7 +100,12 @@ class StepThreeRegisterFragment : Fragment() {
                         (activity as MainActivity).showLoader()
                 }
                 Status.SUCCESS -> {
-                    mBinding.spinnerPosition.adapter= ArrayAdapter<String>(requireContext(),android.R.layout.simple_spinner_dropdown_item,it.data!!)
+                    val list= arrayListOf<String>()
+                    list.add("Puesto")
+                    it.data?.forEach {
+                        list.add(it)
+                    }
+                    mBinding.spinnerPosition.adapter= ArrayAdapter<String>(requireContext(),android.R.layout.simple_spinner_dropdown_item,list)
                 }
                 Status.ERROR -> {
                     if (isAdded)
@@ -117,7 +122,12 @@ class StepThreeRegisterFragment : Fragment() {
                         (activity as MainActivity).showLoader()
                 }
                 Status.SUCCESS -> {
-                    mBinding.spinnerTeam.adapter= ArrayAdapter<String>(requireContext(),android.R.layout.simple_spinner_dropdown_item,it.data!!)
+                    val list= arrayListOf<String>()
+                    list.add("Iniciativa")
+                    it.data?.forEach {
+                        list.add(it)
+                    }
+                    mBinding.spinnerTeam.adapter= ArrayAdapter<String>(requireContext(),android.R.layout.simple_spinner_dropdown_item,list)
                 }
                 Status.ERROR -> {
                     if (isAdded)
@@ -177,10 +187,14 @@ class StepThreeRegisterFragment : Fragment() {
                 Status.ERROR -> {
                     if (isAdded)
                         (activity as MainActivity).dismissLoader()
-                    context?.toast(getString(it.message!!))
+                    it.message?.let { error ->
+                        context?.toast(getString(error))
+                    }
+
                 }
             }
         }
+
         viewModel.statusForUrl.observe(viewLifecycleOwner) {
             when (it.status) {
                 Status.LOADING -> {

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <string-array name="spinnerItemsPositions">
         <item>Puesto</item>
         <item>Android Dev</item>
@@ -13,7 +14,7 @@
 
     <string-array name="spinnerItemsTeam">
         <item>Iniciativa</item>
-        <item>HellFish</item>
+        <item>Hellfish</item>
         <item>Minuts</item>
         <item>Masters</item>
         <item>Hashiras</item>
@@ -43,4 +44,5 @@
         <item>Noviembre</item>
         <item>Diciembre</item>
     </string-array>
+
 </resources>
