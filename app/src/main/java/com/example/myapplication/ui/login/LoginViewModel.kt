@@ -5,12 +5,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.myapplication.core.utils.Resource
 import com.example.myapplication.core.utils.checkIfIsValidEmail
 import com.example.myapplication.core.utils.checkIfIsValidPassword
+import com.example.myapplication.core.utils.statusNetwork.Resource2
 import com.example.myapplication.data.models.LoginDomainModel
-import com.example.myapplication.data.remote.response.LoginResponse
-import com.example.myapplication.domain.FirebaseRepository
 import com.example.myapplication.domain.LoginRepository
 import com.example.myapplication.domain.SharePreferenceRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -23,8 +21,8 @@ class LoginViewModel @Inject constructor(
     private val sharePreferenceRepository: SharePreferenceRepository
 ) : ViewModel() {
 
-    private var _status = MutableLiveData<Resource<LoginDomainModel>>()
-    val status: LiveData<Resource<LoginDomainModel>> get() = _status
+    private var _status = MutableLiveData<Resource2<LoginDomainModel>>()
+    val status: LiveData<Resource2<LoginDomainModel>> get() = _status
 
     private var _activeButton = MutableLiveData<Boolean>()
     val activeButton: LiveData<Boolean> get() = _activeButton
@@ -34,15 +32,16 @@ class LoginViewModel @Inject constructor(
         pass: String
     ) {
         viewModelScope.launch {
-            _status.value = Resource.loading(null)
-            handelResponseStatus(loginRepository.doLogin(email, pass))
-
+            _status.value = Resource2.loading(null)
+            loginRepository.doLogin(email, pass).collect{
+                handelResponseStatus(it)
+            }
         }
     }
 
     @Suppress("UNCHECKED_CAST")
     @SuppressLint("NullSafeMutableLiveData")
-    private fun handelResponseStatus(apiResponseStatus: Resource<LoginDomainModel>) {
+    private fun handelResponseStatus(apiResponseStatus: Resource2<LoginDomainModel>) {
         _status.value = apiResponseStatus
     }
 

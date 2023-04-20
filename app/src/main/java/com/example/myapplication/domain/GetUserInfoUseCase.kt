@@ -22,9 +22,9 @@ class GetUserInfoUseCase @Inject constructor(
     fun emailList(day: String, mails: (ArrayList<String>) -> Unit) =
         firebase.getListUsers(day, mails)
 
-    suspend fun getUsersByTeams(): ArrayList<TeamGroup> =
+  /*  suspend fun getUsersByTeams(): ArrayList<TeamGroup> =
         withContext(Dispatchers.IO) {
-            var res: ArrayList<UserHomeResponse> = arrayListOf()
+            var res: ArrayList<UserHomeDomainModel> = arrayListOf()
             val resTeam: ArrayList<TeamGroup> = arrayListOf(
                 TeamGroup(team = "Business Analyst", users = arrayListOf(), isSelected = false),
                 TeamGroup(team = "Scrum Master", users = arrayListOf(), isSelected = false),
@@ -65,5 +65,5 @@ class GetUserInfoUseCase @Inject constructor(
             resTeam
         }
 
-
+*/
 }

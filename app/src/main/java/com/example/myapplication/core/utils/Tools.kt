@@ -22,13 +22,12 @@ class Tools @Inject constructor(private val context: Context){
      fun isEnableGeolocation():Boolean{
         return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
     }
-
     @SuppressLint("MissingPermission")
     suspend fun getLocation(): LocationModel? {
         if(isLocationPermissionEnable())
             return null
 
-        //val location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+
         val fusedLocationClient: FusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context)
         val location = fusedLocationClient.lastLocation.await()
 
@@ -54,8 +53,8 @@ class Tools @Inject constructor(private val context: Context){
 
 
     companion object{
-        fun getTeams(users:ArrayList<UserHomeDomainModel>):ArrayList<TeamGroup>{
-            var res: ArrayList<UserHomeResponse> = arrayListOf()
+        fun getTeams(res:List<UserHomeDomainModel>):ArrayList<TeamGroup>{
+            var users: ArrayList<UserHomeDomainModel> = arrayListOf()
             val resTeam: ArrayList<TeamGroup> = arrayListOf(
                 TeamGroup(team = "Business Analyst", users = arrayListOf(), isSelected = false),
                 TeamGroup(team = "Scrum Master", users = arrayListOf(), isSelected = false),
@@ -64,20 +63,18 @@ class Tools @Inject constructor(private val context: Context){
                 TeamGroup(team = "Testers/QA", users = arrayListOf(), isSelected = false),
                 TeamGroup(team = "Backend Developers", users = arrayListOf(), isSelected = false)
             )
-
-
         res.forEach { user ->
             when (user.position) {
                 "Android Dev" -> {
                     resTeam[0].users.add(user)
                 }
-                "IOS" -> {
+                "IOS Dev" -> {
                     resTeam[1].users.add(user)
                 }
-                "Analyst" -> {
+                "Business Analyst" -> {
                     resTeam[2].users.add(user)
                 }
-                "Backend" -> {
+                "Backend Dev" -> {
                     resTeam[3].users.add(user)
                 }
                 "Scrum Master" -> {
