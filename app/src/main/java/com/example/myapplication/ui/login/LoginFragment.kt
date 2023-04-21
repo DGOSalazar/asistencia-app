@@ -120,7 +120,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                Status.ERROR -> {
                     if (isAdded)
                         (activity as MainActivity).dismissLoader()
-                    context?.toast(getString(it.message!!))
+                    context?.toast(getString(R.string.user_not_exist))
                 }
             }
         }

@@ -12,9 +12,7 @@ import com.example.myapplication.domain.UserRegisterRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
-
 import kotlinx.coroutines.launch
-
 import javax.inject.Inject
 
 @HiltViewModel
@@ -37,14 +35,14 @@ class StepThreeRegisterViewModel @Inject constructor(
     private var _status = MutableLiveData<Resource<Boolean>>()
     val status: LiveData<Resource<Boolean>> get() = _status
 
-    private var _statusForImage = MutableLiveData<Resource<Uri>>()
-    val statusForUrl: LiveData<Resource<Uri>> get() = _statusForImage
+    private var _statusForImage = MutableLiveData<Resource2<Uri>>()
+    val statusForUrl: LiveData<Resource2<Uri>> get() = _statusForImage
 
-    private var _statusForDataUser = MutableLiveData<Resource<Boolean>>()
-    val statusForDataUser: LiveData<Resource<Boolean>> get() = _statusForDataUser
+    private var _statusForDataUser = MutableLiveData<Resource2<Boolean>>()
+    val statusForDataUser: LiveData<Resource2<Boolean>> get() = _statusForDataUser
 
-    private var _statusForDoUser = MutableLiveData<Resource<Boolean>>()
-    val statusForDoUser: LiveData<Resource<Boolean>> get() = _statusForDoUser
+    private var _statusForDoUser = MutableLiveData<Resource2<Boolean>>()
+    val statusForDoUser: LiveData<Resource2<Boolean>> get() = _statusForDoUser
 
 
     private var _positions = MutableLiveData<Resource2<ArrayList<String>>>()
@@ -67,29 +65,25 @@ class StepThreeRegisterViewModel @Inject constructor(
         _photoUri.value = photo
     }
 
-    @Suppress("UNCHECKED_CAST")
-    @SuppressLint("NullSafeMutableLiveData")
-    fun createAccount(user: UserRegister) {
-        viewModelScope.launch {
-            _statusForDoUser.value = Resource.loading(null)
-            _statusForDoUser.value =
-                userRegisterRepository.doAuthRegister(user.email, user.password)
+
+    fun createAccount(user: UserRegister) = viewModelScope.launch {
+        _statusForDoUser.value = Resource2.loading(null)
+        userRegisterRepository.doAuthRegister(user.email, user.password).collect {
+            _statusForDoUser.value = it
         }
     }
 
-    @Suppress("UNCHECKED_CAST")
-    @SuppressLint("NullSafeMutableLiveData")
-    fun saveNewUser(model: UserRegister) {
-        viewModelScope.launch {
-            _statusForDataUser.value = userRegisterRepository.doUserRegister(model)
+
+    fun saveNewUser(model: UserRegister) = viewModelScope.launch {
+        userRegisterRepository.doUserRegister(model).collect { response ->
+            _statusForDataUser.value = response
         }
     }
 
-    @Suppress("UNCHECKED_CAST")
-    @SuppressLint("NullSafeMutableLiveData")
-    fun upLoadImage(uri: Uri) {
-        viewModelScope.launch {
-            _statusForImage.value = userRegisterRepository.doUploadImage(uri)
+
+    fun upLoadImage(uri: Uri) = viewModelScope.launch {
+        userRegisterRepository.doUploadImage(uri).collect {
+            _statusForImage.value = it
         }
     }
 
@@ -99,8 +93,9 @@ class StepThreeRegisterViewModel @Inject constructor(
             emit(reponse)
         }
     }
+
     fun getAllTeams() = liveData(Dispatchers.IO) {
-        userRegisterRepository.getAllTeams().collect{response ->
+        userRegisterRepository.getAllTeams().collect { response ->
             emit(response)
         }
     }
