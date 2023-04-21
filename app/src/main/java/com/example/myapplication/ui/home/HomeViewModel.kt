@@ -9,12 +9,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myapplication.core.utils.statusNetwork.ResponseStatus
 import com.example.myapplication.data.models.*
+import com.example.myapplication.data.remote.response.AttendanceDaysResponse
 import com.example.myapplication.data.remote.response.UserHomeResponse
 import com.example.myapplication.domain.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.security.PrivateKey
 import java.time.LocalDate
 import javax.inject.Inject
 
@@ -29,7 +31,8 @@ class HomeViewModel @Inject constructor(
     private val sharePreferenceRepository: SharePreferenceRepository,
     private val validateGeolocationUseCase: ValidateGeolocationUseCase,
     private val attendanceHistoryRegisterUseCase: AttendanceHistoryRegisterUseCase,
-    private val showOrHideAttendanceButton:ShowOrHideAttendanceButton
+    private val showOrHideAttendanceButton:ShowOrHideAttendanceButton,
+    private val NewGenerateMonthDayUC: NewGenerateMonthDayUC
     ):ViewModel() {
 
     private val _daySelected = MutableLiveData<String>()
@@ -215,6 +218,26 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             _showOrHideAttendanceBtn.value = showOrHideAttendanceButton.invoke(email = email, currentDate = date)
         }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun newSetCalendarDays(accountEmail: String, daysToAttend: List<AttendanceDays>) {
+        viewModelScope.launch {
+            NewGenerateMonthDayUC.invoke(email = accountEmail, days = mapper(daysToAttend))
+        }
+    }
+
+    private fun mapper(daysToAttend: List<AttendanceDays>):ArrayList<AttendanceDaysResponse> = run{
+        val newDays = arrayListOf<AttendanceDaysResponse>()
+        daysToAttend.forEach {
+            newDays.add(
+                AttendanceDaysResponse(
+                    email = it.emails,
+                    currentDay = it.currentDay
+                )
+            )
+        }
+        return newDays
     }
 
 

@@ -221,6 +221,7 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main){
         mCalendarAdapter.statusMonth = actualMonth
         mCalendarAdapter.assistedDays = getDaysToAttend(daysToAttend)
         viewModel.setCalendarDays(localDate, localDate.minusMonths(1), daysToAttend, actualMonth)
+        viewModel.newSetCalendarDays(accountEmail, daysToAttend)
         //showAttendanceButton(daysToAttend)
         val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy")
         val currentDate = LocalDate.now().format(formatter)
