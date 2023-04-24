@@ -26,8 +26,8 @@ class Resource2<T>(
         fun <T> success(data: T?): Resource2<T> {
             return Resource2(Status.SUCCESS, data)
         }
-        fun <T> error(msg: String? = null): Resource2<T> {
-            return Resource2(Status.ERROR, message = msg)
+        fun <T> error(msg: String? = null, data:T? =null): Resource2<T> {
+            return Resource2(Status.ERROR, message = msg, data = data)
         }
         fun <T> loading(msg: Int? = null): Resource2<T> {
             return Resource2(Status.LOADING)

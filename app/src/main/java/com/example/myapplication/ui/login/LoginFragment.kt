@@ -110,7 +110,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                         (activity as MainActivity).dismissLoader()
 
                     viewModel.saveLogin(
-                        it.data!!.email,
+                        mBinding.inputEmail.text.toString(),
                         mBinding.inputPass.text.toString()
                     )
                     val intent = Intent(requireContext(), HomeActivity::class.java)

@@ -29,7 +29,7 @@ class FirebaseApiService @Inject constructor(private val client: FirebaseClientM
         }))
     }.catch { error ->
         error.message?.let {
-            emit(Resource2.error("error"))
+            emit(Resource2.error(it))
         }
     }
 

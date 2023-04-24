@@ -13,7 +13,6 @@ import com.example.myapplication.data.remote.response.UserHomeResponse
 import com.example.myapplication.domain.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.time.LocalDate
@@ -30,9 +29,9 @@ class HomeViewModel @Inject constructor(
     private val sharePreferenceRepository: SharePreferenceRepository,
     private val validateGeolocationUseCase: ValidateGeolocationUseCase,
     private val attendanceHistoryRegisterUseCase: AttendanceHistoryRegisterUseCase,
-    private val showOrHideAttendanceButton:ShowOrHideAttendanceButton,
+    private val showOrHideAttendanceButton: ShowOrHideAttendanceButton,
     private val userHomeRepository: UserHomeRepository
-    ):ViewModel() {
+) : ViewModel() {
 
     private val _daySelected = MutableLiveData<String>()
     var daySelected: LiveData<String> = _daySelected
@@ -83,10 +82,9 @@ class HomeViewModel @Inject constructor(
     val showOrHideAttendanceBtn: LiveData<ResponseStatus<Boolean>?> get() = _showOrHideAttendanceBtn
 
 
-
-    fun confirmStatus(email:String, day: String){
+    fun confirmStatus(email: String, day: String) {
         viewModelScope.launch {
-            getLocationUseCase.checkConfirmStatus(day,email)
+            getLocationUseCase.checkConfirmStatus(day, email)
             _confirmOk.value = getLocationUseCase.getConfirm()
         }
     }
@@ -193,29 +191,30 @@ class HomeViewModel @Inject constructor(
     }
 
     @Suppress("UNCHECKED_CAST")
-    fun applyAttendance(){
+    fun applyAttendance() {
         viewModelScope.launch {
             _status.value = validateGeolocationUseCase.invoke() as ResponseStatus<Any>
         }
     }
 
     fun cleanLiveData() {
-        _status.value= null
+        _status.value = null
         _showOrHideAttendanceBtn.value = null
-        _statusHistoryRegister.value=null
+        _statusHistoryRegister.value = null
     }
 
     @Suppress("UNCHECKED_CAST")
-    fun registerHistoryAttendance(email: String, date:String) {
+    fun registerHistoryAttendance(email: String, date: String) {
         viewModelScope.launch {
             val request = AttendanceHistoryModel(email, date, 2)
             _statusHistoryRegister.value = attendanceHistoryRegisterUseCase.invoke(request)
         }
     }
 
-    fun showOrHideAttendanceButton(email:String, date: String){
+    fun showOrHideAttendanceButton(email: String, date: String) {
         viewModelScope.launch {
-            _showOrHideAttendanceBtn.value = showOrHideAttendanceButton.invoke(email = email, currentDate = date)
+            _showOrHideAttendanceBtn.value =
+                showOrHideAttendanceButton.invoke(email = email, currentDate = date)
         }
     }
 

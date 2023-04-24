@@ -1,5 +1,6 @@
 package com.example.myapplication.domain
 
+import com.example.myapplication.core.utils.Status
 import com.example.myapplication.core.utils.statusNetwork.Resource2
 import com.example.myapplication.data.mappers.UserHomeMapper
 import com.example.myapplication.data.models.TeamGroup
@@ -13,11 +14,15 @@ import javax.inject.Inject
 class TeamRepository @Inject constructor(private val webDS: TeamWebDS) {
     suspend fun getUsersByTeams(): Flow<Resource2<ArrayList<TeamGroup>>> =
         webDS.getAllUsersTeams().map {
-            val list = arrayListOf<UserHomeDomainModel>()
-            it.data?.forEach {
-                list.add(UserHomeMapper().map(it))
+            if (it.status == Status.SUCCESS) {
+                val list = arrayListOf<UserHomeDomainModel>()
+                it.data?.forEach {
+                    list.add(UserHomeMapper().map(it))
+                }
+                val teams = Tools.getTeams(list)
+                Resource2.success(teams)
             }
-            val teams = Tools.getTeams(list)
-            Resource2.success(teams)
+            else
+                Resource2.error(it.message)
         }
 }
