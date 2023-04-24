@@ -1,10 +1,13 @@
 package com.example.myapplication.data.remote.api
 
 import android.net.Uri
+import android.util.Log
 import com.example.myapplication.core.utils.FirebaseClientModule
+import com.example.myapplication.core.utils.Resource
 import com.example.myapplication.core.utils.statusNetwork.Resource2
 import com.example.myapplication.core.utils.statusNetwork.ResponseStatus
 import com.example.myapplication.core.utils.statusNetwork.makeCall
+import com.example.myapplication.data.models.User
 import com.example.myapplication.data.remote.request.UserRegisterRequest
 import com.example.myapplication.data.remote.response.AttendanceDaysResponse
 import com.example.myapplication.data.remote.response.LoginResponse
@@ -18,6 +21,7 @@ import javax.inject.Inject
 
 
 class FirebaseApiService @Inject constructor(private val client: FirebaseClientModule) {
+
     suspend fun getLogin(email: String, password: String): ResponseStatus<LoginResponse> =
         makeCall {
             val result = client.auth.signInWithEmailAndPassword(email, password).await()
@@ -53,22 +57,20 @@ class FirebaseApiService @Inject constructor(private val client: FirebaseClientM
         isSuccess
     }
 
-/*
-    suspend fun getUserInfo(
-        listEmail: ArrayList<String>,
-    ) = makeCall {
-        val list = arrayListOf<UserHomeResponse>()
-        listEmail.forEach { i ->
-            val documents = client.userCollection.whereEqualTo("email", i).get().await().documents
-            documents.forEach { d ->
-                val netUser = d.toObject<UserHomeResponse>()
-                list.add(netUser!!)
-            }
+    suspend fun getUserData(email: String) : Resource<User> {
+        var user = User()
+        var response: Resource<User>
+        var doc = client.userCollection.whereEqualTo("email", email).get().await()
+        doc.forEach { data->
+            user = data.toObject()
         }
-        list
+        if(user == User()) {
+            response = Resource.error(101)
+            Log.d("error","don t get data")
+        }
+        else response = Resource.success(user)
+        return response
     }
-
- */
 
     suspend fun getUserInfo(
         listEmail: ArrayList<String>,
@@ -84,8 +86,7 @@ class FirebaseApiService @Inject constructor(private val client: FirebaseClientM
                 }
             }
             Resource2.success(list)
-        }
-        )
+        })
     }.catch { error ->
         error.message?.let {
             emit(Resource2.error(it))
