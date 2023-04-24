@@ -21,7 +21,6 @@ import com.example.myapplication.core.utils.statusNetwork.ResponseStatus
 import com.example.myapplication.data.models.AttendanceDays
 import com.example.myapplication.data.models.Day
 import com.example.myapplication.data.models.Month
-import com.example.myapplication.data.models.UserHomeDomainModel
 import com.example.myapplication.data.remote.response.UserHomeResponse
 import com.example.myapplication.databinding.FragmentAssistenceMainBinding
 import com.example.myapplication.sys.utils.Tools
