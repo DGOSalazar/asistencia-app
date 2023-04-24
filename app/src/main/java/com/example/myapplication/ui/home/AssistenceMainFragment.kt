@@ -29,6 +29,7 @@ import com.example.myapplication.ui.home.adapters.CalendarAdapter
 import com.example.myapplication.ui.home.adapters.UserAdapter
 import com.google.android.gms.location.*
 import dagger.hilt.android.AndroidEntryPoint
+import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.*
@@ -210,9 +211,22 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main){
     private fun setHeader(user: UserHomeResponse) {
         mBinding.tvWelcome.text = "Hola ${user.name}"
         userData = user
-        mBinding.tvDate.text = String.format(getString(R.string.welcome_date),
-            resources.getStringArray(R.array.days)[localDate.dayOfWeek.value-1],localDate.dayOfMonth,
-            resources.getStringArray(R.array.months)[localDate.monthValue-1],localDate.year)
+        var today = localDate.dayOfWeek.value
+        if((today == 6) || (today == 7))
+        {
+            mBinding.tvDate.text = if(localDate.dayOfWeek == DayOfWeek.SATURDAY)
+                String.format(getString(R.string.welcome_date),
+                getString(R.string.saturday),localDate.dayOfMonth,
+                    resources.getStringArray(R.array.months)[localDate.monthValue-1],localDate.year) else
+                String.format(getString(R.string.welcome_date),
+                    getString(R.string.sunday),localDate.dayOfMonth,
+                    resources.getStringArray(R.array.months)[localDate.monthValue-1],localDate.year)
+        }else {
+            mBinding.tvDate.text = String.format(getString(R.string.welcome_date),
+                resources.getStringArray(R.array.days)[localDate.dayOfWeek.value-1],localDate.dayOfMonth,
+                resources.getStringArray(R.array.months)[localDate.monthValue-1],localDate.year)
+        }
+
         mCalendarAdapter.imageProfileUrl = user.profilePhoto
         mCalendarAdapter.notifyDataSetChanged()
     }
