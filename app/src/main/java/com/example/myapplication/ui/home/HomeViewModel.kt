@@ -13,6 +13,7 @@ import com.example.myapplication.data.remote.response.UserHomeResponse
 import com.example.myapplication.domain.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.time.LocalDate
@@ -29,7 +30,8 @@ class HomeViewModel @Inject constructor(
     private val sharePreferenceRepository: SharePreferenceRepository,
     private val validateGeolocationUseCase: ValidateGeolocationUseCase,
     private val attendanceHistoryRegisterUseCase: AttendanceHistoryRegisterUseCase,
-    private val showOrHideAttendanceButton:ShowOrHideAttendanceButton
+    private val showOrHideAttendanceButton:ShowOrHideAttendanceButton,
+    private val userHomeRepository: UserHomeRepository
     ):ViewModel() {
 
     private val _daySelected = MutableLiveData<String>()
@@ -142,8 +144,8 @@ class HomeViewModel @Inject constructor(
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun getListEmails(day: String) {
-        _isLoading.value = Status.LOADING
         viewModelScope.launch {
+            _isLoading.value = Status.LOADING
             withContext(Dispatchers.IO) {
                 getUserInfoUseCase.emailList(day) {
                     _userEmails.postValue(it)

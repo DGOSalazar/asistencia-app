@@ -14,7 +14,8 @@ class UserHomeMapper: Mapper<UserHomeResponse,UserHomeDomainModel> {
             birthDate = input.birthDate,
             team = input.team,
             profilePhoto = input.profilePhoto,
-            phone = input.phone
+            phone = input.phone,
+            name=input.name
         )
     }
 }

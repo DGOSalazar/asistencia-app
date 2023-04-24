@@ -36,7 +36,6 @@ class StepThreeRegisterFragment : Fragment() {
     private val args: StepThreeRegisterFragmentArgs by navArgs()
     private var model = UserRegister()
     private var imageUriLocal: Uri? = null
-    private var isAuthRegister = true
 
     private val responseLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
@@ -47,31 +46,6 @@ class StepThreeRegisterFragment : Fragment() {
                 }
             }
         }
-
-    /*@Inject
-    lateinit var validations: Validations
-
-    @Inject
-    lateinit var sharedPreferences: SharedPreferences
-
-
-    private lateinit var email: String
-    private lateinit var password: String
-    private lateinit var name: String
-    private lateinit var lastName: String
-    private lateinit var birthdate: String
-    private lateinit var phone: String
-
-    //Cast items
-    private var position = ""
-    private var team = ""
-    private var employeeNumber = ""
-
-    private var isValidPosition = false
-    private var isValidInitiative = false
-    private var isValidEmployeeNumber = false
-    private var isValidImage = false
-    */
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -89,60 +63,68 @@ class StepThreeRegisterFragment : Fragment() {
     }
 
     @SuppressLint("NewApi")
-    @RequiresApi(Build.VERSION_CODES.M)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel.setNameTexView("${args.userModel.name} ${args.userModel.lastName}")
-        viewModel.getAllPositions().observe(viewLifecycleOwner){
-            when (it.status) {
-                Status.LOADING -> {
-                    if (isAdded)
-                        (activity as MainActivity).showLoader()
-                }
-                Status.SUCCESS -> {
-                    val list= arrayListOf<String>()
-                    list.add("Puesto")
-                    it.data?.forEach {
-                        list.add(it)
-                    }
-                    mBinding.spinnerPosition.adapter= ArrayAdapter<String>(requireContext(),android.R.layout.simple_spinner_dropdown_item,list)
-                }
-                Status.ERROR -> {
-                    if (isAdded)
-                        (activity as MainActivity).dismissLoader()
-                    context?.toast(it.message!!)
-                }
-            }
-        }
-
-        viewModel.getAllTeams().observe(viewLifecycleOwner){
-            when (it.status) {
-                Status.LOADING -> {
-                    if (isAdded)
-                        (activity as MainActivity).showLoader()
-                }
-                Status.SUCCESS -> {
-                    val list= arrayListOf<String>()
-                    list.add("Iniciativa")
-                    it.data?.forEach {
-                        list.add(it)
-                    }
-                    mBinding.spinnerTeam.adapter= ArrayAdapter<String>(requireContext(),android.R.layout.simple_spinner_dropdown_item,list)
-                }
-                Status.ERROR -> {
-                    if (isAdded)
-                        (activity as MainActivity).dismissLoader()
-                    context?.toast(it.message!!)
-                }
-            }
-        }
         setObservers()
         setListeners()
     }
 
     @SuppressLint("NewApi")
-    @RequiresApi(Build.VERSION_CODES.M)
     private fun setObservers() {
+
+        viewModel.getAllPositions().observe(viewLifecycleOwner) {
+            when (it.status) {
+                Status.LOADING -> {
+                    if (isAdded)
+                        (activity as MainActivity).showLoader()
+                }
+                Status.SUCCESS -> {
+                    val list = arrayListOf<String>()
+                    list.add("Puesto")
+                    it.data?.forEach {
+                        list.add(it)
+                    }
+                    mBinding.spinnerPosition.adapter = ArrayAdapter<String>(
+                        requireContext(),
+                        android.R.layout.simple_spinner_dropdown_item,
+                        list
+                    )
+                }
+                Status.ERROR -> {
+                    if (isAdded)
+                        (activity as MainActivity).dismissLoader()
+                    context?.toast(it.message!!)
+                }
+            }
+        }
+
+        viewModel.getAllTeams().observe(viewLifecycleOwner) {
+            when (it.status) {
+                Status.LOADING -> {
+                    if (isAdded)
+                        (activity as MainActivity).showLoader()
+                }
+                Status.SUCCESS -> {
+                    val list = arrayListOf<String>()
+                    list.add("Iniciativa")
+                    it.data?.forEach {
+                        list.add(it)
+                    }
+                    mBinding.spinnerTeam.adapter = ArrayAdapter<String>(
+                        requireContext(),
+                        android.R.layout.simple_spinner_dropdown_item,
+                        list
+                    )
+                }
+                Status.ERROR -> {
+                    if (isAdded)
+                        (activity as MainActivity).dismissLoader()
+                    context?.toast(it.message!!)
+                }
+            }
+        }
+
         viewModel.statusForDoUser.observe(viewLifecycleOwner) {
             when (it.status) {
                 Status.LOADING -> {
@@ -161,7 +143,9 @@ class StepThreeRegisterFragment : Fragment() {
                 Status.ERROR -> {
                     if (isAdded)
                         (activity as MainActivity).dismissLoader()
-                    context?.toast(getString(it.message!!))
+                    it.message?.let { error ->
+                        context?.toast(error)
+                    }
                 }
             }
         }
@@ -188,7 +172,7 @@ class StepThreeRegisterFragment : Fragment() {
                     if (isAdded)
                         (activity as MainActivity).dismissLoader()
                     it.message?.let { error ->
-                        context?.toast(getString(error))
+                        context?.toast(error)
                     }
 
                 }
@@ -211,31 +195,14 @@ class StepThreeRegisterFragment : Fragment() {
                 Status.ERROR -> {
                     if (isAdded)
                         (activity as MainActivity).dismissLoader()
-                    context?.toast(getString(it.message!!))
+                    it.message?.let {
+                        context?.toast(it)
+                    }
                 }
             }
         }
 
 
-        /*     viewModel.status.observe(viewLifecycleOwner) {
-                 when (it.status) {
-                     Status.LOADING -> {
-                         if (isAdded)
-                             (activity as MainActivity).showLoader()
-                     }
-                      Status.SUCCESS -> {
-                         if (isAdded)
-                             (activity as MainActivity).dismissLoader()
-                         handleStatusSuccess(it)
-                     }
-                     Status.ERROR -> {
-                         if (isAdded)
-                             (activity as MainActivity).dismissLoader()
-                         context?.toast(getString(it.message!!))
-                     }
-                 }
-             }
-     */
         viewModel.setModel.observe(viewLifecycleOwner) {
             model = it
         }
@@ -252,131 +219,13 @@ class StepThreeRegisterFragment : Fragment() {
         viewModel.activeButton.observe(viewLifecycleOwner) {
             activateButton(it)
         }
-        /* viewModel.urlPhoto.observe(viewLifecycleOwner) {
-             if (it != null) {
-                 imageUri = it
-                 isValidImage = true
-                 updateEnableNextBtn()
-             } else
-                 context?.toast("Error al subir la imagen")
-         }
-         viewModel.registerFlag.observe(viewLifecycleOwner) {
-             // findNavController().navigate(R.id.action_stepThreeRegisterFragment_to_assistenceMainFragment)
-         }*/
+
     }
 
-    /*private fun handleStatusSuccess(responseStatus: Resource<Boolean>) {
-        when(responseStatus.data){
-            is Boolean -> {
-                if(responseStatus.data){
-                    if (isAuthRegister){
-                        isAuthRegister = false
-                        viewModel.saveNewUser(createModel())
-                    } else
-                        viewModel.upLoadImage(imageUriLocal!!)
-                }else
-                    context?.toast("hubo un problema al crear la cuenta")
-            }
-            else ->{
-                val intent = Intent(requireContext(), HomeActivity::class.java)
-                startActivity(intent)
-            }
-            else -> return
-        }
-    }*/
-
-    /*private fun setSpinners() {
-        ArrayAdapter.createFromResource(
-            requireContext(),
-            R.array.positions,
-            android.R.layout.simple_spinner_item
-        ).also { adapter ->
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            mBinding.spinnerPosition.adapter = adapter
-        }
-        ArrayAdapter.createFromResource(
-            requireContext(),
-            R.array.teams,
-            android.R.layout.simple_spinner_item
-        ).also { adapter ->
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            mBinding.spinnerTeam.adapter = adapter
-        }
-    }*/
-
-    @RequiresApi(Build.VERSION_CODES.M)
     private fun setListeners() {
-        /*mBinding.btNext.setOnClickListener {
-            val user = User(
-                email = email,
-                name = name,
-                lastName1 = lastName,
-                lastName2 = lastName,
-                position = position,
-                birthDate = birthdate,
-                team = team,
-                profilePhoto = imageUri.toString(),
-                employee = mBinding.inputPass2.text.toString().toLong(),
-                phone = phone,
-                assistDay = arrayListOf("")
-            )
-            viewModel.saveUserData(user)
-
-            //sharedPreferences.edit().putString(EMAIL_KEY, email).apply() todo recuperar desde el viewModel
-        }
-        mBinding.spinnerPosition.onItemSelectedListener = (object : OnItemSelectedListener {
-            override fun onItemSelected(p0: AdapterView<*>?, p1: View?, pos: Int, p3: Long) {
-                position = when (pos) {
-                    0 -> {
-                        "Android"
-                    }
-                    1 -> {
-                        "IOS"
-                    }
-                    2 -> {
-                        "Analyst"
-                    }
-                    3 -> {
-                        "Backend"
-                    }
-                    4 -> {
-                        "Scrum Master"
-                    }
-                    else -> {
-                        "Tester/QA"
-                    }
-                }
-                updateEnableNextBtn()
-            }
-
-            override fun onNothingSelected(p0: AdapterView<*>?) {}
-        })
-        mBinding.spinnerTeam.onItemSelectedListener = (object : OnItemSelectedListener {
-            override fun onItemSelected(p0: AdapterView<*>?, p1: View?, pos: Int, p3: Long) {
-                team = when (pos) {
-                    0 -> {
-                        "HellFish"
-                    }
-                    1 -> {
-                        "Minus"
-                    }
-                    2 -> {
-                        "Rocket"
-                    }
-                    else -> {
-                        "En espera"
-                    }
-                }
-                updateEnableNextBtn()
-            }
-
-            override fun onNothingSelected(p0: AdapterView<*>?) {}
-        })
-        */
 
         mBinding.btNext.setOnClickListener {
             viewModel.createAccount(createModel())
-            //  requireContext().toast("${mBinding.spinnerPosition.selectedItemPosition}")
         }
 
         mBinding.spinnerPosition.getPosition {
@@ -431,18 +280,4 @@ class StepThreeRegisterFragment : Fragment() {
             employeeNumber = mBinding.inputNumEmployee.text.toString().toInt()
         }
     }
-
-    /*@RequiresApi(Build.VERSION_CODES.M)
-    private fun updateEnableNextBtn() {
-        //val enable =  isValidPosition && isValidInitiative && isValidEmployeeNumber && isValidImage
-        val enable = isValidEmployeeNumber && isValidImage
-        val textColor = if (enable) R.color.blue_app else R.color.grey7
-        val backgroundColor = if (enable) R.color.white else R.color.grey2
-
-        mBinding.btNext.apply {
-            isEnabled = enable
-            setBackgroundColor(requireContext().getColor(textColor))
-            setTextColor(requireContext().getColor(backgroundColor))
-        }
-    }*/
 }
