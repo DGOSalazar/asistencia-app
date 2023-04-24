@@ -21,14 +21,14 @@ class UserScreenFragment : Fragment(R.layout.fragment_user_screen) {
 
     private var user: User = User()
     private lateinit var mBinding: FragmentUserScreenBinding
-    private val viewModel : UserScreenViewModel by activityViewModels()
+    private val viewModel: UserScreenViewModel by activityViewModels()
     private lateinit var mAdapter: NotifyAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        mBinding = FragmentUserScreenBinding.inflate(layoutInflater,container,false)
+        mBinding = FragmentUserScreenBinding.inflate(layoutInflater, container, false)
         return mBinding.root
     }
 
@@ -40,20 +40,20 @@ class UserScreenFragment : Fragment(R.layout.fragment_user_screen) {
     }
 
     private fun setObservers() {
-        viewModel.notifyData.observe(viewLifecycleOwner){
+        viewModel.notifyData.observe(viewLifecycleOwner) {
             //launchAdapter()
         }
-        viewModel.userData.observe(viewLifecycleOwner){
-            when(it.status){
-                Status.SUCCESS ->{
+        viewModel.userData.observe(viewLifecycleOwner) {
+            when (it.status) {
+                Status.SUCCESS -> {
                     (activity as HomeActivity).dismissLoader()
                     user = it.data!!
                     setUi()
                 }
-                Status.ERROR ->{
+                Status.ERROR -> {
                     context?.toast("error")
                 }
-                Status.LOADING ->{
+                Status.LOADING -> {
                     (activity as HomeActivity).showLoader()
                 }
             }
@@ -64,10 +64,14 @@ class UserScreenFragment : Fragment(R.layout.fragment_user_screen) {
     private fun launchAdapter() {
         val list =
             arrayListOf(
-                Notify("001","Recuerda registrarte la siguiente semana",
-                    R.drawable.icon_timer,"justo ahora"),
-                Notify("001","Recuerda registrarte la siguiente semana",
-                    R.drawable.icon_timer,"justo ahora")
+                Notify(
+                    "001", "Recuerda registrarte la siguiente semana",
+                    R.drawable.icon_timer, "justo ahora"
+                ),
+                Notify(
+                    "001", "Recuerda registrarte la siguiente semana",
+                    R.drawable.icon_timer, "justo ahora"
+                )
             )
         mAdapter = NotifyAdapter(list)
         mBinding.notifyRecycler.apply {
@@ -78,38 +82,39 @@ class UserScreenFragment : Fragment(R.layout.fragment_user_screen) {
     }
 
     private fun setUi() {
-        with(mBinding){
+        with(mBinding) {
             ivUserPhoto.glide(user.profilePhoto)
             tvNameUser.text = user.name
-            tvPositionUser.text = String.format(getString(R.string.positionAndTeam),user.position,user.team)
-            colaboratorNum.text = String.format(getString(R.string.employee_num),user.employee)
-            tvCostCenter.text = String.format(getString(R.string.cost),"12982")
-            tvManager.text= String.format(getString(R.string.manager),user.name)
-            tvPosition.text = String.format(getString(R.string.positionRol),user.position)
-            tvManagerSup.text = String.format(getString(R.string.maanager_sup),"Diana Estrada")
-            tvProject.text = String.format(getString(R.string.project),"Abono coppel")
-            tvScrum.text = String.format(getString(R.string.scrum),"Esteban Ochoa")
-            tvDateEnroll.text = String.format(getString(R.string.inDate),"01-08-1998")
-            tvWorkerDays.text = String.format(getString(R.string.workerDays),"22")
-            tvOfficeDays.text = String.format(getString(R.string.daysInOffice),"7")
+            tvPositionUser.text =
+                String.format(getString(R.string.positionAndTeam), user.position, user.team)
+            colaboratorNum.text = String.format(getString(R.string.employee_num), user.employee)
+            tvCostCenter.text = String.format(getString(R.string.cost), "12982")
+            tvManager.text = String.format(getString(R.string.manager), user.name)
+            tvPosition.text = String.format(getString(R.string.positionRol), user.position)
+            tvManagerSup.text = String.format(getString(R.string.maanager_sup), "Diana Estrada")
+            tvProject.text = String.format(getString(R.string.project), "Abono coppel")
+            tvScrum.text = String.format(getString(R.string.scrum), "Esteban Ochoa")
+            tvDateEnroll.text = String.format(getString(R.string.inDate), "01-08-1998")
+            tvWorkerDays.text = String.format(getString(R.string.workerDays), "22")
+            tvOfficeDays.text = String.format(getString(R.string.daysInOffice), "7")
         }
     }
 
-    private fun setListeners(){
+    private fun setListeners() {
         var isCheck = false
-        with(mBinding){
-            tvNotificationH.setOnClickListener{
+        with(mBinding) {
+            tvNotificationH.setOnClickListener {
                 changeViewToNotify(true)
                 launchAdapter()
             }
-            tvResumenH.setOnClickListener{
+            tvResumenH.setOnClickListener {
                 changeViewToNotify(false)
             }
 
             btEdit.setOnClickListener {
                 isCheck = !isCheck
-                if (isCheck) with(mBinding){
-                    ivUserPhoto.setImageDrawable(resources.getDrawable(R.drawable.img_4,null))
+                if (isCheck) with(mBinding) {
+                    ivUserPhoto.setImageDrawable(resources.getDrawable(R.drawable.img_4, null))
                     btEdit.text = getString(R.string.donePerfil)
                     etCostCenter.visibility = View.VISIBLE
                     etManager.visibility = View.VISIBLE
@@ -119,7 +124,7 @@ class UserScreenFragment : Fragment(R.layout.fragment_user_screen) {
                     etProject.visibility = View.VISIBLE
                     etSm.visibility = View.VISIBLE
                 }
-                else with(mBinding){
+                else with(mBinding) {
                     ivUserPhoto.glide(user.profilePhoto)
                     btEdit.text = getString(R.string.edit_profile)
                     etCostCenter.visibility = View.GONE
@@ -134,14 +139,14 @@ class UserScreenFragment : Fragment(R.layout.fragment_user_screen) {
         }
     }
 
-    private fun changeViewToNotify(noty: Boolean){
-        with(mBinding){
+    private fun changeViewToNotify(noty: Boolean) {
+        with(mBinding) {
             btEdit.visibility =
-                if(noty) View.INVISIBLE else View.VISIBLE
+                if (noty) View.INVISIBLE else View.VISIBLE
             ilNotification.visibility =
-                if(noty) View.VISIBLE else View.GONE
+                if (noty) View.VISIBLE else View.GONE
             ilSummary.visibility =
-                if (noty)  View.GONE else View.VISIBLE
+                if (noty) View.GONE else View.VISIBLE
         }
     }
 }

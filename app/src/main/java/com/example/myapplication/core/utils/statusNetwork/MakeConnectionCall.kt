@@ -16,19 +16,8 @@ suspend fun <T> makeCall(
         ResponseStatus.Error(R.string.exception)
     }
 }
-/*
-suspend fun <T> makeCall2(
-    call: suspend  () ->T
-): Resource2<T> = withContext(Dispatchers.IO) {
-    try {
-        Resource2.success(call.invoke())
-    } catch (e: Throwable) {
-        Resource2.error(R.string.throwable_exception)
-    } catch (e: Exception) {
-        Resource2.error(R.string.exception)
-    }
-}
-*/
+
+
 class Resource2<T>(
     val status: Status,
     val data: T? = null,

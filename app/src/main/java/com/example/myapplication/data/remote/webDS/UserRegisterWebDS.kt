@@ -1,14 +1,8 @@
 package com.example.myapplication.data.remote.webDS
 
 import android.net.Uri
-import com.example.myapplication.R
-import com.example.myapplication.core.utils.Resource
-import com.example.myapplication.core.utils.statusNetwork.ResponseStatus
 import com.example.myapplication.data.remote.api.FirebaseApiService
 import com.example.myapplication.data.remote.request.UserRegisterRequest
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class UserRegisterWebDS @Inject constructor(private val service: FirebaseApiService) {

@@ -1,6 +1,5 @@
 package com.example.myapplication.ui.userRegister.stepThree
 
-import android.annotation.SuppressLint
 import android.net.Uri
 import androidx.lifecycle.*
 import com.example.myapplication.core.utils.Resource
@@ -11,7 +10,6 @@ import com.example.myapplication.data.datasource.UserRegister
 import com.example.myapplication.domain.UserRegisterRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 

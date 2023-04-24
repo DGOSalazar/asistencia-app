@@ -14,7 +14,6 @@ class StepOneViewModel @Inject constructor() : ViewModel() {
     private var _activeButton = MutableLiveData<Boolean>()
     val activeButton: LiveData<Boolean> get() = _activeButton
 
-
     fun validateEmailAndPassword(email: String, pass: String, confirmationPass: String) {
         if (email.isNotEmpty() && pass.isNotEmpty() && confirmationPass.isNotEmpty()) {
             _activeButton.value =
