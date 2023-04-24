@@ -76,10 +76,11 @@
     <string name="asssit_name">Juan Carlos ¿Deseas asistir</string>
     <string name="delete_assit">Eliminar asistencia</string>
     <string name="user_not_exist">El usuario no aparece en la base de datos o la contraseña es incorrecta</string>
+    <string name="conection_error">No logramos consultar tu información intenta mas tarde</string>
     <string name="upload_image_error">Error al subir la imagen</string>
     <string name="problem_registering_user">Hubo un problema al registrar usuario </string>
     <string name="nameUserScreen">Diego Salazar Contreras</string>
-    <string name="positionAndTeam">%1$s | <b>Iniciatiiva Abono Coppel</b></string>
+    <string name="positionAndTeam">%1$s | <b>%2$s</b></string>
     <string name="personal_info">Información personal</string>
     <string name="employee_num">Numero de Colaborador: %1$s <i></i></string>
     <string name="cost">Centro de Costos: %1$s</string>
@@ -95,7 +96,7 @@
     <string name="name_dialog_confirm">Yep</string>
     <string name="tv_messagges_delete">¿Seguro que deseas eliminar tu asistencia?</string>
     <string name="fullDay">El Día esta completo!</string>
-    <string name="inDate">Fecha de ingres: %1$s</string>
+    <string name="inDate">Fecha de ingreso: %1$s</string>
     <string name="workerDays">Dias laborados: %1$s</string>
     <string name="daysInOffice">Dias en Oficina: %1$s</string>
     <string name="reminders_notification_channel_id">123456</string>
@@ -139,6 +140,14 @@
     <string name="gps_desable_message">Necisita activar el GPS para marcar asistencia</string>
     <string name="error_get_all_users">error al obtener los usuarios</string>
     <string name="error_get_list_user">Error al obtener los correos</string>
+    <string name="employee_photo">employee_photo</string>
+    <string name="edit_profile">Editar perfil</string>
+    <string name="summary">Resumen</string>
+    <string name="notifyctions">Notificaciones</string>
+    <string name="history">Historial</string>
+    <string name="saturday">Sabado</string>
+    <string name="sunday">Domingo</string>
+    <string name="donePerfil">Listo!</string>
 
 
 </resources>
