@@ -4,7 +4,6 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import com.example.myapplication.R
 import com.example.myapplication.core.utils.statusNetwork.Resource2
-import com.example.myapplication.data.mappers.AttendanceDaysMapper
 import com.example.myapplication.data.mappers.UserHomeMapper
 import com.example.myapplication.data.models.AttendanceDays
 import com.example.myapplication.data.models.UserHomeDomainModel

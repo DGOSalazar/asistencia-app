@@ -10,14 +10,13 @@ import androidx.lifecycle.viewModelScope
 import com.example.myapplication.core.utils.statusNetwork.ResponseStatus
 import com.example.myapplication.data.models.*
 import com.example.myapplication.data.remote.response.AttendanceDaysResponse
+import com.example.myapplication.data.remote.response.DayCollectionResponse
 import com.example.myapplication.data.remote.response.UserHomeResponse
 import com.example.myapplication.domain.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.security.PrivateKey
 import java.time.LocalDate
 import javax.inject.Inject
 
@@ -205,7 +204,7 @@ class HomeViewModel @Inject constructor(
     fun cleanLiveData() {
         _status.value= null
         _showOrHideAttendanceBtn.value = null
-        _statusHistoryRegister.value=null
+        _statusHistoryRegister.value = null
     }
 
     @Suppress("UNCHECKED_CAST")
@@ -221,26 +220,5 @@ class HomeViewModel @Inject constructor(
             _showOrHideAttendanceBtn.value = showOrHideAttendanceButton.invoke(email = email, currentDate = date)
         }
     }
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    fun newSetCalendarDays(accountEmail: String, daysToAttend: List<AttendanceDays>) {
-        viewModelScope.launch {
-            NewGenerateMonthDayUC.invoke(email = accountEmail, days = mapper(daysToAttend))
-        }
-    }
-
-    private fun mapper(daysToAttend: List<AttendanceDays>):ArrayList<AttendanceDaysResponse> = run{
-        val newDays = arrayListOf<AttendanceDaysResponse>()
-        daysToAttend.forEach {
-            newDays.add(
-                AttendanceDaysResponse(
-                    email = it.emails,
-                    currentDay = it.currentDay
-                )
-            )
-        }
-        return newDays
-    }
-
 
 }

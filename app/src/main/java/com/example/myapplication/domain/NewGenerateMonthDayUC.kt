@@ -7,6 +7,7 @@ import com.example.myapplication.core.utils.Constants.DAY_PER_MONTH
 import com.example.myapplication.core.utils.Constants.FREE_PLACES_VALUE
 import com.example.myapplication.data.models.NewDayModel
 import com.example.myapplication.data.remote.response.AttendanceDaysResponse
+import com.example.myapplication.data.remote.response.DayCollectionResponse
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
@@ -21,16 +22,14 @@ class NewGenerateMonthDayUC @Inject constructor() {
 
     @SuppressLint("SimpleDateFormat")
     private val sdf: SimpleDateFormat = SimpleDateFormat("dd-MM-yyyy")
-    private lateinit var attendanceDays: ArrayList<AttendanceDaysResponse>
-    private var userEmail: String = ""
+    private lateinit var attendanceDays: ArrayList<DayCollectionResponse>
+
 
     @RequiresApi(Build.VERSION_CODES.O)
     operator fun invoke(
-        days: ArrayList<AttendanceDaysResponse>,
-        email: String
+        days: ArrayList<DayCollectionResponse>,
     ): ArrayList<NewDayModel> = run {
         attendanceDays = days
-        userEmail = email
 
         val allDays = arrayListOf<NewDayModel>()
         val daysOfCurrentMonth: ArrayList<NewDayModel> = getCurrentMonthDays()
@@ -55,7 +54,7 @@ class NewGenerateMonthDayUC @Inject constructor() {
             val dayOfWeek: Int = calendar[Calendar.DAY_OF_WEEK]
             if (dayOfWeek !in arrayOf(Calendar.SATURDAY, Calendar.SUNDAY)) {
                 daysList.add(NewDayModel(
-                        value = sdf.format(calendar.time),
+                        date = sdf.format(calendar.time),
                         freePlaces = getFreePlaces())
                 )
             }
@@ -78,7 +77,7 @@ class NewGenerateMonthDayUC @Inject constructor() {
             for (i in lastDaysOfTheWeekOfTheLastMonth..daysInPastMonth) {
                 calendar.set(currentYear, currentMonth, i)
                 daysList.add(NewDayModel(
-                    value = sdf.format(calendar.time),
+                    date = sdf.format(calendar.time),
                     freePlaces = getFreePlaces())
                 )
             }
@@ -94,7 +93,7 @@ class NewGenerateMonthDayUC @Inject constructor() {
         for (i in 1..daysNextMonth) {
             calendar.set(currentYear, currentMonth, i)
             daysList.add(NewDayModel(
-                value = sdf.format(calendar.time),
+                date = sdf.format(calendar.time),
                 freePlaces = getFreePlaces())
             )
         }
@@ -107,7 +106,7 @@ class NewGenerateMonthDayUC @Inject constructor() {
         var freePlaces = FREE_PLACES_VALUE
         attendanceDays.forEach { remoteDate ->
             if (remoteDate.currentDay == currentDate)
-                freePlaces -= remoteDate.email.size
+                freePlaces -= remoteDate.email!!.size
         }
         return freePlaces
     }
