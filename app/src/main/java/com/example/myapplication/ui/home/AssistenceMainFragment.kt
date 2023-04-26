@@ -63,7 +63,11 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main){
         super.onCreate(savedInstanceState)
         accountEmail = viewModel.getEmail()
         viewModel.cleanLiveData()
-        // TODO: recuperar desde el viewModel
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.cleanLiveData()
     }
 
     override fun onCreateView(
@@ -85,6 +89,7 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main){
     }
 
 
+    @SuppressLint("NotifyDataSetChanged")
     @RequiresApi(Build.VERSION_CODES.S)
     private fun setObservers() {
         viewModel.assistanceDays.observe(viewLifecycleOwner, this::setCalendarDays)
@@ -234,27 +239,9 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main){
         mCalendarAdapter.statusMonth = actualMonth
         mCalendarAdapter.assistedDays = getDaysToAttend(daysToAttend)
         viewModel.setCalendarDays(localDate, localDate.minusMonths(1), daysToAttend, actualMonth)
-        //showAttendanceButton(daysToAttend)
         val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy")
         val currentDate = LocalDate.now().format(formatter)
         viewModel.showOrHideAttendanceButton( accountEmail, currentDate)
-    }
-
-    private fun showAttendanceButton(daysToAttend: List<AttendanceDays>) {
-        val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy")
-        val currentDate = LocalDate.now().format(formatter)
-
-        val isAttendanceDay = daysToAttend.any {
-            if (it.currentDay == currentDate)
-                it.emails.any{ email -> email == accountEmail }
-            else
-                false
-        }
-
-        if (isAttendanceDay)
-            mBinding.fabConfirmAsit.visibility = View.VISIBLE
-        else
-            mBinding.fabConfirmAsit.visibility = View.GONE
     }
 
     private fun getDaysToAttend(daysToAttend: List<AttendanceDays>): List<Int> {
@@ -350,11 +337,6 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main){
         localDate = localDate.plusMonths(1)
         actualMonth = if (actualMonth == PAST_MONTH) CURRENT_MONTH else NEXT_MONTH
         viewModel.getUserDate()
-    }
-
-    private fun monthYearFromDate(date:LocalDate):String {
-        val formatter = DateTimeFormatter.ofPattern("MMMM yyyy")
-        return date.format(formatter)
     }
 
     private fun clickUser(u: UserHomeResponse){

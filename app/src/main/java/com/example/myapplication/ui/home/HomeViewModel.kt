@@ -9,6 +9,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.myapplication.core.utils.statusNetwork.ResponseStatus
 import com.example.myapplication.data.models.*
+import com.example.myapplication.data.remote.response.AttendanceDaysResponse
+import com.example.myapplication.data.remote.response.DayCollectionResponse
 import com.example.myapplication.data.remote.response.UserHomeResponse
 import com.example.myapplication.domain.*
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -30,6 +32,7 @@ class HomeViewModel @Inject constructor(
     private val validateGeolocationUseCase: ValidateGeolocationUseCase,
     private val attendanceHistoryRegisterUseCase: AttendanceHistoryRegisterUseCase,
     private val showOrHideAttendanceButton: ShowOrHideAttendanceButton,
+    private val NewGenerateMonthDayUC: NewGenerateMonthDayUC,
     private val userHomeRepository: UserHomeRepository
 ) : ViewModel() {
 
