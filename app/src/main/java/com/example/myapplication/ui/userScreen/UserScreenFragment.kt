@@ -8,21 +8,25 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.myapplication.R
+import com.example.myapplication.core.dialog.AddProjectDialog
 import com.example.myapplication.core.utils.Status
 import com.example.myapplication.core.extensionFun.glide
 import com.example.myapplication.core.extensionFun.toast
 import com.example.myapplication.data.models.Notify
 import com.example.myapplication.data.models.User
+import com.example.myapplication.data.models.UserAdditionalData
 import com.example.myapplication.databinding.FragmentUserScreenBinding
 import com.example.myapplication.ui.home.HomeActivity
 import com.example.myapplication.ui.userScreen.adapters.NotifyAdapter
+import com.example.myapplication.ui.userScreen.adapters.ProjectsAdapter
 
 class UserScreenFragment : Fragment(R.layout.fragment_user_screen) {
 
     private var user: User = User()
     private lateinit var mBinding: FragmentUserScreenBinding
     private val viewModel: UserScreenViewModel by activityViewModels()
-    private lateinit var mAdapter: NotifyAdapter
+    private lateinit var mAdapterNoty: NotifyAdapter
+    private lateinit var mAdapterProjects : ProjectsAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -49,6 +53,7 @@ class UserScreenFragment : Fragment(R.layout.fragment_user_screen) {
                     (activity as HomeActivity).dismissLoader()
                     user = it.data!!
                     setUi()
+                    viewModel.getMoreUserData()
                 }
                 Status.ERROR -> {
                     context?.toast("error")
@@ -58,10 +63,57 @@ class UserScreenFragment : Fragment(R.layout.fragment_user_screen) {
                 }
             }
         }
+        viewModel.setUserMoreData.observe(viewLifecycleOwner){
+            when (it.status) {
+                Status.SUCCESS -> {
+                    (activity as HomeActivity).dismissLoader()
+                    viewModel.getMoreUserData()
+                }
+                Status.ERROR -> {
+                    context?.toast("error")
+                }
+                Status.LOADING -> {
+                    (activity as HomeActivity).showLoader()
+                }
+            }
+        }
+        viewModel.userMoreData.observe(viewLifecycleOwner){
+            when (it.status) {
+                Status.SUCCESS -> {
+                    (activity as HomeActivity).dismissLoader()
+                    setNewData(it.data!!)
+                    //launchAdapterProjects(it.data?.releases ?: arrayListOf(Pair("","")))
+                }
+                Status.ERROR -> {
+                    setNewData(UserAdditionalData())
+                }
+                Status.LOADING -> {
+                    (activity as HomeActivity).showLoader()
+                }
+            }
+        }
     }
 
+    private fun setNewData(user: UserAdditionalData) {
+        with(mBinding) {
+            tvCostCenter.text = String.format(getString(R.string.cost), user.costCenter)
+            etCostCenter.setText(user.costCenter)
+            tvManager.text = String.format(getString(R.string.manager), user.managerMain)
+            etManager.setText(user.managerMain)
+            tvManagerSup.text = String.format(getString(R.string.maanager_sup), user.managerDirect)
+            etManagerSup.setText(user.managerDirect)
+            tvProject.text = String.format(getString(R.string.project), user.project)
+            etProject.setText(user.project)
+            tvScrum.text = String.format(getString(R.string.scrum), user.scrumMaster)
+            etSm.setText(user.scrumMaster)
+            tvDateEnroll.text = String.format(getString(R.string.inDate), user.enrollDate)
+            etInDate.setText(user.enrollDate)
+            tvWorkerDays.text = String.format(getString(R.string.workerDays), "0")
+            tvOfficeDays.text = String.format(getString(R.string.daysInOffice), "0")
+        }
+    }
 
-    private fun launchAdapter() {
+    private fun launchAdapterNotify() {
         val list =
             arrayListOf(
                 Notify(
@@ -73,9 +125,18 @@ class UserScreenFragment : Fragment(R.layout.fragment_user_screen) {
                     R.drawable.icon_timer, "justo ahora"
                 )
             )
-        mAdapter = NotifyAdapter(list)
+        mAdapterNoty = NotifyAdapter(list)
         mBinding.notifyRecycler.apply {
-            adapter = mAdapter
+            adapter = mAdapterNoty
+            layoutManager = LinearLayoutManager(activity?.applicationContext)
+        }
+        mBinding.notifyRecycler.visibility = View.VISIBLE
+    }
+
+    private fun launchAdapterProjects(list: ArrayList<Pair<String, String>>) {
+        mAdapterProjects = ProjectsAdapter(list)
+        mBinding.rvProjects.apply {
+            adapter = mAdapterProjects
             layoutManager = LinearLayoutManager(activity?.applicationContext)
         }
         mBinding.notifyRecycler.visibility = View.VISIBLE
@@ -83,20 +144,12 @@ class UserScreenFragment : Fragment(R.layout.fragment_user_screen) {
 
     private fun setUi() {
         with(mBinding) {
+            rvProjects.visibility = View.GONE
             ivUserPhoto.glide(user.profilePhoto)
             tvNameUser.text = user.name
             tvPositionUser.text =
                 String.format(getString(R.string.positionAndTeam), user.position, user.team)
             colaboratorNum.text = String.format(getString(R.string.employee_num), user.employee)
-            tvCostCenter.text = String.format(getString(R.string.cost), "12982")
-            tvManager.text = String.format(getString(R.string.manager), user.name)
-            tvPosition.text = String.format(getString(R.string.positionRol), user.position)
-            tvManagerSup.text = String.format(getString(R.string.maanager_sup), "Diana Estrada")
-            tvProject.text = String.format(getString(R.string.project), "Abono coppel")
-            tvScrum.text = String.format(getString(R.string.scrum), "Esteban Ochoa")
-            tvDateEnroll.text = String.format(getString(R.string.inDate), "01-08-1998")
-            tvWorkerDays.text = String.format(getString(R.string.workerDays), "22")
-            tvOfficeDays.text = String.format(getString(R.string.daysInOffice), "7")
         }
     }
 
@@ -105,35 +158,50 @@ class UserScreenFragment : Fragment(R.layout.fragment_user_screen) {
         with(mBinding) {
             tvNotificationH.setOnClickListener {
                 changeViewToNotify(true)
-                launchAdapter()
+                launchAdapterNotify()
             }
+
             tvResumenH.setOnClickListener {
                 changeViewToNotify(false)
             }
+            /*
+            ivAddProject.setOnClickListener {
+                AddProjectDialog(){
+                    viewModel.setNewProject(it)
+                }.show(parentFragmentManager,"open dialog for add")
+            }
+             */
 
             btEdit.setOnClickListener {
                 isCheck = !isCheck
                 if (isCheck) with(mBinding) {
-                    ivUserPhoto.setImageDrawable(resources.getDrawable(R.drawable.img_4, null))
                     btEdit.text = getString(R.string.donePerfil)
                     etCostCenter.visibility = View.VISIBLE
                     etManager.visibility = View.VISIBLE
                     etInDate.visibility = View.VISIBLE
-                    etPosition.visibility = View.VISIBLE
                     etManagerSup.visibility = View.VISIBLE
                     etProject.visibility = View.VISIBLE
                     etSm.visibility = View.VISIBLE
                 }
                 else with(mBinding) {
-                    ivUserPhoto.glide(user.profilePhoto)
                     btEdit.text = getString(R.string.edit_profile)
                     etCostCenter.visibility = View.GONE
                     etManager.visibility = View.GONE
                     etInDate.visibility = View.GONE
-                    etPosition.visibility = View.GONE
                     etManagerSup.visibility = View.GONE
                     etProject.visibility = View.GONE
                     etSm.visibility = View.GONE
+
+                    viewModel.setMoreData(
+                        UserAdditionalData(
+                            costCenter = etCostCenter.text.toString(),
+                            managerMain = etManager.text.toString(),
+                            managerDirect = etManagerSup.text.toString(),
+                            project = etProject.text.toString(),
+                            scrumMaster = etSm.text.toString(),
+                            enrollDate = etInDate.text.toString()
+                        )
+                    )
                 }
             }
         }

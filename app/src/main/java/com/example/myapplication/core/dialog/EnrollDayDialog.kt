@@ -1,13 +1,8 @@
 package com.example.myapplication.core.dialog
 
-import android.annotation.SuppressLint
-import android.app.AlertDialog
-import android.app.Dialog
-import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,11 +12,7 @@ import androidx.fragment.app.activityViewModels
 import com.example.myapplication.R
 import com.example.myapplication.data.models.Day
 import com.example.myapplication.databinding.DialogEnrollToDayBinding
-import com.example.myapplication.databinding.FragmentAssistencceWeekBinding
-import com.example.myapplication.ui.home.AssistenceWeekFragment
 import com.example.myapplication.ui.home.HomeViewModel
-import hilt_aggregated_deps._dagger_hilt_android_internal_managers_ActivityComponentManager_ActivityComponentBuilderEntryPoint
-import javax.inject.Inject
 
 
 @RequiresApi(Build.VERSION_CODES.O)
