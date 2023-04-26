@@ -197,11 +197,12 @@ class AssistenceWeekFragment() : Fragment(R.layout.fragment_assistencce_week) {
         cleanSelected(i.dayOfWeek-1)
         setDaysAdapter(days)
     }
+
     private fun clickUser(u: UserHomeResponse){
         UserDialog(u).show(parentFragmentManager,"Yep")
     }
 
-    private fun cleanSelected(t:Int){
+    private fun cleanSelected(t :Int){
         for(i in 0..4) {
             days[i].selected = false
         }

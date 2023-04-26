@@ -11,6 +11,8 @@ import javax.inject.Singleton
 class FirebaseClientModule @Inject constructor() {
     val auth : FirebaseAuth get() = FirebaseAuth.getInstance()
     val userCollection = Firebase.firestore.collection(Collection.USERS_COLLECTION.value)
+    val userMoreDataCollection = Firebase.firestore.collection(Collection.USERS_COLLECTION_MORE_DATA.value)
+    val userProjectsDoneCollection = Firebase.firestore.collection(Collection.USER_PROJECTS_COLLECTION.value)
     val dayCollection = Firebase.firestore.collection(Collection.DAY_COLLECTION.value)
     val teamsCollection = Firebase.firestore.collection(Collection.TEAM_COLLECTION.value)
     val positionCollection = Firebase.firestore.collection(Collection.POSITION_COLLECTION.value)
