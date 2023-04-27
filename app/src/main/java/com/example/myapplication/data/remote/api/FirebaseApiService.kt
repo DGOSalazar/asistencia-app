@@ -1,10 +1,10 @@
 package com.example.myapplication.data.remote.api
 
 import android.net.Uri
-import android.util.Log
 import com.example.myapplication.core.utils.FirebaseClientModule
 import com.example.myapplication.core.utils.Resource
 import com.example.myapplication.core.utils.statusNetwork.Resource2
+import com.example.myapplication.data.models.ProjectsDomainModel
 import com.example.myapplication.data.models.User
 import com.example.myapplication.data.models.UserAdditionalData
 import com.example.myapplication.data.remote.request.UserRegisterRequest
@@ -79,76 +79,91 @@ class FirebaseApiService @Inject constructor(private val client: FirebaseClientM
     }
 
     //UserRepository; Left add flows and mappers
-    suspend fun getUserData(email: String) : Resource<User> {
+    suspend fun getUserData(email: String) = flow {
         var user = User()
-        var response: Resource<User>
-        var doc = client.userCollection.whereEqualTo("email", email).get().await()
-        doc.forEach { data->
-            user = data.toObject()
-        }
-        if(user == User()) {
-            response = Resource.error(101)
-            Log.d("error","don t get data")
-        }
-        else response = Resource.success(user)
-        return response
-    }
-
-    fun saveMoreUserData(user: UserAdditionalData)
-    : Resource<Unit> {
-        var response = Resource.success(Unit)
-        client.userMoreDataCollection.document(user.email).set(user)
-            .addOnSuccessListener{
-                response
-            }.addOnFailureListener {
-                response = Resource.error(101)
+        emit(Resource2.success(client.userCollection.whereEqualTo("email", email).get().await().let { doc->
+            doc.forEach {
+               user = it.toObject()
             }
-        return response
+            user
+        }))
+    }.catch { error ->
+        error.message?.let {
+            emit(Resource2.error(it,null))
+        }
     }
 
-    suspend fun getUserMoreData(email: String) : Resource<UserAdditionalData> {
+    suspend fun saveMoreUserData(user: UserAdditionalData)
+    = flow {
+        emit(client.userMoreDataCollection.document(user.email).set(user).let {
+            var isSuccess = false
+            it.addOnCompleteListener { done ->
+                isSuccess = done.isSuccessful
+            }.await()
+            Resource2.success(isSuccess)
+        })
+        }.catch { error ->
+        error.message?.let {
+            emit(Resource2.error(it))
+        }
+    }
+
+    suspend fun getUserMoreData(email: String) = flow {
         var user = UserAdditionalData()
-        var response: Resource<UserAdditionalData>
-        var doc = client.userMoreDataCollection.whereEqualTo("email", email).get().await()
-        doc.forEach { data->
-            user = data.toObject()
-        }
-        if(user == UserAdditionalData()) {
-            response = Resource.error(101)
-            Log.d("error","don t get data")
-        }
-        else response = Resource.success(user)
-        return response
+        emit(Resource2.success(client.userMoreDataCollection.whereEqualTo("email", email).get().await().let { doc->
+            doc.forEach { data->
+                user = data.toObject()
+            }
+            user
+        }))
+    }.catch {
+        emit(Resource2.error("error001",null))
     }
-     /*
-     fun saveProjectsForUser(user: UserAdditionalData) : Resource<Unit>{
-        var projects = arrayListOf(Pair(String,String))
-        var response = Resource.success(Unit)
-        var dac = client.userProjectsDoneCollection.document(user.email).set(user.releases).
-        addOnSuccessListener{
-            response
+
+    fun deleteProfile(user: User): Resource<Unit>{
+        var resource = Resource.success(Unit)
+        val storageRef = client.storage.storage.reference
+        val desertRef = storageRef.child(user.profilePhoto)
+
+        desertRef.delete().addOnSuccessListener {
+            resource
         }.addOnFailureListener {
-            response = Resource.error(101)
+            resource = Resource.error(101)
         }
-        return response
-     }
-      */
-
-    suspend fun getProjectsForUser(email: String) : Resource<ArrayList<Pair<String,String>>>{
-        var res = arrayListOf(Pair("",""))
-        var response : Resource<ArrayList<Pair<String,String>>>
-        var doc = client.userProjectsDoneCollection.whereEqualTo("email", email).get().await()
-        doc.forEach { data ->
-            res = data.toObject()
-        }
-        if(res.isEmpty()) {
-            response = Resource.error(101)
-            Log.d("error","don t get data")
-        } else response = Resource.success(res)
-        return  response
+         return resource
     }
 
-    //
+    fun saveProjectsForUser(projects :ProjectsDomainModel) = flow {
+        emit(client.userProjectsDoneCollection.document(projects.email).set(projects).let {
+            var isSuccess = false
+            it.addOnCompleteListener { done ->
+                isSuccess = done.isSuccessful
+            }.await()
+            Resource2.success(isSuccess)
+        })
+     }.catch { error ->
+         error.message?.let {
+             emit(Resource2.error(it))
+         }
+    }
+
+
+    suspend fun getProjectsForUser(email: String) = flow{
+        var listRes = ProjectsDomainModel()
+        emit(Resource2.success(client.userProjectsDoneCollection.whereEqualTo("email", email).
+        get().await().let { doc ->
+            doc.forEach { data ->
+                listRes = data.toObject()
+            }
+            listRes
+        }))
+    }.catch {
+            error ->
+        error.message?.let {
+            emit(Resource2.error(it))
+        }
+    }
+
     suspend fun getUserInfo(
         listEmail: ArrayList<String>,
     ) = flow {
@@ -183,12 +198,10 @@ class FirebaseApiService @Inject constructor(private val client: FirebaseClientM
         }
     }
 
-
     suspend fun getAllUsers() = flow {
         emit(Resource2.success(client.userCollection.get().await().documents.mapNotNull {
             it.toObject(UserHomeResponse::class.java)
-        }
-        ))
+        }))
     }.catch { error ->
         error.message?.let {
             emit(Resource2.error(it))

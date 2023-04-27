@@ -1,9 +1,15 @@
 package com.example.myapplication.ui.userScreen
 
+import android.app.Activity
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -12,9 +18,7 @@ import com.example.myapplication.core.dialog.AddProjectDialog
 import com.example.myapplication.core.utils.Status
 import com.example.myapplication.core.extensionFun.glide
 import com.example.myapplication.core.extensionFun.toast
-import com.example.myapplication.data.models.Notify
-import com.example.myapplication.data.models.User
-import com.example.myapplication.data.models.UserAdditionalData
+import com.example.myapplication.data.models.*
 import com.example.myapplication.databinding.FragmentUserScreenBinding
 import com.example.myapplication.ui.home.HomeActivity
 import com.example.myapplication.ui.userScreen.adapters.NotifyAdapter
@@ -23,10 +27,21 @@ import com.example.myapplication.ui.userScreen.adapters.ProjectsAdapter
 class UserScreenFragment : Fragment(R.layout.fragment_user_screen) {
 
     private var user: User = User()
+    private var listProjects = ProjectsDomainModel()
     private lateinit var mBinding: FragmentUserScreenBinding
     private val viewModel: UserScreenViewModel by activityViewModels()
     private lateinit var mAdapterNoty: NotifyAdapter
     private lateinit var mAdapterProjects : ProjectsAdapter
+    private var imageUriLocal: Uri? = null
+
+    private val responseLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            if (it.resultCode == Activity.RESULT_OK) {
+                if (it.data != null) {
+                    imageUriLocal = it.data?.data
+                }
+            }
+        }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -38,12 +53,27 @@ class UserScreenFragment : Fragment(R.layout.fragment_user_screen) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.getUserData()
+        initObservers()
         setListeners()
         setObservers()
     }
 
     private fun setObservers() {
+        viewModel.statusForUrl.observe(viewLifecycleOwner){
+            when(it.status)
+            {
+                Status.LOADING->{
+                    (activity as HomeActivity).showLoader()
+                }
+                Status.SUCCESS->{
+                    (activity as HomeActivity).dismissLoader()
+                }
+                Status.ERROR->{
+                    (activity as HomeActivity).dismissLoader()
+                    Log.i("Error","Fatal")
+                }
+            }
+        }
         viewModel.notifyData.observe(viewLifecycleOwner) {
             //launchAdapter()
         }
@@ -53,7 +83,6 @@ class UserScreenFragment : Fragment(R.layout.fragment_user_screen) {
                     (activity as HomeActivity).dismissLoader()
                     user = it.data!!
                     setUi()
-                    viewModel.getMoreUserData()
                 }
                 Status.ERROR -> {
                     context?.toast("error")
@@ -82,7 +111,6 @@ class UserScreenFragment : Fragment(R.layout.fragment_user_screen) {
                 Status.SUCCESS -> {
                     (activity as HomeActivity).dismissLoader()
                     setNewData(it.data!!)
-                    //launchAdapterProjects(it.data?.releases ?: arrayListOf(Pair("","")))
                 }
                 Status.ERROR -> {
                     setNewData(UserAdditionalData())
@@ -91,6 +119,42 @@ class UserScreenFragment : Fragment(R.layout.fragment_user_screen) {
                     (activity as HomeActivity).showLoader()
                 }
             }
+        }
+        viewModel.userProjects.observe(viewLifecycleOwner){
+            when(it.status){
+                Status.SUCCESS -> {
+                    (activity as HomeActivity).dismissLoader()
+                    listProjects = it.data!!
+                    launchAdapterProjects(listProjects)
+                }
+                Status.ERROR -> {
+                    setNewData(UserAdditionalData())
+                }
+                Status.LOADING -> {
+                    (activity as HomeActivity).showLoader()
+                }
+            }
+        }
+        viewModel.setUserProjects.observe(viewLifecycleOwner){
+            when(it.status) {
+                Status.SUCCESS -> {
+                    (activity as HomeActivity).dismissLoader()
+                    viewModel.getProjects()
+                }
+                Status.ERROR -> {
+                    context?.toast("error")
+                }
+                Status.LOADING -> {
+                    (activity as HomeActivity).showLoader()
+                }
+            }
+        }
+    }
+    private fun initObservers(){
+        viewModel.apply {
+            getUserData()
+            getMoreUserData()
+            getProjects()
         }
     }
 
@@ -130,21 +194,19 @@ class UserScreenFragment : Fragment(R.layout.fragment_user_screen) {
             adapter = mAdapterNoty
             layoutManager = LinearLayoutManager(activity?.applicationContext)
         }
-        mBinding.notifyRecycler.visibility = View.VISIBLE
     }
 
-    private fun launchAdapterProjects(list: ArrayList<Pair<String, String>>) {
-        mAdapterProjects = ProjectsAdapter(list)
+    private fun launchAdapterProjects(projects : ProjectsDomainModel){
+        mAdapterProjects =
+            ProjectsAdapter(projects,getString(R.string.projectName),getString(R.string.liberationQ))
         mBinding.rvProjects.apply {
             adapter = mAdapterProjects
             layoutManager = LinearLayoutManager(activity?.applicationContext)
         }
-        mBinding.notifyRecycler.visibility = View.VISIBLE
     }
 
     private fun setUi() {
         with(mBinding) {
-            rvProjects.visibility = View.GONE
             ivUserPhoto.glide(user.profilePhoto)
             tvNameUser.text = user.name
             tvPositionUser.text =
@@ -164,13 +226,16 @@ class UserScreenFragment : Fragment(R.layout.fragment_user_screen) {
             tvResumenH.setOnClickListener {
                 changeViewToNotify(false)
             }
-            /*
-            ivAddProject.setOnClickListener {
-                AddProjectDialog(){
-                    viewModel.setNewProject(it)
-                }.show(parentFragmentManager,"open dialog for add")
+
+            ivImg.setOnClickListener {
+                //viewModel.deletePhoto()
             }
-             */
+            ivAddProject.setOnClickListener{
+                AddProjectDialog{
+                    listProjects.projectInfo.add(it)
+                    viewModel.saveProjects(listProjects)
+                }.show(parentFragmentManager,"showDialog")
+            }
 
             btEdit.setOnClickListener {
                 isCheck = !isCheck
@@ -204,6 +269,12 @@ class UserScreenFragment : Fragment(R.layout.fragment_user_screen) {
                     )
                 }
             }
+            ivShowProject.setOnClickListener {
+                showProjects(true)
+            }
+            ivHideProject.setOnClickListener {
+                showProjects(false)
+            }
         }
     }
 
@@ -216,5 +287,18 @@ class UserScreenFragment : Fragment(R.layout.fragment_user_screen) {
             ilSummary.visibility =
                 if (noty) View.GONE else View.VISIBLE
         }
+    }
+
+    private fun showProjects(isShow: Boolean = true){
+        with(mBinding){
+            rvProjects.visibility = if (isShow) View.VISIBLE else View.GONE
+            ivHideProject.visibility = if (isShow) View.VISIBLE else View.GONE
+            ivShowProject.visibility = if (isShow) View.GONE else View.VISIBLE
+        }
+    }
+
+    private fun fromGallery() {
+        val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+        responseLauncher.launch(intent)
     }
 }
