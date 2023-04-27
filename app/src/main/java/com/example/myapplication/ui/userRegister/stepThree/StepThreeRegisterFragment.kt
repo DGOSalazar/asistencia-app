@@ -14,6 +14,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.myapplication.R
 import com.example.myapplication.core.extensionFun.toast
@@ -22,6 +23,7 @@ import com.example.myapplication.data.datasource.UserRegister
 import com.example.myapplication.databinding.FragmentStepThreeRegisterBinding
 import com.example.myapplication.ui.MainActivity
 import com.example.myapplication.ui.home.HomeActivity
+import com.example.myapplication.ui.login.LoginFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -156,8 +158,8 @@ class StepThreeRegisterFragment : Fragment() {
                     if (isAdded)
                         (activity as MainActivity).dismissLoader()
                     if (it.data!!) {
-                        val intent = Intent(requireContext(), HomeActivity::class.java)
-                        startActivity(intent)
+                        context?.toast("Ya puedes iniciar con tus credenciales!")
+                        findNavController().navigate(StepThreeRegisterFragmentDirections.actionStepThreeRegisterFragmentToLoginFragment22())
                     } else {
                         context?.toast(getString(R.string.user_register_error))
                         if (isAdded)

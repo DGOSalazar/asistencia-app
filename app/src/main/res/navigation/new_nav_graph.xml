@@ -64,6 +64,9 @@
             <argument
                 android:name="userModel"
                 app:argType="com.example.myapplication.data.datasource.UserRegister" />
+            <action
+                android:id="@+id/action_stepThreeRegisterFragment_to_loginFragment22"
+                app:destination="@id/loginFragment2" />
 
         </fragment>
     </navigation>
