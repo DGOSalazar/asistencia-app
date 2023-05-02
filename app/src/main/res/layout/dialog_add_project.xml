@@ -59,7 +59,7 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/ti_project"
                 android:layout_width="0dp"
-                android:layout_height="@dimen/dp40"
+                android:layout_height="@dimen/dp60"
                 android:layout_marginTop="@dimen/dp8"
                 app:layout_constraintStart_toStartOf="@id/tv_message"
                 app:layout_constraintEnd_toEndOf="@id/tv_message"
@@ -69,22 +69,28 @@
                     android:id="@+id/input_name_project"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:maxLines="1"
+                    android:maxLength="12"
+                    android:inputType="text"
                     />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/ti_release"
-            android:layout_width="0dp"
-            android:layout_height="@dimen/dp40"
-            app:layout_constraintStart_toStartOf="@id/tv_message"
-            app:layout_constraintEnd_toEndOf="@id/tv_message"
-            app:layout_constraintTop_toBottomOf="@id/ti_project"
+                android:id="@+id/ti_release"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/dp60"
+                app:layout_constraintStart_toStartOf="@id/tv_message"
+                app:layout_constraintEnd_toEndOf="@id/tv_message"
+                app:layout_constraintTop_toBottomOf="@id/ti_project"
                 android:layout_marginTop="@dimen/dp16"
-            android:hint="Liberado en el Q...">
+                android:hint="Liberado en el Q...">
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/input_nameQ"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:maxLength="2"
+                android:inputType="number"
                 />
         </com.google.android.material.textfield.TextInputLayout>
 

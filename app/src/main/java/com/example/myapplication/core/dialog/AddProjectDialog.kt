@@ -7,14 +7,17 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import com.example.myapplication.R
+import com.example.myapplication.data.models.ProjectInfo
+import com.example.myapplication.data.models.ProjectsDomainModel
 import com.example.myapplication.databinding.DialogAddProjectBinding
 
 
 class AddProjectDialog(
-    var res: (Pair<String,String>)-> Unit
+    var res: (ProjectInfo) -> Unit
     ): DialogFragment(R.layout.dialog_add_project) {
+
     private lateinit var mBinding: DialogAddProjectBinding
-    private var data: Pair<String,String> = Pair("","")
+    private var data = ProjectInfo()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,9 +34,6 @@ class AddProjectDialog(
 
     private fun view() {
         listeners()
-        with(mBinding){
-            data = Pair(inputNameProject.text.toString(),inputNameQ.text.toString())
-        }
     }
 
     private fun listeners() {
@@ -42,7 +42,12 @@ class AddProjectDialog(
                 dismiss()
             }
             btConfirm.setOnClickListener{
+                data = ProjectInfo(
+                    projectName = inputNameProject.text.toString(),
+                    releaseDate = inputNameQ.text.toString()
+                )
                 res(data)
+                dismiss()
             }
         }
     }

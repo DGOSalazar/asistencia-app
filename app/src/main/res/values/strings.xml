@@ -149,6 +149,9 @@
     <string name="saturday">Sabado</string>
     <string name="sunday">Domingo</string>
     <string name="donePerfil">Listo!</string>
+    <string name="liberationQ"><b>Liberada en el Q: </b> %1$s</string>
+    <string name="projectName"><b>Iniciativa liberada: </b> %1$s</string>
+    <string name="done_projects">Iniciativas concluidas</string>
 
 
 </resources>

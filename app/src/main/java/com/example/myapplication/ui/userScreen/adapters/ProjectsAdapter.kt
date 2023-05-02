@@ -3,11 +3,18 @@ package com.example.myapplication.ui.userScreen.adapters
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.R
+import com.example.myapplication.data.models.ProjectsDomainModel
 import com.example.myapplication.databinding.ProjectListViewBinding
+import com.example.myapplication.ui.home.HomeActivity
 
-class ProjectsAdapter(var projectList : ArrayList<Pair<String,String>>)
+class ProjectsAdapter(
+    var projectList : ProjectsDomainModel,
+    var fieldName : String,
+    var fieldQ : String
+)
     : RecyclerView.Adapter<ProjectsAdapter.ViewHolder>()  {
 
     inner class ViewHolder(view: View): RecyclerView.ViewHolder(view){
@@ -15,8 +22,8 @@ class ProjectsAdapter(var projectList : ArrayList<Pair<String,String>>)
 
         fun mountView(){
             with(mBinding){
-                tvNotiText.text  = projectList[adapterPosition].first
-                tvTimer.text = projectList[adapterPosition].second
+                tvNotiText.text  = String.format(fieldName,projectList.projectInfo[adapterPosition].projectName)
+                tvTimer.text = String.format(fieldQ,projectList.projectInfo[adapterPosition].releaseDate)
             }
         }
     }
@@ -32,5 +39,5 @@ class ProjectsAdapter(var projectList : ArrayList<Pair<String,String>>)
             mountView()
         }
     }
-    override fun getItemCount(): Int = projectList.size
+    override fun getItemCount(): Int = projectList.projectInfo.size
 }
