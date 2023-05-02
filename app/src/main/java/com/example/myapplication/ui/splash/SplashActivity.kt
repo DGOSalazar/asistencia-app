@@ -2,10 +2,12 @@ package com.example.myapplication.ui.splash
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import androidx.annotation.RequiresApi
 import com.airbnb.lottie.LottieAnimationView
 import com.example.myapplication.R
 import com.example.myapplication.databinding.ActivitySplashBinding
@@ -14,6 +16,7 @@ import com.example.myapplication.ui.MainActivity
 @SuppressLint("CustomSplashScreen")
 class SplashActivity : AppCompatActivity() {
     private lateinit var mBinding: ActivitySplashBinding
+    @RequiresApi(Build.VERSION_CODES.S)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mBinding= ActivitySplashBinding.inflate(layoutInflater)

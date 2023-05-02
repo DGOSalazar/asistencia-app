@@ -1,15 +1,15 @@
 package com.example.myapplication.ui.home
 
 import android.annotation.SuppressLint
-import android.content.SharedPreferences
+import android.app.AlertDialog
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.view.*
-import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
@@ -17,21 +17,22 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.myapplication.R
 import com.example.myapplication.core.dialog.UserDialog
 import com.example.myapplication.core.extensionFun.toast
+import com.example.myapplication.core.utils.statusNetwork.ResponseStatus
 import com.example.myapplication.data.models.AttendanceDays
 import com.example.myapplication.data.models.Day
 import com.example.myapplication.data.models.Month
-import com.example.myapplication.data.models.User
+import com.example.myapplication.data.remote.response.UserHomeResponse
 import com.example.myapplication.databinding.FragmentAssistenceMainBinding
+import com.example.myapplication.sys.utils.Tools
 import com.example.myapplication.ui.home.adapters.CalendarAdapter
 import com.example.myapplication.ui.home.adapters.UserAdapter
-import com.example.myapplication.ui.login.EMAIL_KEY
 import com.google.android.gms.location.*
 import dagger.hilt.android.AndroidEntryPoint
+import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.*
 import javax.inject.Inject
-import kotlin.collections.ArrayList
 
 
 const val CURRENT_MONTH = 1
@@ -48,19 +49,25 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main){
     private lateinit var mBinding:FragmentAssistenceMainBinding
     private val viewModel: HomeViewModel by activityViewModels()
 
+    @Inject
+    lateinit var tools: Tools
 
     @RequiresApi(Build.VERSION_CODES.O)
     var localDate: LocalDate= LocalDate.now()
     private var actualMonth = CURRENT_MONTH
     private var accountEmail = ""
-    private var userData: User = User()
+    private var userData: UserHomeResponse = UserHomeResponse()
 
-    @Inject
-    lateinit var sharedPreferences: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        accountEmail = sharedPreferences.getString(EMAIL_KEY, "").toString()
+        accountEmail = viewModel.getEmail()
+        viewModel.cleanLiveData()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.cleanLiveData()
     }
 
     override fun onCreateView(
@@ -71,9 +78,9 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main){
         return mBinding.root
     }
 
+    @RequiresApi(Build.VERSION_CODES.S)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        //mBinding.fabConfirmAsit.visibility = View.VISIBLE
         setObservers()
         setLaunch()
         setCalendarAdapter()
@@ -81,11 +88,10 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main){
         setListeners()
     }
 
+
+    @SuppressLint("NotifyDataSetChanged")
+    @RequiresApi(Build.VERSION_CODES.S)
     private fun setObservers() {
-        viewModel.confirmOk.observe(viewLifecycleOwner){
-            if (it) mBinding.fabConfirmAsit.visibility = View.VISIBLE
-            else mBinding.fabConfirmAsit.visibility = View.VISIBLE
-        }
         viewModel.assistanceDays.observe(viewLifecycleOwner, this::setCalendarDays)
         viewModel.currentMonth.observe(viewLifecycleOwner, this::updateCurrentDateInCalendar)
         viewModel.accountData.observe(viewLifecycleOwner, this::setHeader)
@@ -98,10 +104,99 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main){
         viewModel.local.observe(viewLifecycleOwner){
             context?.toast(it.toString())
         }
+
+        viewModel.status.observe(viewLifecycleOwner) {
+            if (it == null)
+                return@observe
+            when (it) {
+                is ResponseStatus.Loading -> {
+                    if (isAdded)
+                        (activity as HomeActivity).showLoader()
+                }
+                is ResponseStatus.Success -> {
+                    if (isAdded)
+                        (activity as HomeActivity).dismissLoader()
+                    handleStatusSuccess(it)
+                }
+                is ResponseStatus.Error -> {
+                    if (isAdded)
+                        (activity as HomeActivity).dismissLoader()
+                    context?.toast(getString(it.messageId))
+                }
+            }
+        }
+
+        viewModel.statusHistoryRegister.observe(viewLifecycleOwner){
+            if (it == null)
+                return@observe
+            when (it) {
+                is ResponseStatus.Loading -> {
+                    if (isAdded)
+                        (activity as HomeActivity).showLoader()
+                }
+                is ResponseStatus.Success -> {
+                    if (isAdded)
+                        (activity as HomeActivity).dismissLoader()
+                    showAlert("registro exitoso"){}
+                    viewModel.showOrHideAttendanceButton( accountEmail, getCurrentDate())
+                }
+                is ResponseStatus.Error -> {
+                    if (isAdded)
+                        (activity as HomeActivity).dismissLoader()
+                    context?.toast(getString(it.messageId))
+                }
+            }
+        }
+
+        viewModel.showOrHideAttendanceBtn.observe(viewLifecycleOwner){
+            if (it == null)
+                return@observe
+            when (it) {
+                is ResponseStatus.Loading -> {
+                    if (isAdded)
+                        (activity as HomeActivity).showLoader()
+                }
+                is ResponseStatus.Success -> {
+                    if (isAdded)
+                        (activity as HomeActivity).dismissLoader()
+                    mBinding.fabConfirmAsit.visibility = if (it.data) View.VISIBLE else View.GONE
+                }
+                is ResponseStatus.Error -> {
+                    if (isAdded)
+                        (activity as HomeActivity).dismissLoader()
+                    context?.toast(getString(it.messageId))
+                }
+            }
+        }
+    }
+
+    private fun handleStatusSuccess(responseStatus: ResponseStatus.Success<Any>) {
+        when(responseStatus.data){
+            is Boolean -> {
+                if(responseStatus.data){
+                    viewModel.registerHistoryAttendance(accountEmail, getCurrentDate())
+                }
+                else
+                    showAlert(getString(R.string.error_local_location_not_match)){ }
+            }
+            else -> return
+        }
+    }
+
+    private fun showAlert(message:String, action:() -> Unit) {
+        val builder = AlertDialog.Builder(context)
+        builder.setTitle("Title")
+        builder.setMessage(message)
+        builder.setPositiveButton("OK") { view, _ ->
+            action()
+            view.dismiss()
+        }
+        val dialog = builder.create()
+        dialog.show()
     }
 
     @SuppressLint("SetTextI18n")
-    private fun updateUsersList(emailList:ArrayList<User>) {
+    private fun updateUsersList(emailList:ArrayList<UserHomeResponse>) {
         mBinding.tvAssist.text = "${emailList.size} Asistentes"
         mUserAdapter = UserAdapter(emailList){
             clickUser(it)
@@ -117,12 +212,25 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main){
     }
 
     @SuppressLint("SetTextI18n", "NotifyDataSetChanged")
-    private fun setHeader(user: User) {
+    private fun setHeader(user: UserHomeResponse) {
         mBinding.tvWelcome.text = "Hola ${user.name}"
         userData = user
-        mBinding.tvDate.text = String.format(getString(R.string.welcome_date),
-            resources.getStringArray(R.array.days)[localDate.dayOfWeek.value-1],localDate.dayOfMonth,
-            resources.getStringArray(R.array.months)[localDate.monthValue-1],localDate.year)
+        var today = localDate.dayOfWeek.value
+        if((today == 6) || (today == 7))
+        {
+            mBinding.tvDate.text = if(localDate.dayOfWeek == DayOfWeek.SATURDAY)
+                String.format(getString(R.string.welcome_date),
+                getString(R.string.saturday),localDate.dayOfMonth,
+                    resources.getStringArray(R.array.months)[localDate.monthValue-1],localDate.year) else
+                String.format(getString(R.string.welcome_date),
+                    getString(R.string.sunday),localDate.dayOfMonth,
+                    resources.getStringArray(R.array.months)[localDate.monthValue-1],localDate.year)
+        }else {
+            mBinding.tvDate.text = String.format(getString(R.string.welcome_date),
+                resources.getStringArray(R.array.days)[localDate.dayOfWeek.value-1],localDate.dayOfMonth,
+                resources.getStringArray(R.array.months)[localDate.monthValue-1],localDate.year)
+        }
+
         mCalendarAdapter.imageProfileUrl = user.profilePhoto
         mCalendarAdapter.notifyDataSetChanged()
     }
@@ -131,11 +239,13 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main){
         mCalendarAdapter.statusMonth = actualMonth
         mCalendarAdapter.assistedDays = getDaysToAttend(daysToAttend)
         viewModel.setCalendarDays(localDate, localDate.minusMonths(1), daysToAttend, actualMonth)
+        val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy")
+        val currentDate = LocalDate.now().format(formatter)
+        viewModel.showOrHideAttendanceButton( accountEmail, currentDate)
     }
 
     private fun getDaysToAttend(daysToAttend: List<AttendanceDays>): List<Int> {
         val userAssistanceDays = arrayListOf<Int>()
-
         daysToAttend.forEach{ day ->
             if(day.emails.any {it == accountEmail}) {
                 val date = day.currentDay.split("-")
@@ -155,40 +265,24 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main){
         mBinding.vNext.setOnClickListener{
             nextMonthAction()
         }
-        mBinding.containerHomeNav.setOnClickListener{
-            moveNavSelector(it)
-        }
-        mBinding.containerTeamNav.setOnClickListener{
-            moveNavSelector(it)
-            val navBuilder = NavOptions.Builder()
-            navBuilder.setEnterAnim(R.anim.enter_from_left).setExitAnim(R.anim.exit_from_left)
-                .setPopEnterAnim(R.anim.enter_from_right).setPopExitAnim(R.anim.exit_from_right)
-            findNavController().
-            navigate(AssistenceMainFragmentDirections.
-            actionAssistenceMainFragmentToTeamMainFragment(),navBuilder.build())
-        }
-        mBinding.containerMyProfileNav.setOnClickListener{
-            moveNavSelector(it)
-            val navBuilder = NavOptions.Builder()
-            navBuilder.setEnterAnim(R.anim.enter_from_left).setExitAnim(R.anim.exit_from_left)
-                .setPopEnterAnim(R.anim.enter_from_right).setPopExitAnim(R.anim.exit_from_right)
-            findNavController().
-            navigate(AssistenceMainFragmentDirections.
-            actionAssistenceMainFragmentToUserScreenFragment(userData),navBuilder.build())
-        }
+
         mBinding.tvMenuIcon.setOnClickListener{
             context?.toast("TopMenu")
         }
         mBinding.fabConfirmAsit.setOnClickListener {
-            mBinding.fabConfirmAsit.visibility = View.GONE
-            context?.toast("Confirmación de asistencia exitosa.")
-            viewModel.getCurrentLocation(activity?.applicationContext!!)
+            if(tools.isEnableGeolocation())
+                viewModel.applyAttendance()
+            else
+                showAlert(getString(R.string.gps_desable_message)){
+                    startActivity( Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
+                }
         }
     }
 
     @SuppressLint("SetTextI18n")
     private fun setCalendarTitle() {
         mBinding.tvMonth.text = (resources.getStringArray(R.array.months)[localDate.monthValue-1])
+        (activity as? HomeActivity)?.hideBottomBar(true)
     }
 
     @SuppressLint("NotifyDataSetChanged", "SimpleDateFormat")
@@ -211,7 +305,7 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main){
         val formattedString = localDate.format(formatter)
         viewModel.getListEmails(formattedString)
         viewModel.setDay(formattedString)
-        viewModel.confirmStatus(accountEmail,formattedString)
+        viewModel.confirmStatus(accountEmail, formattedString)
     }
 
     private fun setCalendarAdapter(){
@@ -245,43 +339,17 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main){
         viewModel.getUserDate()
     }
 
-    private fun monthYearFromDate(date:LocalDate):String {
-        val formatter = DateTimeFormatter.ofPattern("MMMM yyyy")
-        return date.format(formatter)
-    }
-
-    @SuppressLint("UseCompatLoadingForDrawables")
-    private fun moveNavSelector(view: View) {
-        when(view.id){
-            R.id.container_home_nav ->{
-                mBinding.containerHomeNav.setBackgroundResource(R.drawable.bg_buttom_nav)
-                mBinding.containerTeamNav.setBackgroundColor(requireContext().getColor(R.color.grey1))
-                mBinding.containerMyProfileNav.setBackgroundColor(requireContext().getColor(R.color.grey1))
-                Toast.makeText(requireContext(), "Home", Toast.LENGTH_SHORT).show()
-            }
-            R.id.container_team_nav ->{
-                mBinding.containerTeamNav.setBackgroundResource(R.drawable.bg_buttom_nav)
-                mBinding.containerHomeNav.setBackgroundColor(requireContext().getColor(R.color.grey1))
-                mBinding.containerMyProfileNav.setBackgroundColor(requireContext().getColor(R.color.grey1))
-                Toast.makeText(requireContext(), "Equipo", Toast.LENGTH_SHORT).show()
-            }
-            R.id.container_my_profile_nav ->{
-                mBinding.containerMyProfileNav.setBackgroundResource(R.drawable.bg_buttom_nav)
-                mBinding.containerHomeNav.setBackgroundColor(requireContext().getColor(R.color.grey1))
-                mBinding.containerTeamNav.setBackgroundColor(requireContext().getColor(R.color.grey1))
-                Toast.makeText(requireContext(), "Perfil", Toast.LENGTH_SHORT).show()
-            }
-            else -> {
-                //
-            }
-        }
-    }
-    private fun clickUser(u: User){
+    private fun clickUser(u: UserHomeResponse){
         UserDialog(u).show(parentFragmentManager,"Yep")
     }
     private fun click(day:Day){
         viewModel.setDay(day.date)
         viewModel.setObjectDay(day)
         findNavController().navigate(AssistenceMainFragmentDirections.actionAssistenceMainFragmentToAssistenceWeekFragment())
+    }
+
+    private fun getCurrentDate(): String {
+        val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy")
+        return LocalDate.now().format(formatter)
     }
 }

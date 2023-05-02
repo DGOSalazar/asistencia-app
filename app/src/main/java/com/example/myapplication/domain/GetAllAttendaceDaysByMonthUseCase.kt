@@ -3,11 +3,12 @@ package com.example.myapplication.domain
 import android.os.Build
 import androidx.annotation.RequiresApi
 import com.example.myapplication.data.models.AttendanceDays
-import com.example.myapplication.data.network.FirebaseServices
+import com.example.myapplication.data.remote.api.FirebaseServices
 import javax.inject.Inject
 
 class GetAllAttendanceDaysByMonthUseCase @Inject constructor(
-    private val firebaseServices: FirebaseServices)
+    private val firebaseServices: FirebaseServices
+)
 {
     @RequiresApi(Build.VERSION_CODES.O)
     operator fun invoke(

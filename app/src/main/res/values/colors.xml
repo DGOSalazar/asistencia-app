@@ -37,6 +37,7 @@
     <color name="back_color">#F8CCAD</color>
     <color name="scrum_color">#ADB9F8</color>s
 
+    <color name="colorWhiteTransparent">#80656565</color>
     <color name="black_shadow">#165A5A5A</color>
 
 </resources>

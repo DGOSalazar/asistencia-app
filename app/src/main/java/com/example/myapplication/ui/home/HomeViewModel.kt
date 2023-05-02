@@ -7,7 +7,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.myapplication.core.utils.statusNetwork.ResponseStatus
 import com.example.myapplication.data.models.*
+import com.example.myapplication.data.remote.response.AttendanceDaysResponse
+import com.example.myapplication.data.remote.response.DayCollectionResponse
+import com.example.myapplication.data.remote.response.UserHomeResponse
 import com.example.myapplication.domain.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -23,14 +27,20 @@ class HomeViewModel @Inject constructor(
     private val enrollUserToDayUseCase: EnrollUserToDayUseCase,
     private val getUserInfoUseCase: GetUserInfoUseCase,
     private val getAllAttendanceDaysByMonthUseCase: GetAllAttendanceDaysByMonthUseCase,
-    private val getLocationUseCase: GetLocationUseCase
-    ):ViewModel() {
+    private val getLocationUseCase: GetLocationUseCase,
+    private val sharePreferenceRepository: SharePreferenceRepository,
+    private val validateGeolocationUseCase: ValidateGeolocationUseCase,
+    private val attendanceHistoryRegisterUseCase: AttendanceHistoryRegisterUseCase,
+    private val showOrHideAttendanceButton: ShowOrHideAttendanceButton,
+    private val NewGenerateMonthDayUC: NewGenerateMonthDayUC,
+    private val userHomeRepository: UserHomeRepository
+) : ViewModel() {
 
     private val _daySelected = MutableLiveData<String>()
     var daySelected: LiveData<String> = _daySelected
 
-    private val _users = MutableLiveData<ArrayList<User>>()
-    var users: LiveData<ArrayList<User>> = _users
+    private val _users = MutableLiveData<ArrayList<UserHomeResponse>>()
+    var users: LiveData<ArrayList<UserHomeResponse>> = _users
 
     private val _userEmails = MutableLiveData<ArrayList<String>>()
     var userEmails: LiveData<ArrayList<String>> = _userEmails
@@ -44,8 +54,8 @@ class HomeViewModel @Inject constructor(
     private val _weekSelected = MutableLiveData<List<Day>>()
     var weekSelected: LiveData<List<Day>> = _weekSelected
 
-    private val _accountData = MutableLiveData<User>()
-    var accountData: LiveData<User> = _accountData
+    private val _accountData = MutableLiveData<UserHomeResponse>()
+    var accountData: LiveData<UserHomeResponse> = _accountData
 
     private val _loader = MutableLiveData<Boolean>()
     var loader: LiveData<Boolean> = _loader
@@ -65,9 +75,19 @@ class HomeViewModel @Inject constructor(
     private val _confirmOk = MutableLiveData<Boolean>()
     var confirmOk: LiveData<Boolean> = _confirmOk
 
-    fun confirmStatus(email:String, day: String){
+    private var _status = MutableLiveData<ResponseStatus<Any>?>()
+    val status: LiveData<ResponseStatus<Any>?> get() = _status
+
+    private var _statusHistoryRegister = MutableLiveData<ResponseStatus<Boolean>?>()
+    val statusHistoryRegister: LiveData<ResponseStatus<Boolean>?> get() = _statusHistoryRegister
+
+    private var _showOrHideAttendanceBtn = MutableLiveData<ResponseStatus<Boolean>?>()
+    val showOrHideAttendanceBtn: LiveData<ResponseStatus<Boolean>?> get() = _showOrHideAttendanceBtn
+
+
+    fun confirmStatus(email: String, day: String) {
         viewModelScope.launch {
-            getLocationUseCase.checkConfirmStatus(day,email)
+            getLocationUseCase.checkConfirmStatus(day, email)
             _confirmOk.value = getLocationUseCase.getConfirm()
         }
     }
@@ -117,7 +137,7 @@ class HomeViewModel @Inject constructor(
             withContext(Dispatchers.IO) {
                 getUserInfoUseCase.userInfo(listEmails) {
                     _users.postValue(it)
-                    _isLoading.value = Status.SUCCESS
+                    _isLoading.postValue(Status.SUCCESS)
                 }
             }
         }
@@ -125,8 +145,8 @@ class HomeViewModel @Inject constructor(
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun getListEmails(day: String) {
-        _isLoading.value = Status.LOADING
         viewModelScope.launch {
+            _isLoading.value = Status.LOADING
             withContext(Dispatchers.IO) {
                 getUserInfoUseCase.emailList(day) {
                     _userEmails.postValue(it)
@@ -157,10 +177,12 @@ class HomeViewModel @Inject constructor(
         _mail.value = email
     }
 
-    fun getEmail(): String = mail.value!!
+    fun getEmail() = sharePreferenceRepository.getEmail().toString()
+
+    //fun getEmail(): String = mail.value!!
 
     fun clearLiveData() {
-        val clean = arrayListOf<User>()
+        val clean = arrayListOf<UserHomeResponse>()
         _users.value = clean
         _userEmails.value = arrayListOf()
     }
@@ -170,4 +192,34 @@ class HomeViewModel @Inject constructor(
             getLocationUseCase.getLocationResult(context)
         }
     }
+
+    @Suppress("UNCHECKED_CAST")
+    fun applyAttendance() {
+        viewModelScope.launch {
+            _status.value = validateGeolocationUseCase.invoke() as ResponseStatus<Any>
+        }
+    }
+
+    fun cleanLiveData() {
+        _status.value = null
+        _showOrHideAttendanceBtn.value = null
+        _statusHistoryRegister.value = null
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    fun registerHistoryAttendance(email: String, date: String) {
+        viewModelScope.launch {
+            val request = AttendanceHistoryModel(email, date, 2)
+            _statusHistoryRegister.value = attendanceHistoryRegisterUseCase.invoke(request)
+        }
+    }
+
+    fun showOrHideAttendanceButton(email: String, date: String) {
+        viewModelScope.launch {
+            _showOrHideAttendanceBtn.value =
+                showOrHideAttendanceButton.invoke(email = email, currentDate = date)
+        }
+    }
+
+
 }

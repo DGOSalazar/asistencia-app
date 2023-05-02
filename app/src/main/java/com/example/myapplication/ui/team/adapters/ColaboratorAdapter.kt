@@ -6,10 +6,11 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.R
 import com.example.myapplication.core.extensionFun.glide
-import com.example.myapplication.data.models.User
+import com.example.myapplication.data.models.UserHomeDomainModel
+import com.example.myapplication.data.remote.response.UserHomeResponse
 import com.example.myapplication.databinding.ColaboratorViewLiteBinding
 
-class ColaboratorAdapter(var listUsers: ArrayList<User>): RecyclerView.Adapter<ColaboratorAdapter.ViewHolder>() {
+class ColaboratorAdapter(var listUsers: ArrayList<UserHomeDomainModel>): RecyclerView.Adapter<ColaboratorAdapter.ViewHolder>() {
 
     inner class ViewHolder(view: View): RecyclerView.ViewHolder(view){
         var mBinding = ColaboratorViewLiteBinding.bind(view)

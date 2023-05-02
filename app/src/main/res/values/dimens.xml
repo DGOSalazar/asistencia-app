@@ -59,4 +59,5 @@
     <dimen name="dp6">6dp</dimen>
     <dimen name="dp3">3dp</dimen>
     <dimen name="sp15">15sp</dimen>
+    <dimen name="sp8">8sp</dimen>
 </resources>

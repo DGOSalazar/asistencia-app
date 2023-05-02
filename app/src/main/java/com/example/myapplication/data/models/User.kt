@@ -14,4 +14,5 @@ data class User(var email: String="",
                 var profilePhoto: String="",
                 var phone: String="",
                 var employee: Long=0,
-                var assistDay: ArrayList<String> = arrayListOf()) : Parcelable
+                var assistDay: String =""
+) : Parcelable

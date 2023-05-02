@@ -18,6 +18,7 @@ import com.example.myapplication.R
 import com.example.myapplication.core.extensionFun.toast
 import com.example.myapplication.core.notification.AlarmReceiver
 import com.example.myapplication.core.notification.AlarmReceiver.Companion.NOTIFICATION_ID
+import com.example.myapplication.core.generics.loader.LoaderFragment
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.DayOfWeek
 import java.time.LocalDate
@@ -28,6 +29,7 @@ import java.util.*
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private var localDate = LocalDate.now()
+    private val loader by lazy { LoaderFragment() }
 
     companion object {
         const val PERMISSION_REQUEST_CODE = 1
@@ -110,5 +112,34 @@ class MainActivity : AppCompatActivity() {
             this,
             Manifest.permission.SCHEDULE_EXACT_ALARM
         ) != PackageManager.PERMISSION_GRANTED
+    }
+
+//---------------------------------
+
+    fun showLoader() {
+        try {
+            val loaderDialog = supportFragmentManager.findFragmentByTag("Loader")
+            val isShowing = loader.dialog?.isShowing ?: false
+            if (loaderDialog != null && loaderDialog.isAdded) {
+                return
+            }
+
+            if (!loader.isAdded && !loader.isVisible && !isShowing) {
+                loader.show(supportFragmentManager, "Loader")
+                supportFragmentManager.executePendingTransactions()
+            }
+        } catch (e: Exception) {
+            //ERROR
+        }
+    }
+
+    fun dismissLoader() {
+        if (loader.isAdded) {
+            if (loader.isResumed) {
+                loader.dismiss()
+            } else {
+                loader.dismissAllowingStateLoss()
+            }
+        }
     }
 }

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="spinnerItemsPositions">
+        <item>Puesto</item>
+        <item>Android Dev</item>
+        <item>IOS Dev</item>
+        <item>Business Analyst</item>
+        <item>Backend Dev</item>
+        <item>Scrum Master</item>
+        <item>Tester/QA</item>
+        <item>Otro</item>
+    </string-array>
+
+    <string-array name="spinnerItemsTeam">
+        <item>Iniciativa</item>
+        <item>Hellfish</item>
+        <item>Minuts</item>
+        <item>Masters</item>
+        <item>Hashiras</item>
+        <item>C+ExA</item>
+        <item>En espera</item>
+    </string-array>
+
+    <string-array name="days">
+        <item>Lunes</item>
+        <item>Martes</item>
+        <item>Miércoles</item>
+        <item>Jueves</item>
+        <item>Viernes</item>
+    </string-array>
+
+    <string-array name="months">
+        <item>Enero</item>
+        <item>Febrero</item>
+        <item>Marzo</item>
+        <item>Abril</item>
+        <item>Mayo</item>
+        <item>Junio</item>
+        <item>Julio</item>
+        <item>Agosto</item>
+        <item>Septiembre</item>
+        <item>Octubre</item>
+        <item>Noviembre</item>
+        <item>Diciembre</item>
+    </string-array>
+
+</resources>
