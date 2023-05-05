@@ -1,9 +1,7 @@
 package com.example.myapplication.ui.home.adapters
 
-import android.os.Build
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.R
 import com.example.myapplication.data.models.NewDayModel
@@ -17,6 +15,7 @@ class NewCalendarAdapter :
     var onClickDay: ((NewDayModel) -> Unit)? = null
     var currentDate: String = ""
     var assistedDays: ArrayList<DayCollectionResponse> = arrayListOf()
+    var userType:Int = 0
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): CalendarViewHolder {
         val view = LayoutInflater.from(viewGroup.context)
@@ -24,10 +23,14 @@ class NewCalendarAdapter :
         return CalendarViewHolder(view)
     }
 
-    @RequiresApi(Build.VERSION_CODES.M)
     override fun onBindViewHolder(viewHolder: CalendarViewHolder, position: Int) {
         val day = dataSet[position]
-        viewHolder.setView(day, currentDate, assistedDays)
+        viewHolder.setView(
+            day,
+            currentDate,
+            assistedDays,
+            userType
+        )
         viewHolder.binding.container.setOnClickListener { onClickDay?.invoke(day) }
     }
 

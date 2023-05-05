@@ -25,9 +25,16 @@ class SharePreferenceRepository @Inject constructor(
         edit.apply()
     }
 
+    fun saveUserType(userType:Int){
+        edit.putInt(Constants.USER_TYPE_KEY, userType)
+    }
+
     fun getEmail(): String? =
         sharedPreferences.getString(Constants.EMAIL_KEY, "")
 
     fun getPassword(): String? =
         sharedPreferences.getString(Constants.PASSWORD_KEY, "")
+
+    fun getUserType(): Int =
+        sharedPreferences.getInt(Constants.USER_TYPE_KEY,0)
 }

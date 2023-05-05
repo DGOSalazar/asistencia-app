@@ -11,5 +11,6 @@ data class UserHomeResponse(
     var profilePhoto: String="",
     var phone: String="",
     var employee: Long=0,
+    var userType:Int = 0
     //var assistDay:String=""
 )

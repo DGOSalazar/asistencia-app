@@ -32,7 +32,7 @@ class HomeViewModel @Inject constructor(
     private val validateGeolocationUseCase: ValidateGeolocationUseCase,
     private val attendanceHistoryRegisterUseCase: AttendanceHistoryRegisterUseCase,
     private val showOrHideAttendanceButton: ShowOrHideAttendanceButton,
-    private val NewGenerateMonthDayUC: NewGenerateMonthDayUC,
+    private val newGenerateMonthDayUC: NewGenerateMonthDayUC,
     private val userHomeRepository: UserHomeRepository
 ) : ViewModel() {
 
@@ -83,6 +83,15 @@ class HomeViewModel @Inject constructor(
 
     private var _showOrHideAttendanceBtn = MutableLiveData<ResponseStatus<Boolean>?>()
     val showOrHideAttendanceBtn: LiveData<ResponseStatus<Boolean>?> get() = _showOrHideAttendanceBtn
+
+    private var _calendarDays = MutableLiveData<ArrayList<NewDayModel>>()
+    val calendarDays: LiveData<ArrayList<NewDayModel>> get() = _calendarDays
+
+
+    var daysToAttend:List<AttendanceDays> = emptyList()
+    var remoteDays:ArrayList<DayCollectionResponse> = arrayListOf()
+
+
 
 
     fun confirmStatus(email: String, day: String) {
@@ -221,5 +230,30 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun newGetCalendarDays(attendanceDays:List<AttendanceDays>){
+        viewModelScope.launch {
+            remoteDays = mapper(attendanceDays)
+            _calendarDays.value = newGenerateMonthDayUC.invoke(remoteDays)
+        }
+    }
 
+    private fun mapper(attendanceDays:List<AttendanceDays>):ArrayList<DayCollectionResponse>{
+        val dayList = arrayListOf<DayCollectionResponse>()
+        attendanceDays.forEach{ day ->
+            dayList.add(
+                DayCollectionResponse(
+                    currentDay = day.currentDay,
+                    email =  day.emails
+                )
+            )
+        }
+        return dayList
+    }
+
+    fun getUserType() = sharePreferenceRepository.getUserType()
+
+    fun setUserType(userType:Int) {
+        sharePreferenceRepository.saveUserType(userType)
+    }
 }

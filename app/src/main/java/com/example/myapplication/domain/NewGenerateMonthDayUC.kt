@@ -39,7 +39,9 @@ class NewGenerateMonthDayUC @Inject constructor() {
 
         allDays.addAll(daysOfCurrentMonth)
 
-        if (allDays.size < DAY_PER_MONTH) allDays.addAll(getNextMonthDays(DAY_PER_MONTH - allDays.size))
+        val nextMonthDaysNumber = DAY_PER_MONTH - allDays.size
+
+        if (allDays.size < DAY_PER_MONTH) allDays.addAll(getNextMonthDays(nextMonthDaysNumber))
 
         allDays
     }

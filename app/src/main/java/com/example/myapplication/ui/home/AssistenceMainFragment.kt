@@ -7,9 +7,11 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.view.*
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
@@ -25,6 +27,7 @@ import com.example.myapplication.data.remote.response.UserHomeResponse
 import com.example.myapplication.databinding.FragmentAssistenceMainBinding
 import com.example.myapplication.sys.utils.Tools
 import com.example.myapplication.ui.home.adapters.CalendarAdapter
+import com.example.myapplication.ui.home.adapters.NewCalendarAdapter
 import com.example.myapplication.ui.home.adapters.UserAdapter
 import com.google.android.gms.location.*
 import dagger.hilt.android.AndroidEntryPoint
@@ -45,9 +48,11 @@ const val NEXT_MONTH = 3
 class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main){
 
     private lateinit var mCalendarAdapter: CalendarAdapter
+    private lateinit var newCalendarAdapter: NewCalendarAdapter
     private lateinit var mUserAdapter: UserAdapter
     private lateinit var mBinding:FragmentAssistenceMainBinding
     private val viewModel: HomeViewModel by activityViewModels()
+    private val mainViewModel: AttendanceMainViewModel by viewModels()
 
     @Inject
     lateinit var tools: Tools
@@ -67,6 +72,11 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main){
 
     override fun onResume() {
         super.onResume()
+        viewModel.cleanLiveData()
+    }
+
+    override fun onStart() {
+        super.onStart()
         viewModel.cleanLiveData()
     }
 
@@ -168,6 +178,19 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main){
                 }
             }
         }
+
+        viewModel.calendarDays.observe(viewLifecycleOwner){ calendarDays ->
+            newCalendarAdapter = NewCalendarAdapter().apply {
+                dataSet = calendarDays
+                currentDate = getCurrentDate()
+                assistedDays = viewModel.remoteDays
+                userType = viewModel.getUserType()
+                onClickDay = { day ->
+                    Toast.makeText(requireContext(), day.date , Toast.LENGTH_SHORT).show()
+                }
+            }
+            mBinding.recyclerCalendar.adapter = newCalendarAdapter
+        }
     }
 
     private fun handleStatusSuccess(responseStatus: ResponseStatus.Success<Any>) {
@@ -230,12 +253,22 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main){
                 resources.getStringArray(R.array.days)[localDate.dayOfWeek.value-1],localDate.dayOfMonth,
                 resources.getStringArray(R.array.months)[localDate.monthValue-1],localDate.year)
         }
-
+        viewModel.setUserType(user.userType)
+        setViewByUserType()
         mCalendarAdapter.imageProfileUrl = user.profilePhoto
         mCalendarAdapter.notifyDataSetChanged()
     }
 
+    private fun setViewByUserType(){
+        if (userData.userType == 0) return
+
+        /** agergar cambios visuales de la vista modo super usuario*/
+        Toast.makeText(requireContext(), "Bienvenido super usuario", Toast.LENGTH_SHORT).show()
+        viewModel.newGetCalendarDays(viewModel.daysToAttend)
+    }
+
     private fun setCalendarDays(daysToAttend:List<AttendanceDays>){
+        viewModel.daysToAttend = daysToAttend
         mCalendarAdapter.statusMonth = actualMonth
         mCalendarAdapter.assistedDays = getDaysToAttend(daysToAttend)
         viewModel.setCalendarDays(localDate, localDate.minusMonths(1), daysToAttend, actualMonth)
