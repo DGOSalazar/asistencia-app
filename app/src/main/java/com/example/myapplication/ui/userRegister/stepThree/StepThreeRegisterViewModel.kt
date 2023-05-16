@@ -6,7 +6,7 @@ import com.example.myapplication.core.utils.Resource
 import com.example.myapplication.core.utils.isValidCollaboratorNumber
 import com.example.myapplication.core.utils.isValidSpinner
 import com.example.myapplication.core.utils.statusNetwork.Resource2
-import com.example.myapplication.data.datasource.UserRegister
+import com.example.myapplication.data.models.UserRegister
 import com.example.myapplication.domain.UserRegisterRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -87,9 +87,8 @@ class StepThreeRegisterViewModel @Inject constructor(
 
 
     fun getAllPositions() = liveData(Dispatchers.IO) {
-        userRegisterRepository.getAllPositions().collect { reponse ->
-            emit(reponse)
-        }
+        userRegisterRepository.getAllPositions()
+            .collect { reponse -> emit(reponse) }
     }
 
     fun getAllTeams() = liveData(Dispatchers.IO) {

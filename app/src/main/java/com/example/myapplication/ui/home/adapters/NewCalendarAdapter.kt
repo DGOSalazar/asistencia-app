@@ -1,9 +1,7 @@
 package com.example.myapplication.ui.home.adapters
 
-import android.os.Build
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.R
 import com.example.myapplication.data.models.NewDayModel
@@ -24,7 +22,7 @@ class NewCalendarAdapter :
         return CalendarViewHolder(view)
     }
 
-    @RequiresApi(Build.VERSION_CODES.M)
+
     override fun onBindViewHolder(viewHolder: CalendarViewHolder, position: Int) {
         val day = dataSet[position]
         viewHolder.setView(day, currentDate, assistedDays)

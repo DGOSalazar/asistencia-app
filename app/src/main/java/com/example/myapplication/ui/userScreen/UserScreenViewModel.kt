@@ -11,7 +11,6 @@ import com.example.myapplication.data.models.ProjectsDomainModel
 import com.example.myapplication.data.models.User
 import com.example.myapplication.data.models.UserAdditionalData
 import com.example.myapplication.domain.SharePreferenceRepository
-import com.example.myapplication.domain.UserRegisterRepository
 import com.example.myapplication.domain.UserScreenRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -20,7 +19,6 @@ import javax.inject.Inject
 @HiltViewModel
 class UserScreenViewModel @Inject constructor(
     private val userScreenRepository: UserScreenRepository,
-    private val userRegisterRepository: UserRegisterRepository,
     private val sharePreferenceRepository: SharePreferenceRepository
 ) : ViewModel() {
 

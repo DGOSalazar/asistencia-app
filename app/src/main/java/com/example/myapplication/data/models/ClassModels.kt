@@ -1,13 +1,7 @@
-package com.example.myapplication.data.datasource
+package com.example.myapplication.data.models
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
-
-data class Login(
-    val email: String,
-    val isEmailVerified: Boolean
-)
-
 @Parcelize
 data class UserRegister(
     var email: String = "",

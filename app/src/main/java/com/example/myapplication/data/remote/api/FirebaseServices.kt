@@ -144,17 +144,4 @@ class FirebaseServices @Inject constructor(
         return notifications
     }
 
-    suspend fun getAllUsers(): ArrayList<UserHomeResponse>? {
-        val list: ArrayList<UserHomeResponse> = arrayListOf()
-        val snap = firebase.userCollection.get().await()
-        val documents = snap.documents
-        return documents?.let {
-            it.forEach { document ->
-                val netUser = document.toObject<UserHomeResponse>()
-                netUser?.let { it1 -> list.add(it1) }
-            }
-            list
-        }
-    }
-
 }

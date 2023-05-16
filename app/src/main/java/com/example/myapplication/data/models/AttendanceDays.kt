@@ -8,7 +8,6 @@ import java.time.DayOfWeek
 data class AttendanceDays  constructor(
     val emails:ArrayList<String>,
     val currentDay:String,
-    val currentDayEng:DayOfWeek = DayOfWeek.FRIDAY,
     var day:Int=0,
     var freePlaces:Int=1
 )

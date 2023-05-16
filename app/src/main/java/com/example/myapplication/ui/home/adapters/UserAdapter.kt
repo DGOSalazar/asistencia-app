@@ -1,18 +1,13 @@
 package com.example.myapplication.ui.home.adapters
 
-import android.annotation.SuppressLint
-import android.graphics.drawable.ColorDrawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.myapplication.R
-import com.example.myapplication.core.dialog.UserDialog
-import com.example.myapplication.databinding.ColaboratorViewBinding
-import com.example.myapplication.data.models.User
 import com.example.myapplication.data.remote.response.UserHomeResponse
-import kotlinx.coroutines.NonDisposableHandle.parent
+import com.example.myapplication.databinding.ColaboratorViewBinding
 
 class UserAdapter(private var user: List<UserHomeResponse>, private var click: (UserHomeResponse) -> Unit): RecyclerView.Adapter<UserAdapter.ViewHolder>() {
 

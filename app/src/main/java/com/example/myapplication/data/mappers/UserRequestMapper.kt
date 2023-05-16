@@ -1,6 +1,6 @@
 package com.example.myapplication.data.mappers
 
-import com.example.myapplication.data.datasource.UserRegister
+import com.example.myapplication.data.models.UserRegister
 import com.example.myapplication.data.remote.request.UserRegisterRequest
 
 class UserRequestMapper : Mapper<UserRegister,UserRegisterRequest>{

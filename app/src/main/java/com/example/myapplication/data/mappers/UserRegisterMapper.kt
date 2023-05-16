@@ -1,6 +1,7 @@
-package com.example.myapplication.data.datasource.mappers
+package com.example.myapplication.data.mappers
 
-import com.example.myapplication.data.datasource.UserRegister
+import com.example.myapplication.data.models.UserRegister
+
 
 class UserRegisterMapper {
     fun fromDtoToDomain(user: UserRegister): HashMap<String, Any> {

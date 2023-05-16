@@ -3,9 +3,9 @@ package com.example.myapplication.ui.userRegister.stepTwo
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.myapplication.data.datasource.UserRegister
 import com.example.myapplication.core.utils.isValidPhone
 import com.example.myapplication.core.utils.isValidText
+import com.example.myapplication.data.models.UserRegister
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 

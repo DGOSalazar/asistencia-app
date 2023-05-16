@@ -1,9 +1,7 @@
 package com.example.myapplication.ui.home.viewholders
 
 import android.content.res.ColorStateList
-import android.os.Build
 import android.view.View
-import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.R
 import com.example.myapplication.data.models.NewDayModel
@@ -17,7 +15,6 @@ class CalendarViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     private var isAssistedDay:Boolean = false
 
 
-    @RequiresApi(Build.VERSION_CODES.M)
     fun setView(day: NewDayModel, currentDate:String, assistedDays:ArrayList<DayCollectionResponse>){
         val dayType = day.date.compareTo(currentDate)
 
@@ -35,7 +32,7 @@ class CalendarViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
     }
 
-    @RequiresApi(Build.VERSION_CODES.M)
+
     private fun setViewAsLastMonthDay() {
         with(binding) {
             mcFreePlaces.visibility = View.GONE
@@ -46,7 +43,6 @@ class CalendarViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.M)
     private fun setViewAsNextMonthDay(day:NewDayModel) {
         with(binding){
             container.backgroundTintList = ColorStateList.valueOf(ctx.getColor(R.color.white))

@@ -43,7 +43,7 @@
 
             <argument
                 android:name="userModel"
-                app:argType="com.example.myapplication.data.datasource.UserRegister" />
+                app:argType="com.example.myapplication.data.models.UserRegister" />
             <action
                 android:id="@+id/action_twoRegisterFragment_to_stepThreeRegisterFragment"
                 app:destination="@id/stepThreeRegisterFragment"
@@ -63,7 +63,7 @@
 
             <argument
                 android:name="userModel"
-                app:argType="com.example.myapplication.data.datasource.UserRegister" />
+                app:argType="com.example.myapplication.data.models.UserRegister" />
             <action
                 android:id="@+id/action_stepThreeRegisterFragment_to_loginFragment22"
                 app:destination="@id/loginFragment2" />

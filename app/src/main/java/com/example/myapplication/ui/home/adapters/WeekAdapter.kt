@@ -3,14 +3,10 @@ package com.example.myapplication.ui.home.adapters
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.R
 import com.example.myapplication.data.models.Day
 import com.example.myapplication.databinding.DaySelectedViewBinding
-import com.example.myapplication.ui.home.HomeViewModel
 
 class WeekAdapter(var weekDays: List<Day>, private var click: (Day) -> Unit): RecyclerView.Adapter<WeekAdapter.ViewHolder>() {
 

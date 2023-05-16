@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import com.example.myapplication.R
 import com.example.myapplication.data.models.ProjectInfo
-import com.example.myapplication.data.models.ProjectsDomainModel
 import com.example.myapplication.databinding.DialogAddProjectBinding
 
 

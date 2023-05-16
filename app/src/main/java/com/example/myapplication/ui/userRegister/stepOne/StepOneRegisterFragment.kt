@@ -12,11 +12,11 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.myapplication.R
-import com.example.myapplication.data.datasource.UserRegister
-import com.example.myapplication.databinding.FragmentStepOneRegisterBinding
 import com.example.myapplication.core.utils.checkIfIsValidEmail
 import com.example.myapplication.core.utils.checkIfIsValidPassword
 import com.example.myapplication.core.utils.showAndHideError
+import com.example.myapplication.data.models.UserRegister
+import com.example.myapplication.databinding.FragmentStepOneRegisterBinding
 import dagger.hilt.android.AndroidEntryPoint
 
 

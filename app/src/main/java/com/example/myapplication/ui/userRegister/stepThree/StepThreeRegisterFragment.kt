@@ -19,11 +19,9 @@ import androidx.navigation.fragment.navArgs
 import com.example.myapplication.R
 import com.example.myapplication.core.extensionFun.toast
 import com.example.myapplication.core.utils.*
-import com.example.myapplication.data.datasource.UserRegister
+import com.example.myapplication.data.models.UserRegister
 import com.example.myapplication.databinding.FragmentStepThreeRegisterBinding
 import com.example.myapplication.ui.MainActivity
-import com.example.myapplication.ui.home.HomeActivity
-import com.example.myapplication.ui.login.LoginFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

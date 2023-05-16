@@ -54,7 +54,6 @@ class Tools @Inject constructor(private val context: Context){
 
     companion object{
         fun getTeams(res:List<UserHomeDomainModel>):ArrayList<TeamGroup>{
-            var users: ArrayList<UserHomeDomainModel> = arrayListOf()
             val resTeam: ArrayList<TeamGroup> = arrayListOf(
                 TeamGroup(team = "Business Analyst", users = arrayListOf(), isSelected = false),
                 TeamGroup(team = "Scrum Master", users = arrayListOf(), isSelected = false),

@@ -208,7 +208,7 @@ class FirebaseApiService @Inject constructor(private val client: FirebaseClientM
         }
     }
 
-    fun getAllPositions() = flow {
+   suspend fun getAllPositions() = flow {
         emit(Resource2.success(client.positionCollection.get().await().documents.let {
             var list = arrayListOf<String>()
             it.forEach { doc ->
