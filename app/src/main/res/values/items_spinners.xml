@@ -45,4 +45,14 @@
         <item>Diciembre</item>
     </string-array>
 
+    <string-array name="new_days">
+        <item>Domingo</item>
+        <item>Lunes</item>
+        <item>Martes</item>
+        <item>Miércoles</item>
+        <item>Jueves</item>
+        <item>Viernes</item>
+        <item>Sabado</item>
+    </string-array>
+
 </resources>

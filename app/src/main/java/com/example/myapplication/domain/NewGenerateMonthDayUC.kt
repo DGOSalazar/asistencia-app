@@ -5,10 +5,14 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import com.example.myapplication.core.utils.Constants.DAY_PER_MONTH
 import com.example.myapplication.core.utils.Constants.FREE_PLACES_VALUE
-import com.example.myapplication.data.models.NewDayModel
-import com.example.myapplication.data.remote.response.AttendanceDaysResponse
-import com.example.myapplication.data.remote.response.DayCollectionResponse
+import com.example.myapplication.core.utils.Constants.RANGE_DAYS_TO_REGISTER
+import com.example.myapplication.core.utils.MonthType
+import com.example.myapplication.data.models.DayCollection
+import com.example.myapplication.data.models.CalendarDay
+import com.example.myapplication.sys.utils.Tools
 import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.util.*
 import javax.inject.Inject
 import kotlin.collections.ArrayList
@@ -16,24 +20,32 @@ import kotlin.collections.ArrayList
 
 class NewGenerateMonthDayUC @Inject constructor() {
 
-    private val calendar: Calendar = Calendar.getInstance()
-    private var currentMonth = calendar[Calendar.MONTH]
-    private var currentYear = calendar[Calendar.YEAR]
-
+    private lateinit var calendar: Calendar
+    private var currentMonth:Int = 0
+    private var currentYear:Int = 0
+    private var placesAvailable: Int = RANGE_DAYS_TO_REGISTER
+    private var nMonthType: MonthType = MonthType.CURRENT
+    private var nCountDays:Int=0
     @SuppressLint("SimpleDateFormat")
     private val sdf: SimpleDateFormat = SimpleDateFormat("dd-MM-yyyy")
-    private lateinit var attendanceDays: ArrayList<DayCollectionResponse>
+    private lateinit var attendanceDays: List<DayCollection>
 
 
     @RequiresApi(Build.VERSION_CODES.O)
     operator fun invoke(
-        days: ArrayList<DayCollectionResponse>,
-    ): ArrayList<NewDayModel> = run {
+        days: List<DayCollection>,
+        monthType: MonthType,
+        countDays:Int
+    ): ArrayList<CalendarDay> = run {
+        nCountDays = countDays
+        placesAvailable = RANGE_DAYS_TO_REGISTER
+        nMonthType = monthType
+        setCalendarDate()
         attendanceDays = days
 
-        val allDays = arrayListOf<NewDayModel>()
-        val daysOfCurrentMonth: ArrayList<NewDayModel> = getCurrentMonthDays()
-        val daysOfLastMonth: ArrayList<NewDayModel>? = getLastMonthDays()
+        val allDays = arrayListOf<CalendarDay>()
+        val daysOfCurrentMonth: ArrayList<CalendarDay> = getCurrentMonthDays()
+        val daysOfLastMonth: ArrayList<CalendarDay>? = getLastMonthDays()
 
         if (!daysOfLastMonth.isNullOrEmpty()) allDays.addAll(daysOfLastMonth)
 
@@ -46,26 +58,46 @@ class NewGenerateMonthDayUC @Inject constructor() {
         allDays
     }
 
-    private fun getCurrentMonthDays(): ArrayList<NewDayModel> {
+    private fun setCalendarDate(){
+        calendar = Calendar.getInstance()
+        when(nMonthType){
+            MonthType.LAST->{
+                calendar.add(Calendar.MONTH, -1)
+            }
+            MonthType.NEXT->{
+                calendar.add(Calendar.MONTH, 1)
+            }
+            else->{  calendar = Calendar.getInstance()}
+        }
+        currentMonth = calendar[Calendar.MONTH]
+        currentYear = calendar[Calendar.YEAR]
+        if (nMonthType == MonthType.NEXT )
+            placesAvailable -= nCountDays
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun getCurrentMonthDays(): ArrayList<CalendarDay> {
         calendar.set(currentYear, currentMonth, 1)
-        val daysList = arrayListOf<NewDayModel>()
+        val daysList = arrayListOf<CalendarDay>()
         val daysInMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH)
 
         for (i in 1..daysInMonth) {
             calendar.set(currentYear, currentMonth, i)
             val dayOfWeek: Int = calendar[Calendar.DAY_OF_WEEK]
             if (dayOfWeek !in arrayOf(Calendar.SATURDAY, Calendar.SUNDAY)) {
-                daysList.add(NewDayModel(
-                        date = sdf.format(calendar.time),
-                        freePlaces = getFreePlaces())
-                )
+                val date = sdf.format(calendar.time)
+                daysList.add(CalendarDay(
+                        date = date,
+                        freePlaces = getFreePlaces(),
+                        isEnable = getIsEnable(date)))
             }
         }
         return daysList
     }
 
-    private fun getLastMonthDays(): ArrayList<NewDayModel>? {
-        val daysList = arrayListOf<NewDayModel>()
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun getLastMonthDays(): ArrayList<CalendarDay>? {
+        val daysList = arrayListOf<CalendarDay>()
         calendar.set(currentYear, currentMonth, 1)
         val firstDayOfCurrentMonth = calendar.get(Calendar.DAY_OF_WEEK)
 
@@ -77,9 +109,10 @@ class NewGenerateMonthDayUC @Inject constructor() {
             val lastDaysOfTheWeekOfTheLastMonth = daysInPastMonth - firstDayOfCurrentMonth + 3
 
             for (i in lastDaysOfTheWeekOfTheLastMonth..daysInPastMonth) {
-                calendar.set(currentYear, currentMonth, i)
-                daysList.add(NewDayModel(
-                    date = sdf.format(calendar.time),
+                calendar.set(currentYear, calendar[Calendar.MONTH], i)
+                val date = sdf.format(calendar.time)
+                daysList.add(CalendarDay(
+                    date = date,
                     freePlaces = getFreePlaces())
                 )
             }
@@ -88,16 +121,18 @@ class NewGenerateMonthDayUC @Inject constructor() {
         return daysList
     }
 
-    private fun getNextMonthDays(daysNextMonth: Int): ArrayList<NewDayModel> {
-        val daysList = arrayListOf<NewDayModel>()
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun getNextMonthDays(daysNextMonth: Int): ArrayList<CalendarDay> {
+        val daysList = arrayListOf<CalendarDay>()
         calendar.add(Calendar.MONTH, 1)
 
         for (i in 1..daysNextMonth) {
-            calendar.set(currentYear, currentMonth, i)
-            daysList.add(NewDayModel(
-                date = sdf.format(calendar.time),
-                freePlaces = getFreePlaces())
-            )
+            calendar.set(currentYear, calendar[Calendar.MONTH], i)
+            val date = sdf.format(calendar.time)
+            daysList.add(CalendarDay(
+                date = date,
+                freePlaces = getFreePlaces(), isEnable = getIsEnable(date)
+            ))
         }
         calendar.add(Calendar.MONTH, -1)
         return daysList
@@ -108,9 +143,31 @@ class NewGenerateMonthDayUC @Inject constructor() {
         var freePlaces = FREE_PLACES_VALUE
         attendanceDays.forEach { remoteDate ->
             if (remoteDate.currentDay == currentDate)
-                freePlaces -= remoteDate.email!!.size
+                freePlaces -= remoteDate.emails.size
         }
         return freePlaces
+    }
+
+    @SuppressLint("SimpleDateFormat")
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun getIsEnable(date:String):Boolean{
+        if (nMonthType == MonthType.CURRENT ){
+            val today =  Tools.getTodayDate(format = true)
+            val compareFormat = SimpleDateFormat("yyyy-MM-dd")
+            val inputDateFormat = SimpleDateFormat("dd-MM-yyyy")
+            val inputDate = inputDateFormat.parse(date)
+            val compareDate = compareFormat.format(inputDate!!)
+            val dayType = today.compareTo(compareDate)
+            val haveDaysToRegister = placesAvailable > 0
+            if (placesAvailable > 0 && dayType < 0)  placesAvailable -= 1
+            return dayType < 0 && haveDaysToRegister
+        }else {
+            return if (nMonthType == MonthType.NEXT ){
+                if (placesAvailable > 0)  placesAvailable -= 1
+                placesAvailable > 0
+            }else
+                false
+        }
     }
 
 }

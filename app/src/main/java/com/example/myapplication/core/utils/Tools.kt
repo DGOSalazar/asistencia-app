@@ -5,14 +5,21 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
 import android.location.LocationManager
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
+import com.example.myapplication.core.utils.MonthType
 import com.example.myapplication.data.models.LocationModel
 import com.example.myapplication.data.models.TeamGroup
 import com.example.myapplication.data.models.UserHomeDomainModel
 import com.example.myapplication.data.remote.response.UserHomeResponse
 import com.google.android.gms.location.*
 import kotlinx.coroutines.tasks.await
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.util.*
 import javax.inject.Inject
+import kotlin.collections.ArrayList
 
 
 class Tools @Inject constructor(private val context: Context){
@@ -88,6 +95,21 @@ class Tools @Inject constructor(private val context: Context){
         }
       return  resTeam
     }
+
+        @RequiresApi(Build.VERSION_CODES.O)
+        fun getTodayDate(monthType: MonthType = MonthType.CURRENT, format:Boolean = false): String {
+            val formatter =
+                if (!format) DateTimeFormatter.ofPattern("dd-MM-yyyy")
+                else DateTimeFormatter.ofPattern("yyyy-MM-dd")
+
+            return when(monthType){
+                MonthType.CURRENT -> LocalDate.now().format(formatter)
+                MonthType.LAST -> LocalDate.now().plusMonths(-1).format(formatter)
+                MonthType.NEXT -> LocalDate.now().plusMonths(1).format(formatter)
+            }
+        }
     }
+
+
 
 }

@@ -8,5 +8,6 @@ enum class Collection(val value:String){
     TEAM_COLLECTION("TeamsCollection"),
     NOTIFY_COLLECTION("NotifyCollection"),
     POSITION_COLLECTION("PositionCollection"),
-    USER_PROJECTS_COLLECTION("UserProjectCollection")
+    USER_PROJECTS_COLLECTION("UserProjectCollection"),
+    ATTENDANCE_HISTORY("AttendanceHistory")
 }

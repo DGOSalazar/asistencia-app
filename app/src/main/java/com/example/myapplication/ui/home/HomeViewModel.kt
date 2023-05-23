@@ -7,9 +7,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.myapplication.core.utils.MonthType
 import com.example.myapplication.core.utils.statusNetwork.ResponseStatus
 import com.example.myapplication.data.models.*
-import com.example.myapplication.data.remote.response.AttendanceDaysResponse
 import com.example.myapplication.data.remote.response.DayCollectionResponse
 import com.example.myapplication.data.remote.response.UserHomeResponse
 import com.example.myapplication.domain.*
@@ -78,14 +78,9 @@ class HomeViewModel @Inject constructor(
     private var _status = MutableLiveData<ResponseStatus<Any>?>()
     val status: LiveData<ResponseStatus<Any>?> get() = _status
 
-    private var _statusHistoryRegister = MutableLiveData<ResponseStatus<Boolean>?>()
-    val statusHistoryRegister: LiveData<ResponseStatus<Boolean>?> get() = _statusHistoryRegister
 
-    private var _showOrHideAttendanceBtn = MutableLiveData<ResponseStatus<Boolean>?>()
-    val showOrHideAttendanceBtn: LiveData<ResponseStatus<Boolean>?> get() = _showOrHideAttendanceBtn
-
-    private var _calendarDays = MutableLiveData<ArrayList<NewDayModel>>()
-    val calendarDays: LiveData<ArrayList<NewDayModel>> get() = _calendarDays
+    private var _calendarDays = MutableLiveData<ArrayList<CalendarDay>>()
+    val calendarDays: LiveData<ArrayList<CalendarDay>> get() = _calendarDays
 
 
     var daysToAttend:List<AttendanceDays> = emptyList()
@@ -211,49 +206,27 @@ class HomeViewModel @Inject constructor(
 
     fun cleanLiveData() {
         _status.value = null
-        _showOrHideAttendanceBtn.value = null
-        _statusHistoryRegister.value = null
-    }
-
-    @Suppress("UNCHECKED_CAST")
-    fun registerHistoryAttendance(email: String, date: String) {
-        viewModelScope.launch {
-            val request = AttendanceHistoryModel(email, date, 2)
-            _statusHistoryRegister.value = attendanceHistoryRegisterUseCase.invoke(request)
-        }
-    }
-
-    fun showOrHideAttendanceButton(email: String, date: String) {
-        viewModelScope.launch {
-            _showOrHideAttendanceBtn.value =
-                showOrHideAttendanceButton.invoke(email = email, currentDate = date)
-        }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun newGetCalendarDays(attendanceDays:List<AttendanceDays>){
         viewModelScope.launch {
-            remoteDays = mapper(attendanceDays)
-            _calendarDays.value = newGenerateMonthDayUC.invoke(remoteDays)
+            val remoteDays = mapper(attendanceDays)
+            _calendarDays.value = newGenerateMonthDayUC.invoke(remoteDays,MonthType.CURRENT,0)
         }
     }
 
-    private fun mapper(attendanceDays:List<AttendanceDays>):ArrayList<DayCollectionResponse>{
-        val dayList = arrayListOf<DayCollectionResponse>()
+    private fun mapper(attendanceDays:List<AttendanceDays>):List<DayCollection>{
+        val dayList = mutableListOf<DayCollection>()
         attendanceDays.forEach{ day ->
             dayList.add(
-                DayCollectionResponse(
+                DayCollection(
                     currentDay = day.currentDay,
-                    email =  day.emails
+                    emails =  day.emails
                 )
             )
         }
         return dayList
     }
 
-    fun getUserType() = sharePreferenceRepository.getUserType()
-
-    fun setUserType(userType:Int) {
-        sharePreferenceRepository.saveUserType(userType)
-    }
 }
