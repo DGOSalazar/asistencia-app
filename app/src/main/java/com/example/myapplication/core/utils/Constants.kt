@@ -7,4 +7,7 @@ object Constants {
     const val PATH_CHILD_FIREBASE_STORAGE = "usersPhotos"
     const val FREE_PLACES_VALUE = 33
     const val DAY_PER_MONTH = 25
+    const val RANGE_DAYS_TO_REGISTER = 10
+
+    const val USER_TYPE_KEY: String ="user_type"
 }

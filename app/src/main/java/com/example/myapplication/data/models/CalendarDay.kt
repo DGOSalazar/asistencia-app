@@ -1,6 +1,6 @@
 package com.example.myapplication.data.models
 
-data class NewDayModel (
+data class CalendarDay (
     val date: String,
     val freePlaces:Int,
     val isEnable:Boolean = false

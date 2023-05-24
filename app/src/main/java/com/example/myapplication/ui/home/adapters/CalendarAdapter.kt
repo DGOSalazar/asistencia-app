@@ -25,7 +25,6 @@ class CalendarAdapter(private var days: ArrayList<Day> = arrayListOf(),private v
     var daysToFormatNextMonth = 0
     var imageProfileUrl = ""
 
-    @RequiresApi(Build.VERSION_CODES.M)
     inner class ViewHolder(view: View):RecyclerView.ViewHolder(view){
 
         private var mBinding= DayViewBinding.bind(view)
@@ -36,7 +35,7 @@ class CalendarAdapter(private var days: ArrayList<Day> = arrayListOf(),private v
                 container.backgroundTintList = ColorStateList.valueOf(ctx.getColor(R.color.white))
                 tvDay.setTextColor(ColorStateList.valueOf(ctx.getColor(R.color.grey2)))
                 mBinding.tvDay.visibility = View.VISIBLE
-                assistedDay.visibility = View.GONE
+                assistedDayMark.visibility = View.GONE
             }
         }
 
@@ -54,7 +53,7 @@ class CalendarAdapter(private var days: ArrayList<Day> = arrayListOf(),private v
 
                         container.backgroundTintList = ColorStateList.valueOf(ctx.getColor(R.color.white))
                         tvDay.visibility = View.VISIBLE
-                        assistedDay.visibility = View.GONE
+                        assistedDayMark.visibility = View.GONE
                         mcFreePlaces.visibility =  if(!isAssistedDay && day.num != today && isEnable) View.VISIBLE else View.GONE
                         ivProfile.visibility = if (isAssistedDay && day.isCurrentMonth) View.VISIBLE else View.GONE
 
@@ -64,7 +63,7 @@ class CalendarAdapter(private var days: ArrayList<Day> = arrayListOf(),private v
                     PAST_MONTH->{
                         mcFreePlaces.visibility = View.GONE
                         ivProfile.visibility = View.GONE
-                        assistedDay.visibility =  if (isAssistedDay && day.isCurrentMonth) View.VISIBLE else View.GONE
+                        assistedDayMark.visibility =  if (isAssistedDay && day.isCurrentMonth) View.VISIBLE else View.GONE
                         tvDay.setTextColor(ColorStateList.valueOf(ctx.getColor(R.color.grey5)))
                         container.backgroundTintList = ColorStateList.valueOf(ctx.getColor(R.color.grey4))
                     }
@@ -72,14 +71,14 @@ class CalendarAdapter(private var days: ArrayList<Day> = arrayListOf(),private v
                         if (day.num < today && day.isCurrentMonth){
                             mcFreePlaces.visibility = View.GONE
                             ivProfile.visibility = View.GONE
-                            assistedDay.visibility = if (isAssistedDay) View.VISIBLE else View.GONE
+                            assistedDayMark.visibility = if (isAssistedDay) View.VISIBLE else View.GONE
 
                             val bgContainer = if(day.num == today) R.color.white else R.color.grey4
                             container.backgroundTintList = ColorStateList.valueOf(ctx.getColor(bgContainer))
 
                             tvDay.setTextColor(ColorStateList.valueOf(ctx.getColor(R.color.grey5)))
                         }else{
-                            assistedDay.visibility = View.GONE
+                            assistedDayMark.visibility = View.GONE
                             if (day.enable){
                                 val visibilityValue = if(!isAssistedDay && day.num != today ) View.VISIBLE else View.GONE
                                 mcFreePlaces.visibility = visibilityValue
@@ -96,7 +95,7 @@ class CalendarAdapter(private var days: ArrayList<Day> = arrayListOf(),private v
                             }else{
                                 container.backgroundTintList = ColorStateList.valueOf(ctx.getColor(R.color.white))
                                 tvDay.visibility = View.VISIBLE
-                                assistedDay.visibility = View.GONE
+                                assistedDayMark.visibility = View.GONE
                                 ivProfile.visibility = View.GONE
                                 mcFreePlaces.visibility = View.GONE
 
@@ -125,13 +124,11 @@ class CalendarAdapter(private var days: ArrayList<Day> = arrayListOf(),private v
     fun setCalendarData(days: ArrayList<Day>){
         this.days=days
     }
-    @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.day_view,parent,false)
         return ViewHolder(view)
     }
 
-    @RequiresApi(Build.VERSION_CODES.M)
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         with(holder){
             mountCalendar()

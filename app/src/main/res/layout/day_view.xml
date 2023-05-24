@@ -86,7 +86,7 @@
         android:background="@color/grey3"/>
 
     <View
-        android:id="@+id/assisted_day"
+        android:id="@+id/assisted_day_mark"
         android:layout_width="18sp"
         android:layout_height="18sp"
         android:background="@drawable/triangle"

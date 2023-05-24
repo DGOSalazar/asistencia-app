@@ -2,6 +2,7 @@ package com.example.myapplication.data.remote.api
 
 import android.net.Uri
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import com.example.myapplication.core.utils.FirebaseClientModule
 import com.example.myapplication.core.utils.Resource
@@ -13,6 +14,7 @@ import com.example.myapplication.data.models.User
 import com.example.myapplication.data.models.UserAdditionalData
 import com.example.myapplication.data.remote.request.UserRegisterRequest
 import com.example.myapplication.data.remote.response.AttendanceDaysResponse
+import com.example.myapplication.data.remote.response.DayCollectionResponse
 import com.example.myapplication.data.remote.response.LoginResponse
 import com.example.myapplication.data.remote.response.UserHomeResponse
 import com.google.firebase.firestore.ktx.toObject
@@ -199,5 +201,35 @@ class FirebaseApiService @Inject constructor(private val client: FirebaseClientM
             }
     }
 
+
+
+    suspend fun getAllRegisterDays() = flow {
+        emit(Resource2.success(client.dayCollection.get().await().documents.let {
+            val list = arrayListOf<DayCollectionResponse>()
+            it.forEach { doc ->
+                doc.toObject<DayCollectionResponse>()?.let { it1 -> list.add(it1) }
+            }
+            list
+        }))
+    }.catch { error ->
+        error.message?.let {
+            emit(Resource2.error(it))
+        }
+    }
+
+    suspend fun getNewUserInfo() = flow {
+        emit(Resource2.success(
+            client.userCollection.get().await().documents.let {
+                val list = arrayListOf<UserHomeResponse>()
+                it.forEach { doc ->
+                    doc.toObject<UserHomeResponse>()?.let { it1 -> list.add(it1) }
+                }
+                list
+        }))
+    }.catch { error ->
+        error.message?.let {
+            emit(Resource2.error(it))
+        }
+    }
 
 }

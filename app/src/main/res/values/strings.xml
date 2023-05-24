@@ -154,4 +154,5 @@
     <string name="done_projects">Iniciativas concluidas</string>
 
 
+    <string name="welcome_message_1">Hola %1$s</string>
 </resources>

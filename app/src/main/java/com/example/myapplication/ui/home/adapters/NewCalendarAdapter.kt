@@ -4,32 +4,65 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.R
-import com.example.myapplication.data.models.NewDayModel
-import com.example.myapplication.data.remote.response.DayCollectionResponse
+import com.example.myapplication.core.utils.MonthType
+import com.example.myapplication.core.utils.UserType
+import com.example.myapplication.data.models.DayCollection
+import com.example.myapplication.data.models.CalendarDay
 import com.example.myapplication.ui.home.viewholders.CalendarViewHolder
 
 class NewCalendarAdapter :
     RecyclerView.Adapter<CalendarViewHolder>() {
 
-    var dataSet: ArrayList<NewDayModel> = arrayListOf()
-    var onClickDay: ((NewDayModel) -> Unit)? = null
-    var currentDate: String = ""
-    var assistedDays: ArrayList<DayCollectionResponse> = arrayListOf()
+    var calendarDaysList: ArrayList<CalendarDay> = arrayListOf()
+    var onClickDay: ((CalendarDay) -> Unit)? = null
+    var attendanceDaysList: List<DayCollection> = arrayListOf()
+    var userType:Int = UserType.COLLABORATOR.value
+    var monthType:MonthType = MonthType.CURRENT
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): CalendarViewHolder {
         val view = LayoutInflater.from(viewGroup.context)
             .inflate(R.layout.day_view, viewGroup, false)
         return CalendarViewHolder(view)
     }
 
-
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(viewHolder: CalendarViewHolder, position: Int) {
-        val day = dataSet[position]
-        viewHolder.setView(day, currentDate, assistedDays)
-        viewHolder.binding.container.setOnClickListener { onClickDay?.invoke(day) }
+        val day = calendarDaysList[position]
+
+        viewHolder.binding.container.setOnClickListener {
+            if(day.isEnable)
+                onClickDay?.invoke(day)
+        }
+
+        if (userType == UserType.SUPERUSER.value){
+            viewHolder.setViewAsSuperUser(day)
+            return
+        }
+
+        when(monthType){
+            MonthType.NEXT -> {
+                viewHolder.setNextMonthView(
+                    day,
+                    attendanceDaysList
+                )
+            }
+            MonthType.LAST -> {
+                viewHolder.setViewBeforeToday(
+                    day,
+                    attendanceDaysList
+                )
+            }
+            MonthType.CURRENT -> {
+                viewHolder.setCurrentMonthView(
+                    day,
+                    attendanceDaysList,
+                )
+            }
+        }
     }
 
-    override fun getItemCount() = dataSet.size
+    override fun getItemCount() = calendarDaysList.size
 
 
 }
