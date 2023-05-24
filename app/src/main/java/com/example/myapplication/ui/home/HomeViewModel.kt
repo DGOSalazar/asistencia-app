@@ -13,6 +13,7 @@ import com.example.myapplication.data.remote.response.UserHomeResponse
 import com.example.myapplication.domain.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.time.LocalDate
@@ -133,8 +134,8 @@ class HomeViewModel @Inject constructor(
     fun getUserDatastore(listEmails: ArrayList<String>) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                getUserInfoUseCase.userInfo(listEmails) {
-                    _users.postValue(it)
+                getUserInfoUseCase.userInfo(listEmails).collect {
+                    _users.postValue(it.data!!)
                     _isLoading.postValue(Status.SUCCESS)
                 }
             }
@@ -146,8 +147,8 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             _isLoading.value = Status.LOADING
             withContext(Dispatchers.IO) {
-                getUserInfoUseCase.emailList(day) {
-                    _userEmails.postValue(it)
+                getUserInfoUseCase.emailList(day).collect {
+                    _userEmails.postValue(it.data!!)
                 }
             }
         }
@@ -161,8 +162,8 @@ class HomeViewModel @Inject constructor(
         val listEmails: ArrayList<String> = arrayListOf()
         listEmails.add(accountEmail)
         viewModelScope.launch {
-            getUserInfoUseCase.userInfo(listEmails) {
-                _accountData.postValue(it[0])
+            getUserInfoUseCase.userInfo(listEmails).collect {
+                _accountData.postValue(it.data!![0])
             }
         }
     }

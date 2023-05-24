@@ -1,5 +1,6 @@
 package com.example.myapplication.domain
 
+import com.example.myapplication.data.remote.api.FirebaseApiService
 import com.example.myapplication.data.remote.api.FirebaseServices
 import javax.inject.Inject
 

@@ -16,6 +16,6 @@ class UserScreenRepository @Inject constructor(
 
     //projects
     suspend fun getProjectUser(email: String) = firebaseRepository.getProjectsForUser(email)
-    fun saveProjectsByUser(projects: ProjectsDomainModel) =
+   suspend fun saveProjectsByUser(projects: ProjectsDomainModel) =
         firebaseRepository.saveProjectsForUser(projects)
 }

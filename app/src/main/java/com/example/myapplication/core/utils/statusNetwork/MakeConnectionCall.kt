@@ -3,7 +3,10 @@ package com.example.myapplication.core.utils.statusNetwork
 import com.example.myapplication.R
 import com.example.myapplication.core.utils.Status
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
+
 
 suspend fun <T> makeCall(
     call: suspend () -> T
@@ -17,6 +20,14 @@ suspend fun <T> makeCall(
     }
 }
 
+
+suspend fun <T> flowCall(call: suspend () -> T)=flow{
+    emit(Resource2.success(call.invoke()))
+}.catch{ error ->
+    error.message?.let {
+        emit(Resource2.error(it))
+    }
+}
 
 class Resource2<T>(
     val status: Status,
