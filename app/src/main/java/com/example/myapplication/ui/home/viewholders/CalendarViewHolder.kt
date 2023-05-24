@@ -54,6 +54,12 @@ class CalendarViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         with(binding) {
             ivProfile.visibility = View.GONE
             assistedDayMark.visibility = View.GONE
+            val colorTextDay = if (isCurrentMonth(day)) R.color.grey2 else R.color.grey4
+            tvDay.apply {
+                visibility = View.VISIBLE
+                setTextColor(ColorStateList.valueOf(ctx.getColor(colorTextDay)))
+                text = day.date.substring(0,2)
+            }
         }
     }
 
@@ -81,6 +87,7 @@ class CalendarViewHolder(view: View) : RecyclerView.ViewHolder(view) {
             isAssistedDay = attendanceDays.any{ it.currentDay == day.date}
             mcFreePlaces.visibility = if(!isAssistedDay && day.isEnable) View.VISIBLE else View.GONE
             val colorTextDay = if (!isCurrentMonth(day)) R.color.grey2 else R.color.grey4
+            ivProfile.visibility = if (isAssistedDay) View.VISIBLE else View.GONE
             tvDay.apply {
                 visibility = View.VISIBLE
                 setTextColor(ColorStateList.valueOf(ctx.getColor(colorTextDay)))

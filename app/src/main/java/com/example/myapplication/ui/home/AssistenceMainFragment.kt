@@ -7,6 +7,7 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.view.*
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -46,7 +47,7 @@ const val NEXT_MONTH = 3
 class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main){
 
     private val viewModel: HomeViewModel by activityViewModels()
-    private val mainViewModel: AttendanceMainViewModel by viewModels()
+    private val mainViewModel: AttendanceMainViewModel by activityViewModels()
     private lateinit var newCalendarAdapter: NewCalendarAdapter
     private lateinit var mUserAdapter: UserAdapter
     private lateinit var mBinding: FragmentAssistenceMainBinding
@@ -232,17 +233,19 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main){
 
     @SuppressLint("NotifyDataSetChanged")
     private fun setViewAsCollaborator(){
-        mainViewModel.showOrHideAttendanceButton()
         mBinding.tvWelcome.text = getString(R.string.welcome_message_1, mainViewModel.user!!.name)
         mBinding.tvDate.text = String.format(getString(R.string.welcome_date),
             resources.getStringArray(R.array.new_days)[localDate.dayOfWeek.value-1],localDate.dayOfMonth,
             resources.getStringArray(R.array.months)[localDate.monthValue-1],localDate.year)
         setUserAdapter()
-        mainViewModel.getCalendarDays(MonthType.CURRENT)
+        mainViewModel.showOrHideAttendanceButton()
+        if (statusMonthType == MonthType.NEXT )
+            mainViewModel.countDays = 5
+        mainViewModel.getCalendarDays(statusMonthType)
     }
 
     private fun setViewAsSuperUser(){
-    /**agregar cambios para super usuario */
+        /** falta defibir */
     }
 
     private fun setUserAdapter(){
@@ -264,13 +267,20 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main){
             attendanceDaysList = mainViewModel.getAttendanceDays()
             userType = userData.userType
             onClickDay = { day ->
-                onClickCalendarDay(day)
+                if(UserType.SUPERUSER.value == mainViewModel.user!!.userType)
+                    onClickCalendarDaySuperUser(day)
+                else
+                    onClickCalendarDay(day)
             }
         }
         mBinding.recyclerCalendar.apply {
             layoutManager = GridLayoutManager(requireContext().applicationContext,5)
             adapter = newCalendarAdapter
         }
+    }
+
+    private fun onClickCalendarDaySuperUser(day: CalendarDay) {
+        Toast.makeText(requireContext(), day.date, Toast.LENGTH_SHORT).show()
     }
 
     private fun changeNextMonth(){

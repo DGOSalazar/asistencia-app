@@ -41,6 +41,7 @@ class AttendanceMainViewModel@Inject constructor(
     var countDays:Int = 0
 
 
+
     private var _initialHomeDataLiveData = MutableLiveData<Resource2<HomeInitialData>>()
     val initialHomeDataLiveData: LiveData<Resource2<HomeInitialData>> get() = _initialHomeDataLiveData
 
@@ -55,6 +56,8 @@ class AttendanceMainViewModel@Inject constructor(
 
     private var _statusHistoryRegister = MutableLiveData<ResponseStatus<Boolean>?>()
     val statusHistoryRegister: LiveData<ResponseStatus<Boolean>?> get() = _statusHistoryRegister
+
+
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun getHomeData(day: String, email:String){
@@ -142,8 +145,9 @@ class AttendanceMainViewModel@Inject constructor(
         val date = Tools.getTodayDate().split("-")
         countDays = calendarDay.filter {
             val compareDate = it.date.split("-")
-            it.isEnable && date[1] == compareDate[1]
+            it.isEnable && date[1] == compareDate[1] //compare by month
         }.size
+        countDays
     }
 
     fun cleanLiveData() {

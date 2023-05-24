@@ -18,7 +18,7 @@ class NewCalendarAdapter :
     var calendarDaysList: ArrayList<CalendarDay> = arrayListOf()
     var onClickDay: ((CalendarDay) -> Unit)? = null
     var attendanceDaysList: List<DayCollection> = arrayListOf()
-    var userType:Int = 0
+    var userType:Int = UserType.COLLABORATOR.value
     var monthType:MonthType = MonthType.CURRENT
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -55,7 +55,7 @@ class NewCalendarAdapter :
                     attendanceDaysList
                 )
             }
-            else -> {
+            MonthType.CURRENT -> {
                 viewHolder.setCurrentMonthView(
                     day,
                     attendanceDaysList,
