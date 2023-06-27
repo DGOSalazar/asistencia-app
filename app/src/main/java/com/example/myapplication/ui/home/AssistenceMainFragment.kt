@@ -239,8 +239,7 @@ class AssistenceMainFragment : Fragment(R.layout.fragment_assistence_main){
             resources.getStringArray(R.array.months)[localDate.monthValue-1],localDate.year)
         setUserAdapter()
         mainViewModel.showOrHideAttendanceButton()
-        if (statusMonthType == MonthType.NEXT )
-            mainViewModel.countDays = 5
+        if (statusMonthType == MonthType.CURRENT)
         mainViewModel.getCalendarDays(statusMonthType)
     }
 
